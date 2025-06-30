@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta</title>
+    <link rel="stylesheet" href="styleCC.css">
+    <link rel="icon" type="image/svg+xml" href="/public/imagenes/logocorto.png" />
+</head>
+
+<body class="body">
+    <header class="" header>
+        <h1></h1>
+    </header>
+
+    <div class="container">
+        <div style="text-align: center; padding-bottom: 10px;">
+            <img src="/imagenes/logocorto.png" alt="Logo de la fundacion ADIS" />
+        </div>
+        <div class="heading">Creemos una nueva cuenta!</div>
+        <form id="formCrearCuenta">
+            <div class="input-container ic1">
+                <input id="nombre" class="input" type="text" placeholder="Nombre">
+            </div>
+            <div class="input-container ic2">
+                <input id="usuario" class="input" type="text" placeholder="Usuario">
+            </div>
+            <div class="input-container ic2">
+                <input id="password" class="input" type="password" placeholder="Contraseña">
+            </div>
+            <div class="input-container ic2">
+                <input id="confirmar" class="input" type="password" placeholder="Confirma contraseña">
+            </div>
+            <div class="input-container ic2">
+                <select required="" class="input-select" type="text" name="rol" id="rol" placeholder="Nombre">
+                    <option value="">-- Selecciona un rol --</option>
+                    <option value="ESPECIALISTA">ESPECIALISTA</option>
+                    <option value="RECEPCIÓN">RECEPCIÓN</option>
+                    <option value="SUPER USUARIO">SUPER USUARIO</option>
+                </select>
+            </div>
+            <div class="mb-3" id="claveContainer">
+                <input type="password" class="input" id="clave" required placeholder="Clave de Administrador" />
+            </div>
+            <button type="text" class="singin-button">Crear cuenta</button>
+        </form>
+        <span class="forgot-password"><a href="#" onclick="abrirVentanaInicio()">¿Ya tienes una cuenta?</a></span>
+    </div>
+</body>
+
+<script>
+    function abrirVentanaInicio() {
+        window.location.href = 'index.html';
+    }
+
+    document.getElementById("formCrearCuenta").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre");
+        const usuario = document.getElementById("usuario");
+        const contraseña = document.getElementById("password");
+        const rol = document.getElementById("rol");
+        const clave = document.getElementById("clave");
+        const claveContainer = document.getElementById("claveContainer");
+
+        function mostrarClaveSiTodoLleno() {
+            const lleno = usuario.value.trim() &&
+                nombre.value.trim() &&
+                contraseña.value &&
+                rol.value;
+            claveContainer.classList.toggle("d-none", !lleno);
+            clave.required = lleno;
+        }
+
+        usuario.addEventListener("input", mostrarClaveSiTodoLleno);
+        nombre.addEventListener("input", mostrarClaveSiTodoLleno);
+        contraseña.addEventListener("input", mostrarClaveSiTodoLleno);
+        rol.addEventListener("change", mostrarClaveSiTodoLleno);
+
+        if (!usuario || !nombre || !contraseña || !rol || !clave) {
+            alert("completa todos los campos,")
+            return;
+        }
+
+        if (contraseña.value.lenght < 8) {
+            alert("La contraseña debe tener minimo 8 caracteres")
+        }
+
+        try {
+            const res = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/registrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Super-User-Password": clave.value
+                },
+                body: JSON.stringify({
+                    usuario: usuario.value.trim(),
+                    nombre: nombre.value.trim(),
+                    contraseña: contraseña.value,
+                    rol: rol.value
+                })
+            });
+
+            const texto = await res.text();
+            if (res.ok) {
+                alert("Cuenta registrada");
+                window.location.href = "index.html";
+            } else {
+                alert("Error: " + texto);
+            }
+        } catch (error) {
+            console.error("Error al registrar: ", error);
+            alert("Error del servidor");
+        }
+    });
+</script>
+
+</html>

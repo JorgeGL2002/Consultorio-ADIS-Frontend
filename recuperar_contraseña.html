@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña</title>
+    <link rel="stylesheet" href="styleRC.css">
+    <link rel="icon" type="image/svg+xml" href="/imagenes/logocorto.png" />
+</head>
+
+<body class="body">
+    <header class="header">
+        <h1></h1>
+    </header>
+    <div class="container-recuperar">
+        <div style="text-align: center; padding-bottom: 10px;">
+            <img src="/imagenes/logocorto.png" alt="Logo de la fundacion ADIS" />
+        </div>
+        <div class="heading">
+            <h1>Recuperar contraseña</h1>
+            <p>Selecciona tu usuario e ingresa una nueva contraseña</p>
+        </div>
+        <form class="form-recuperar">
+            <select id="trabajador" required>
+                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+            </select>
+
+            <input type="password" required name="password" id="password" placeholder="Nueva contraseña">
+            <input type="password" required name="Confirmarpassword" id="Confirmarpassword"
+                placeholder="Confirma contraseña">
+            <div class="recuperar_contraseña">
+                <button type="button" class="btn-recuperar" id="click">Cambiar contraseña</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+<script>
+    function abrirVentanaInicio() {
+        window.location.href = 'index.html';
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivos")
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById("trabajador");
+                select.innerHTML = "<option value='' disabled selected>--- Selecciona tu usuario ---</option>";
+
+                data.forEach(trabajador => {
+                    const option = document.createElement("option");
+                    option.value = trabajador;
+                    option.textContent = trabajador;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("Error al cargar trabajadores:", error);
+                document.getElementById("trabajador").innerHTML =
+                    "<option value=''>Error al cargar trabajadores</option>";
+            });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const boton = document.querySelector(".recuperar_contraseña");
+
+        if (boton) {
+            boton.addEventListener("click", async () => {
+                const usuario = document.getElementById("trabajador").value.trim();
+                const nueva = document.getElementById("password").value;
+                const confirmar = document.getElementById("Confirmarpassword").value;
+
+                if (!usuario || !nueva || !confirmar) {
+                    alert("Completa todos los campos.");
+                    return;
+                }
+
+                if (nueva !== confirmar) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                }
+
+                if (nueva.length < 6) {
+                    alert("La contraseña debe tener al menos 6 caracteres.");
+                    return;
+                }
+
+                try {
+                    const res = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/reset-password", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            usuario: usuario,
+                            nuevoPassword: nueva
+                        }),
+                    });
+
+                    if (res.ok) {
+                        alert("Contraseña actualizada con éxito");
+                        window.location.href = "index.html"; // Redirige al login
+                    } else {
+                        const mensaje = await res.text();
+                        alert("Error: " + mensaje);
+                    }
+                } catch (err) {
+                    console.error("Error al conectar con la API", err);
+                    alert("Error en el servidor.");
+                }
+            });
+        } else {
+            console.error("No se encontró el botón .recuperar_contraseña");
+        }
+    });
+</script>
+
+</html>

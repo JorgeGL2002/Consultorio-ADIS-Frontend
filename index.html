@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="/public/imagenes/logocorto.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Inicio de sesión | Fundación ADIS</title>
+</head>
+
+<body class="bg-light">
+
+    <div class="card shadow-lg p-4 rounded-4" style="max-width: 400px; width: 100%; margin-top: 80px;">
+        <div style="text-align: center; padding-bottom: 10px;">
+            <img src="/imagenes/logocorto.png" alt="Logo de la fundacion ADIS" />
+        </div>
+        <h3 class="text-center text-primary fw-bold mb-4">Iniciar sesión</h3>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="trabajador" class="form-label">Selecciona tu usuario</label>
+                <select class="form-select" id="trabajador" required>
+                    <option value="" disabled selected>--- Cargando usuarios... ---</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña"
+                    required />
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="#" onclick="abrirVentanaRC()" class="text-decoration-none small text-primary">¿Olvidaste tu
+                    contraseña?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+        </form>
+
+        <hr class="my-4" />
+
+        <div class="text-center">
+            <span class="text-muted small">¿No tienes cuenta?</span><br />
+            <button onclick="abrirVentana()" class="btn btn-outline-primary btn-sm mt-2">Crear cuenta</button>
+        </div>
+
+        <p class="text-center text-muted small mt-4 mb-0">&copy; Fundación ADIS</p>
+
+    </div>
+
+    <script>
+        function abrirVentana() {
+            window.location.href = '../frontend/crear_cuenta.html';
+        }
+
+        function abrirVentanaRC() {
+            window.location.href = '../frontend/recuperar_contraseña.html';
+        }
+
+        function abrirVentanaA() {
+            window.location.href = 'Citas/Agenda.html';
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivos")
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById("trabajador");
+                    select.innerHTML = "<option value='' disabled selected>--- Selecciona tu usuario ---</option>";
+
+                    data.forEach(trabajador => {
+                        const option = document.createElement("option");
+                        option.value = trabajador;
+                        option.textContent = trabajador;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar trabajadores:", error);
+                    document.getElementById("trabajador").innerHTML =
+                        "<option value=''>Error al cargar trabajadores</option>";
+                });
+        });
+    </script>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const trabajador = document.getElementById("trabajador").value;
+            const contraseña = document.getElementById("password").value;
+
+            if (!trabajador || !contraseña) {
+                alert("Completa todos los campos para continuar")
+                return;
+            }
+
+            try {
+                console.log("🟡 Enviando datos:", {
+                    usuario: trabajador,
+                    contraseña: contraseña
+                });
+                const response = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        usuario: trabajador,
+                        contraseña: contraseña
+                    }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`¡Bienvenido ${data.usuario}! (Rol: ${data.rol})`);
+                    localStorage.setItem("id", data.id_trabajador);
+                    localStorage.setItem("rol", data.rol);
+                    localStorage.setItem("usuario", data.usuario);
+                    abrirVentanaA();
+
+                } else {
+                    console.log(trabajador, contraseña);
+                    alert(data.message || "Contraseña incorrecta");
+                }
+            } catch (err) {
+                console.error("Error:", err);
+                alert("Error detectado al iniciar sesión");
+            }
+        });
+    </script>
+</body>
+
+</html>
