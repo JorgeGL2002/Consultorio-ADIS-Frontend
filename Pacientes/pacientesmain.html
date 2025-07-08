@@ -8,6 +8,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/logocorto.png" />
   <title>Pacientes</title>
+
+  <style>
+    #tabla-pacientes td {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body class="bg-light">
@@ -31,7 +37,647 @@
     </div>
   </nav>
 
+  <div class="container mt-4">
+    <div class="d-flex justify-content-center align-items-center mb-3 gap-2">
+
+      <div class="input-group w-50">
+        <input type="text" id="busqueda" placeholder="Buscar paciente" class="form-control" list="listaPacientes">
+        <datalist id="listaPacientes">
+        </datalist>
+        <button type="button" id="buscar" class="btn btn-primary">Buscar</button>
+      </div>
+
+      <button type="button" id="nuevoPaciente" class="btn btn-primary" title="Nuevo paciente"><img src="../assets/agregar.png"
+          style="width: 20px; height: 20px;" alt="Agregar nuevo paciente">
+      </button>
+    </div>
+
+    <div class="table-responsive tabla-container" style="max-height: 550px; overflow-y: auto;">
+      <table class="table table-bordered table-hover table-striped align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Pacientes</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-pacientes">
+          <!-- Se llena con JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalPaciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Paciente - <span id="pacienteNombre" class="text-primary fs-6"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formPaciente">
+
+            <!-- DATOS DEL PACIENTE -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos del paciente</label>
+              <input type="hidden" id="nombrePaciente" name="nombrePaciente">
+              <input type="text" class="form-control mb-3" id="telefono" name="telefono" placeholder="Teléfono"
+                required>
+
+              <select name="sexo" id="sexo" class="form-select mb-3" required>
+                <option value="">Sexo</option>
+                <option value="Masculino">M</option>
+                <option value="Femenino">F</option>
+              </select>
+
+              <input type="date" class="form-control mb-3" id="fechaNacimiento" name="fechaNacimiento" required>
+              <input type="number" class="form-control mb-3" id="edad" name="edad" placeholder="Edad" required>
+
+              <select name="lugarNacimiento" id="lugarNacimiento" class="form-select mb-3">
+                <option value="" disabled selected>Lugar de nacimiento</option>
+              </select>
+
+              <select name="nivelEstudio" id="nivelEstudio" class="form-select mb-3">
+                <option value="" disabled selected>Nivel de estudio</option>
+                <option value="primaria">Primaria</option>
+                <option value="secundaria">Secundaria</option>
+                <option value="preparatoria">Preparatoria</option>
+                <option value="universidad">Universidad</option>
+                <option value="posgrado">Posgrado</option>
+                <option value="doctorado">Doctorado</option>
+              </select>
+              <input type="text" class="form-control mb-3" id="gradoEstudio" name="gradoEstudio"
+                placeholder="Grado de estudio">
+              <input type="text" class="form-control mb-3" id="ocupacion" name="ocupacion" placeholder="Ocupación">
+              <select name="estadoCivil" id="estadoCivil" class="form-select mb-3">
+                <option value="" disabled selected>Estado civil</option>
+                <option value="Soltero">Soltero</option>
+                <option value="Casado">Casado</option>
+                <option value="Viudo">Viudo</option>
+                <option value="Divorciado">Divorciado</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="CURP" id="CURP" placeholder="CURP">
+              <input type="text" class="form-control mb-3" name="RFC" id="RFC" placeholder="RFC">
+            </div>
+
+            <!-- DOMICILIO -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos de domicilio</label>
+              <input type="text" class="form-control mb-3" id="CP" name="CP" placeholder="Código postal">
+              <input type="text" class="form-control mb-3" id="estadosInput" name="estadosInput" placeholder="Estado">
+              <input type="text" class="form-control mb-3" id="municipio" name="municipio" placeholder="Municipio">
+              <input type="text" class="form-control mb-3" name="localidad" id="localidad" placeholder="Localidad">
+              <select name="colonia" id="colonia" class="form-select mb-3">
+                <option value="" selected>Colonia</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="manzana" id="manzana" placeholder="Manzana">
+              <input type="text" class="form-control mb-3" id="calle" name="calle" placeholder="Calle">
+              <input type="text" class="form-control mb-3" id="numeroInt" name="numeroInt"
+                placeholder="Número interior">
+              <input type="text" class="form-control mb-3" id="numeroExt" name="numeroExt"
+                placeholder="Número exterior">
+            </div>
+
+            <!-- PROFESIONALES -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos profesionales</label>
+              <input type="text" class="form-control mb-3" id="empresa" name="empresa" placeholder="Empresa">
+
+              <select name="modalidad" id="modalidad" class="form-select mb-3">
+                <option value="" disabled selected>Modalidad</option>
+                <option value="linea">En línea</option>
+                <option value="presencial">Presencial</option>
+              </select>
+
+              <input type="text" class="form-control mb-3" name="planta" id="planta" placeholder="Planta">
+              <input type="text" class="form-control mb-3" name="area" id="area" placeholder="Área">
+
+              <select class="form-select mb-3" id="trabajador">
+                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+              </select>
+
+              <select name="estadoProfesional" id="estadoProfesional" class="form-select mb-3">
+                <option value="" disabled selected>Estado</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+
+            <!-- DISCAPACIDAD -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Discapacidad</label>
+              <select name="discapacidad" id="discapacidad" class="form-select mb-3">
+                <option value="" disabled selected>¿Tiene alguna discapacidad?</option>
+                <option value="motriz">Motriz</option>
+                <option value="visual">Visual</option>
+                <option value="auditiva">Auditiva</option>
+                <option value="intelectual">Intelectual</option>
+                <option value="multiple">Múltiple</option>
+                <option value="ninguna">Ninguna</option>
+              </select>
+            </div>
+
+            <!-- CONTACTO DE EMERGENCIA -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Contacto de emergencia</label>
+              <input type="text" class="form-control mb-3" name="nombreContacto" id="nombreContacto"
+                placeholder="Nombre del contacto">
+              <input type="number" class="form-control mb-3" name="numeroEmergencia" id="numeroEmergencia"
+                placeholder="Número de emergencia">
+              <input type="text" class="form-control mb-3" name="parentesco" id="parentesco" placeholder="Parentesco">
+            </div>
+
+            <!-- CONSULTA -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Consulta</label>
+              <textarea name="motivo" id="motivo" class="form-control mb-3" rows="2"
+                placeholder="Motivo de la consulta"></textarea>
+              <textarea name="detalles" id="detalles" class="form-control mb-3" rows="2"
+                placeholder="Cuéntanos más detalles"></textarea>
+              <input type="date" class="form-control mb-3" name="fechaInicio" id="fechaInicio">
+              <input type="date" class="form-control mb-3" name="fechaAlta" id="fechaAlta">
+
+              <select name="comoSupiste" id="comoSupiste" class="form-select mb-3">
+                <option value="" disabled selected>¿Cómo supiste de nosotros?</option>
+                <option value="Internet">Internet</option>
+                <option value="Recomendación">Recomendación</option>
+                <option value="Volante">Volante</option>
+                <option value="Otro">Otro</option>
+              </select>
+
+              <textarea name="otro" id="otro" class="form-control mb-3" rows="2"
+                placeholder="Cuéntanos cómo supiste de nosotros"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer sticky-bottom bg-white z-3">
+          <!-- BOTÓN -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success px-4" id="btnAplicarCambios">
+              Actualizar datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo paciente
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formPacienteNuevo">
+
+            <!-- DATOS DEL PACIENTE -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos del paciente</label>
+              <input type="text" class="form-control mb-3" id="NuevonombrePaciente" name="NuevonombrePaciente" placeholder="Nombre del paciente">
+              <input type="text" class="form-control mb-3" id="Nuevotelefono" name="Nuevotelefono" placeholder="Teléfono"
+                required>
+
+              <select name="Nuevosexo" id="Nuevosexo" class="form-select mb-3" required>
+                <option value="">Sexo</option>
+                <option value="Masculino">M</option>
+                <option value="Femenino">F</option>
+              </select>
+
+              <input type="date" class="form-control mb-3" id="NuevofechaNacimiento" name="NuevofechaNacimiento" required>
+              <input type="number" class="form-control mb-3" id="Nuevoedad" name="Nuevoedad" placeholder="Edad" required>
+
+              <select name="NuevolugarNacimiento" id="NuevolugarNacimiento" class="form-select mb-3">
+                <option value="" disabled selected>Lugar de nacimiento</option>
+              </select>
+
+              <select name="NuevonivelEstudio" id="NuevonivelEstudio" class="form-select mb-3">
+                <option value="" disabled selected>Nivel de estudio</option>
+                <option value="primaria">Primaria</option>
+                <option value="secundaria">Secundaria</option>
+                <option value="preparatoria">Preparatoria</option>
+                <option value="universidad">Universidad</option>
+                <option value="posgrado">Posgrado</option>
+                <option value="doctorado">Doctorado</option>
+              </select>
+              <input type="text" class="form-control mb-3" id="NuevogradoEstudio" name="gradoEstudio"
+                placeholder="Grado de estudio">
+              <input type="text" class="form-control mb-3" id="Nuevoocupacion" name="Nuevoocupacion" placeholder="Ocupación">
+              <select name="NuevoestadoCivil" id="NuevoestadoCivil" class="form-select mb-3">
+                <option value="" disabled selected>Estado civil</option>
+                <option value="Soltero">Soltero</option>
+                <option value="Casado">Casado</option>
+                <option value="Viudo">Viudo</option>
+                <option value="Divorciado">Divorciado</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="NuevoCURP" id="NuevoCURP" placeholder="CURP">
+              <input type="text" class="form-control mb-3" name="NuevoRFC" id="NuevoRFC" placeholder="RFC">
+            </div>
+
+            <!-- DOMICILIO -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos de domicilio</label>
+              <input type="text" class="form-control mb-3" id="NuevoCP" name="NuevoCP" placeholder="Código postal">
+              <input type="text" class="form-control mb-3" id="NuevoestadosInput" name="NuevoestadosInput" placeholder="Estado">
+              <input type="text" class="form-control mb-3" id="Nuevomunicipio" name="Nuevomunicipio" placeholder="Municipio">
+              <input type="text" class="form-control mb-3" name="Nuevolocalidad" id="Nuevolocalidad" placeholder="Localidad">
+              <select name="Nuevocolonia" id="Nuevocolonia" class="form-select mb-3">
+                <option value="" selected>Colonia</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="Nuevomanzana" id="Nuevomanzana" placeholder="Manzana">
+              <input type="text" class="form-control mb-3" id="Nuevocalle" name="Nuevocalle" placeholder="Calle">
+              <input type="text" class="form-control mb-3" id="NuevonumeroInt" name="NuevonumeroInt"
+                placeholder="Número interior">
+              <input type="text" class="form-control mb-3" id="NuevonumeroExt" name="NuevonumeroExt"
+                placeholder="Número exterior">
+            </div>
+
+            <!-- PROFESIONALES -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos profesionales</label>
+              <input type="text" class="form-control mb-3" id="Nuevoempresa" name="Nuevoempresa" placeholder="Empresa">
+
+              <select name="Nuevomodalidad" id="Nuevomodalidad" class="form-select mb-3">
+                <option value="" disabled selected>Modalidad</option>
+                <option value="linea">En línea</option>
+                <option value="presencial">Presencial</option>
+              </select>
+
+              <input type="text" class="form-control mb-3" name="Nuevoplanta" id="Nuevoplanta" placeholder="Planta">
+              <input type="text" class="form-control mb-3" name="Nuevoarea" id="Nuevoarea" placeholder="Área">
+
+              <select class="form-select mb-3" id="Nuevotrabajador">
+                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+              </select>
+
+              <select name="NuevoestadoProfesional" id="NuevoestadoProfesional" class="form-select mb-3">
+                <option value="" disabled selected>Estado</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+
+            <!-- DISCAPACIDAD -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Discapacidad</label>
+              <select name="Nuevodiscapacidad" id="Nuevodiscapacidad" class="form-select mb-3">
+                <option value="" disabled selected>¿Tiene alguna discapacidad?</option>
+                <option value="motriz">Motriz</option>
+                <option value="visual">Visual</option>
+                <option value="auditiva">Auditiva</option>
+                <option value="intelectual">Intelectual</option>
+                <option value="multiple">Múltiple</option>
+                <option value="ninguna">Ninguna</option>
+              </select>
+            </div>
+
+            <!-- CONTACTO DE EMERGENCIA -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Contacto de emergencia</label>
+              <input type="text" class="form-control mb-3" name="NuevonombreContacto" id="NuevonombreContacto"
+                placeholder="Nombre del contacto">
+              <input type="number" class="form-control mb-3" name="NuevonumeroEmergencia" id="NuevonumeroEmergencia"
+                placeholder="Número de emergencia">
+              <input type="text" class="form-control mb-3" name="Nuevoparentesco" id="Nuevoparentesco" placeholder="Parentesco">
+            </div>
+
+            <!-- CONSULTA -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Consulta</label>
+              <textarea name="Nuevomotivo" id="Nuevomotivo" class="form-control mb-3" rows="2"
+                placeholder="Motivo de la consulta"></textarea>
+              <textarea name="Nuevodetalles" id="Nuevodetalles" class="form-control mb-3" rows="2"
+                placeholder="Cuéntanos más detalles"></textarea>
+              <input type="date" class="form-control mb-3" name="NuevofechaInicio" id="NuevofechaInicio">
+              <input type="date" class="form-control mb-3" name="NuevofechaAlta" id="NuevofechaAlta">
+
+              <select name="NuevocomoSupiste" id="NuevocomoSupiste" class="form-select mb-3">
+                <option value="" disabled selected>¿Cómo supiste de nosotros?</option>
+                <option value="Internet">Internet</option>
+                <option value="Recomendación">Recomendación</option>
+                <option value="Volante">Volante</option>
+                <option value="Otro">Otro</option>
+              </select>
+
+              <textarea name="Nuevootro" id="Nuevootro" class="form-control mb-3" rows="2"
+                placeholder="Cuéntanos cómo supiste de nosotros"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer sticky-bottom bg-white z-3">
+          <!-- BOTÓN -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success px-4" id="btnGuardarPaciente">
+              Guardar paciente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
+      const select = document.getElementById(idSelect);
+      select.innerHTML = '<option value="" disabled selected>Selecciona una opción</option>';
+
+      opciones.forEach(op => {
+        const option = new Option(op.texto, op.valor);
+        if (op.valor.toLowerCase() === valorSeleccionado.toLowerCase()) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    }
+
+    const opcionesSelect = {
+      nivelEstudio: [
+        { valor: "primaria", texto: "Primaria" },
+        { valor: "secundaria", texto: "Secundaria" },
+        { valor: "preparatoria", texto: "Preparatoria" },
+        { valor: "universidad", texto: "Universidad" },
+        { valor: "posgrado", texto: "Posgrado" },
+        { valor: "doctorado", texto: "Doctorado" }
+      ],
+      modalidad: [
+        { valor: "linea", texto: "En línea" },
+        { valor: "presencial", texto: "Presencial" }
+      ],
+      discapacidad: [
+        { valor: "motriz", texto: "Motriz" },
+        { valor: "visual", texto: "Visual" },
+        { valor: "auditiva", texto: "Auditiva" },
+        { valor: "intelectual", texto: "Intelectual" },
+        { valor: "multiple", texto: "Múltiple" },
+        { valor: "ninguna", texto: "Ninguna" }
+      ]
+    };
+
+    async function recuperarDatos(nombre) {
+      try {
+        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/recuperarPacientes?nombre=${encodeURIComponent(nombre)}`);
+        if (!res.ok) throw new Error("Error al recuperar datos del paciente");
+        const datos = await res.json();
+        console.log("Datos recibidos: ", datos);
+        const paciente = datos[0];
+        console.log(paciente);
+        // DATOS GENERALES
+        document.getElementById("pacienteNombre").innerText = paciente.nombre || "";
+        document.getElementById("telefono").value = paciente.telefono || "";
+        document.getElementById("sexo").value = cargarSexo(paciente.sexo);
+        document.getElementById("fechaNacimiento").value = paciente.fechaNacimiento || "";
+        document.getElementById("edad").value = paciente.edad || "";
+
+        // DATOS PERSONALES
+        document.getElementById("lugarNacimiento").value = paciente.lugarNacimiento || "";
+        cargarSelect("nivelEstudio", opcionesSelect.nivelEstudio, datos.nivelEstudio);
+        document.getElementById("gradoEstudio").value = paciente.gradoEstudio || "";
+        document.getElementById("ocupacion").value = paciente.ocupacion || "";
+        document.getElementById("estadoCivil").value = paciente.estadoCivil || "";
+        document.getElementById("CURP").value = paciente.curp || "";
+        document.getElementById("RFC").value = paciente.rfc || "";
+
+        // DATOS PROFESIONALES
+        document.getElementById("empresa").value = paciente.empresa || "";
+        cargarSelect("modalidad", opcionesSelect.modalidad, datos.modalidad);
+        document.getElementById("planta").value = paciente.planta || "";
+        document.getElementById("area").value = paciente.area || "";
+        document.getElementById("trabajador").value = paciente.profesional || "";
+        document.getElementById("estadoProfesional").value = paciente.estadoProfesional || "";
+        cargarSelect("discapacidad", opcionesSelect.discapacidad, datos.discapacidad);
+
+        // DATOS EMERGENCIA
+        document.getElementById("nombreContacto").value = paciente.contEmergencia || "";
+        document.getElementById("numeroEmergencia").value = paciente.telefonoE || "";
+        document.getElementById("parentesco").value = paciente.parentescoEmergencia || "";
+        document.getElementById("motivo").value = paciente.motivoConsulta || "";
+        document.getElementById("detalles").value = paciente.detalles || "";
+        document.getElementById("fechaInicio").value = paciente.fechaConsulta || "";
+        document.getElementById("fechaAlta").value = paciente.fechaAlta || "";
+
+        // DATOS DOMICILIO
+        document.getElementById("CP").value = paciente.codPostal || "";
+        document.getElementById("estadosInput").value = paciente.estado || "";
+        document.getElementById("municipio").value = paciente.municipio || "";
+        document.getElementById("localidad").value = paciente.localidad || "";
+        document.getElementById("manzana").value = paciente.manzana || "";
+        document.getElementById("calle").value = paciente.calle || "";
+        document.getElementById("numeroInt").value = paciente.nExterior || "";
+        document.getElementById("numeroExt").value = paciente.nInterior || "";
+        document.getElementById("colonia").value = cargarColonia(paciente.colonia);
+        document.getElementById("comoSupiste").value = paciente.comoSeEntero || "";
+        console.log("✅ Todos los campos fueron aplicados al modal");
+
+      } catch (error) {
+        console.error("❌ Error al recuperar datos del paciente:", error);
+      }
+    }
+
+    function cargarTrabajadores(idSelect) {
+      const select = document.getElementById(idSelect);
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivos")
+        .then(r => r.json())
+        .then(data => {
+          select.innerHTML = "<option value='' disabled selected>Especialista a cargo</option>";
+          data.forEach(t => {
+            const option = new Option(t, t);
+            select.appendChild(option);
+          });
+        })
+        .catch(() => {
+          select.innerHTML = "<option>Error al cargar</option>";
+        });
+    }
+
+    function cargarEstados(idSelect) {
+      const select = document.getElementById(idSelect);
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/Estados")
+        .then(r => r.json())
+        .then(data => {
+          select.innerHTML = "Estado";
+          data.forEach(t => {
+            const option = new Option(t, t);
+            select.appendChild(option);
+          });
+        })
+        .catch(() => {
+          select.innerHTML = "<option>Error al cargar</option>";
+        });
+    }
+
+    function cargarColonia(coloniaPaciente, idSelect = "colonia") {
+      const select = document.getElementById(idSelect);
+
+      // Limpia el select
+      select.innerHTML = '<option value="" disabled selected>Colonia</option>';
+
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/colonia")
+        .then(r => r.json())
+        .then(data => {
+          data.forEach(nombre => {
+            const option = new Option(nombre, nombre);
+            if (nombre.toLowerCase() === coloniaPaciente.toLowerCase()) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+        })
+        .catch(err => console.error("Error al cargar colonias:", err));
+    }
+
+    function cargarSexo(sexoPaciente, idSelect = "sexo") {
+      const select = document.getElementById(idSelect);
+
+      select.innerHTML = '<option value="" disabled selected>Sexo</option>';
+
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/sexo")
+        .then(r => r.json())
+        .then(data => {
+          data.forEach(nombre => {
+            const option = new Option(nombre, nombre);
+            if (nombre.toLowerCase() === sexoPaciente.toLowerCase()) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+        })
+        .catch(err => console.error("Error al cargar el tipo de sexo:", err));
+    }
+
+    function abrirModalPacientes() {
+      const modal = new bootstrap.Modal(document.getElementById("modalPaciente"));
+      modal.show();
+    }
+
+    function cargarPacientes(filtro = "") {
+      const tbody = document.getElementById("tabla-pacientes");
+      tbody.innerHTML = "";
+
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+        .then(response => response.json())
+        .then(data => {
+          const nombres = data.map(item => item.nombre);
+          const filtrados = nombres.filter(nombre => nombre.toLowerCase().includes(filtro.toLowerCase()));
+
+          if (filtrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="1">No se encontraron pacientes</td></tr>`;
+            return;
+          }
+
+          filtrados.forEach(nombre => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `<td>${nombre}</td>`;
+            tbody.appendChild(fila);
+          });
+        })
+        .catch(error => {
+          console.error("Error al cargar pacientes:", error);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarTrabajadores("trabajador");
+      cargarEstados("lugarNacimiento");
+      cargarPacientes();
+      const otro = document.getElementById("otro");
+      otro.disabled = true;
+      document.getElementById("comoSupiste").addEventListener("change", () => {
+        const valorComoSupiste = document.getElementById("comoSupiste").value.toLowerCase();
+        if (valorComoSupiste.includes("otro")) {
+          otro.disabled = false;
+          otro.value = "";
+        } else {
+          otro.disabled = true;
+          otro.value = "No aplica";
+        }
+      });
+
+      document.getElementById("CP").addEventListener("keypress", async (e) => {
+        if (e.key === "Enter") {
+          const cp = e.target.value.trim();
+          console.log("CP:", cp);
+          if (!cp) return;
+          try {
+            const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/domicilio?cp=${cp}`);
+            if (!res.ok) throw new Error("Error de CP");
+            const datos = await res.json();
+            if (datos.length > 0) {
+
+              document.getElementById("estadosInput").value = datos[0].estado;
+              document.getElementById("municipio").value = datos[0].municipio;
+              document.getElementById("localidad").value = datos[0].localidad;
+
+              const coloniaSelect = document.getElementById("colonia");
+              coloniaSelect.innerHTML = "Colonia";
+              datos.forEach(d => {
+                const opt = document.createElement("option");
+                opt.value = d.colonia;
+                opt.textContent = d.colonia;
+                coloniaSelect.appendChild(opt);
+              });
+            }
+          } catch (error) {
+            alert("❌ No se pudo encontrar información del código postal.");
+            console.log(error);
+          }
+        }
+      });
+
+      document.getElementById('modalPaciente').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('formPaciente').reset();
+      });
+
+      document.getElementById("fechaNacimiento").addEventListener("change", () => {
+        const fechaInput = document.getElementById("fechaNacimiento").value;
+        if (!fechaInput) return;
+        const Nacimiento = new Date(fechaInput);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - Nacimiento.getFullYear();
+        const mes = hoy.getMonth() - Nacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < Nacimiento.getDate())) {
+          edad--;
+        }
+        document.getElementById("edad").value = edad > 0 ? edad : "0";
+      });
+
+      // Pacientes (datalist)
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+        .then(response => response.json())
+        .then(data => {
+          const lista = document.getElementById("listaPacientes");
+          lista.innerHTML = "";
+
+          data.forEach(paciente => {
+            const option = document.createElement("option");
+            option.value = paciente.nombre;
+            lista.appendChild(option);
+          });
+        })
+        .catch(error => {
+          console.error("Error al cargar pacientes:", error);
+        });
+
+      document.getElementById("buscar").addEventListener("click", () => {
+        const filtro = document.getElementById("busqueda").value.trim();
+        cargarPacientes(filtro);
+      })
+
+      document.getElementById("tabla-pacientes").addEventListener("click", function (e) {
+        if (e.target.tagName === "TD") {
+          const nombre = e.target.textContent.trim();
+          console.log("Nombre seleccionado:", nombre);
+          document.getElementById("nombrePaciente").value = nombre;
+          abrirModalPacientes();
+          recuperarDatos(nombre);
+        }
+      })
+    });
+
     function abrirVentanaHC() {
       window.location.href = '../Historias clinicas/hc.html';
     }
