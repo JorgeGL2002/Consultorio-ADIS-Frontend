@@ -61,7 +61,7 @@
             </symbol>
         </svg>
     </div>
-    <script src="https://cdn.jsdelivr. net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function abrirVentana() {
             window.location.href = '/crear_cuenta.html';
@@ -108,7 +108,7 @@
             const alerta = document.createElement("div");
             alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
             alerta.style.maxWidth = "120px";
-            alerta.style.minWidth = "150px";
+            alerta.style.minWidth = "50px";
             alerta.style.wordWrap = "break-word";
             alerta.style.fontSize = "0.9rem";
             alerta.innerHTML = `
@@ -126,7 +126,7 @@
                 setTimeout(() => alerta.remove(), 500);
 
                 if (recargar) {
-                    window.location.href = '../citas/Agenda.html';
+                    window.location.href = 'citas/agenda.html';
                 }
             }, 3000);
         }

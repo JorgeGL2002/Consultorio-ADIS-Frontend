@@ -480,11 +480,11 @@ function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
     });
 
     function abrirVentanaHC() {
-      window.location.href = '../Historias clinicas/hc.html';
+      window.location.href = '../historias clinicas/hc.html';
     }
     function abrirVentanaA() {
-      window.location.href = '../Citas/Agenda.html';
+      window.location.href = '../citas/agenda.html';
     }
     function abrirVentanaR() {
-        window.location.href = '../Reportes/reportes.html';
+        window.location.href = '../reportes/reportes.html';
     }

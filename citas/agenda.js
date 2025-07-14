@@ -691,5 +691,5 @@ const horarios = [];
 
     function CerrarSesion() {
       window.location.href = '/frontend/index.html';
-      localStorage.clear(); // Limpiar todos los datos almacenados en localStorage
+      localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
     }
