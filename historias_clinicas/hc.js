@@ -158,7 +158,7 @@
       window.location.href = '../pacientes/pacientesmain.html';
     }
     function abrirVentanaA() {
-      window.location.href = '../citas/Agenda.html';
+      window.location.href = '../citas/agenda.html';
     }
     function abrirVentanaR() {
       window.location.href = '../reportes/reportes.html';
