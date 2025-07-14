@@ -21,7 +21,7 @@
             <div class="mb-3">
                 <label for="trabajador" class="form-label">Selecciona tu usuario</label>
                 <select class="form-select" id="trabajador" required>
-                    <option value="" disabled selected>--- Cargando usuarios... ---</option>
+                    <option value="" disabled selected>Usuario</option>
                 </select>
             </div>
 
@@ -49,7 +49,7 @@
         <p class="text-center text-muted small mt-4 mb-0">&copy; Fundación ADIS</p>
     </div>
 
-    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5; max-width: 320px;">
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="check-circle-fill" viewBox="0 0 16 16">
                 <path
@@ -61,7 +61,7 @@
             </symbol>
         </svg>
     </div>
-
+    <script src="https://cdn.jsdelivr. net/npm/sweetalert2@11"></script>
     <script>
         function abrirVentana() {
             window.location.href = '/crear_cuenta.html';
@@ -80,7 +80,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById("trabajador");
-                    select.innerHTML = "<option value='' disabled selected>--- Selecciona tu usuario ---</option>";
+                    select.innerHTML = "<option value='' disabled selected>Usuario</option>";
 
                     data.forEach(trabajador => {
                         const option = document.createElement("option");
@@ -107,14 +107,17 @@
             };
             const alerta = document.createElement("div");
             alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
-            alerta.role = "alert";
+            alerta.style.maxWidth = "120px";
+            alerta.style.minWidth = "150px";
+            alerta.style.wordWrap = "break-word";
+            alerta.style.fontSize = "0.9rem";
             alerta.innerHTML = `
-        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="${tipo}">
-            <use xlink:href="#${iconos[tipo]}"/>
-        </svg>
-        <div>${mensaje}</div>
-        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
+  <svg class="bi flex-shrink-0 me-2" role="img" aria-label="${tipo}">
+      <use xlink:href="#${iconos[tipo]}"/>
+  </svg>
+  <div>${mensaje}</div>
+  <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+`;
             document.getElementById("alertContainer").appendChild(alerta);
 
             setTimeout(() => {
@@ -123,9 +126,9 @@
                 setTimeout(() => alerta.remove(), 500);
 
                 if (recargar) {
-                    location.reload(); // 🔄 recarga la página después del tiempo
+                    window.location.href = '../citas/Agenda.html';
                 }
-            }, 5000);
+            }, 3000);
         }
 
         document.querySelector("form").addEventListener("submit", async function (e) {
@@ -154,13 +157,10 @@
                 });
                 const data = await response.json();
                 if (data.success) {
-                    mostrarAlerta("success", "✅ Cita agendada correctamente");
-                    mostrarAlerta("success", "Bienvenido de nuevo ${data.usuario}", true);
+                    mostrarAlerta("success", `Bienvenido de nuevo ${data.usuario}`, true);
                     localStorage.setItem("id", data.id_trabajador);
                     localStorage.setItem("rol", data.rol);
                     localStorage.setItem("usuario", data.usuario);
-                    abrirVentanaA();
-
                 } else {
                     console.log(trabajador, contraseña);
                     alert(data.message || "Contraseña incorrecta");

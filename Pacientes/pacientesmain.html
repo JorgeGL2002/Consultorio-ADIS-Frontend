@@ -47,8 +47,9 @@
         <button type="button" id="buscar" class="btn btn-primary">Buscar</button>
       </div>
 
-      <button type="button" id="nuevoPaciente" class="btn btn-primary" title="Nuevo paciente"><img src="../assets/agregar.png"
-          style="width: 20px; height: 20px;" alt="Agregar nuevo paciente">
+      <button type="button" id="nuevoPaciente" class="btn btn-primary" title="Nuevo paciente"
+        onclick="abrirModalNuevoPaciente()"><img src="../assets/agregar.png" style="width: 20px; height: 20px;"
+          alt="Agregar nuevo paciente">
       </button>
     </div>
 
@@ -86,8 +87,8 @@
 
               <select name="sexo" id="sexo" class="form-select mb-3" required>
                 <option value="">Sexo</option>
-                <option value="Masculino">M</option>
-                <option value="Femenino">F</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
               </select>
 
               <input type="date" class="form-control mb-3" id="fechaNacimiento" name="fechaNacimiento" required>
@@ -236,20 +237,23 @@
             <!-- DATOS DEL PACIENTE -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos del paciente</label>
-              <input type="text" class="form-control mb-3" id="NuevonombrePaciente" name="NuevonombrePaciente" placeholder="Nombre del paciente">
-              <input type="text" class="form-control mb-3" id="Nuevotelefono" name="Nuevotelefono" placeholder="Teléfono"
-                required>
+              <input type="text" class="form-control mb-3" id="NuevonombrePaciente" name="NuevonombrePaciente"
+                placeholder="Nombre del paciente" required>
+              <input type="text" class="form-control mb-3" id="Nuevotelefono" name="Nuevotelefono"
+                placeholder="Teléfono" required>
 
               <select name="Nuevosexo" id="Nuevosexo" class="form-select mb-3" required>
                 <option value="">Sexo</option>
-                <option value="Masculino">M</option>
-                <option value="Femenino">F</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
               </select>
 
-              <input type="date" class="form-control mb-3" id="NuevofechaNacimiento" name="NuevofechaNacimiento" required>
-              <input type="number" class="form-control mb-3" id="Nuevoedad" name="Nuevoedad" placeholder="Edad" required>
+              <input type="date" class="form-control mb-3" id="NuevofechaNacimiento" name="NuevofechaNacimiento"
+                required>
+              <input type="number" class="form-control mb-3" id="Nuevoedad" name="Nuevoedad" placeholder="Edad"
+                required>
 
-              <select name="NuevolugarNacimiento" id="NuevolugarNacimiento" class="form-select mb-3">
+              <select name="NuevolugarNacimiento" id="NuevolugarNacimiento" class="form-select mb-3" required>
                 <option value="" disabled selected>Lugar de nacimiento</option>
               </select>
 
@@ -264,7 +268,8 @@
               </select>
               <input type="text" class="form-control mb-3" id="NuevogradoEstudio" name="gradoEstudio"
                 placeholder="Grado de estudio">
-              <input type="text" class="form-control mb-3" id="Nuevoocupacion" name="Nuevoocupacion" placeholder="Ocupación">
+              <input type="text" class="form-control mb-3" id="Nuevoocupacion" name="Nuevoocupacion"
+                placeholder="Ocupación">
               <select name="NuevoestadoCivil" id="NuevoestadoCivil" class="form-select mb-3">
                 <option value="" disabled selected>Estado civil</option>
                 <option value="Soltero">Soltero</option>
@@ -280,9 +285,12 @@
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos de domicilio</label>
               <input type="text" class="form-control mb-3" id="NuevoCP" name="NuevoCP" placeholder="Código postal">
-              <input type="text" class="form-control mb-3" id="NuevoestadosInput" name="NuevoestadosInput" placeholder="Estado">
-              <input type="text" class="form-control mb-3" id="Nuevomunicipio" name="Nuevomunicipio" placeholder="Municipio">
-              <input type="text" class="form-control mb-3" name="Nuevolocalidad" id="Nuevolocalidad" placeholder="Localidad">
+              <input type="text" class="form-control mb-3" id="NuevoestadosInput" name="NuevoestadosInput"
+                placeholder="Estado">
+              <input type="text" class="form-control mb-3" id="Nuevomunicipio" name="Nuevomunicipio"
+                placeholder="Municipio">
+              <input type="text" class="form-control mb-3" name="Nuevolocalidad" id="Nuevolocalidad"
+                placeholder="Localidad">
               <select name="Nuevocolonia" id="Nuevocolonia" class="form-select mb-3">
                 <option value="" selected>Colonia</option>
               </select>
@@ -309,7 +317,7 @@
               <input type="text" class="form-control mb-3" name="Nuevoarea" id="Nuevoarea" placeholder="Área">
 
               <select class="form-select mb-3" id="Nuevotrabajador">
-                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+                <option value="" disabled selected>Trabajadores</option>
               </select>
 
               <select name="NuevoestadoProfesional" id="NuevoestadoProfesional" class="form-select mb-3">
@@ -340,7 +348,8 @@
                 placeholder="Nombre del contacto">
               <input type="number" class="form-control mb-3" name="NuevonumeroEmergencia" id="NuevonumeroEmergencia"
                 placeholder="Número de emergencia">
-              <input type="text" class="form-control mb-3" name="Nuevoparentesco" id="Nuevoparentesco" placeholder="Parentesco">
+              <input type="text" class="form-control mb-3" name="Nuevoparentesco" id="Nuevoparentesco"
+                placeholder="Parentesco">
             </div>
 
             <!-- CONSULTA -->
@@ -471,10 +480,76 @@
         document.getElementById("numeroExt").value = paciente.nInterior || "";
         document.getElementById("colonia").value = cargarColonia(paciente.colonia);
         document.getElementById("comoSupiste").value = paciente.comoSeEntero || "";
-        console.log("✅ Todos los campos fueron aplicados al modal");
-
       } catch (error) {
         console.error("❌ Error al recuperar datos del paciente:", error);
+      }
+    }
+
+    async function actualizarDatos(nombre) {
+      const datos = {
+        // DATOS GENERALES
+        nombre: document.getElementById("pacienteNombre").innerText,
+        telefono: document.getElementById("telefono").value,
+        sexo: document.getElementById("sexo").value,
+        fechaNacimiento: document.getElementById("fechaNacimiento").value,
+        edad: document.getElementById("edad").value,
+
+        // DATOS PERSONALES
+        lugarNacimiento: document.getElementById("lugarNacimiento").value,
+        nivelEstudio: document.getElementById("nivelEstudio").value,
+        gradoEstudio: document.getElementById("gradoEstudio").value,
+        ocupacion: document.getElementById("ocupacion").value,
+        estadoCivil: document.getElementById("estadoCivil").value,
+        curp: document.getElementById("CURP").value,
+        rfc: document.getElementById("RFC").value,
+
+        // DATOS PROFESIONALES
+        empresa: document.getElementById("empresa").value,
+        modalidad: document.getElementById("modalidad").value,
+        planta: document.getElementById("planta").value,
+        area: document.getElementById("area").value,
+        profesional: document.getElementById("trabajador").value,
+        estadoProfesional: document.getElementById("estadoProfesional").value,
+        discapacidad: document.getElementById("discapacidad").value,
+
+        // DATOS EMERGENCIA
+        contEmergencia: document.getElementById("nombreContacto").value,
+        telefonoE: document.getElementById("numeroEmergencia").value,
+        parentescoEmergencia: document.getElementById("parentesco").value,
+        motivoConsulta: document.getElementById("motivo").value,
+        detalles: document.getElementById("detalles").value,
+        fechaConsulta: document.getElementById("fechaInicio").value,
+        fechaAlta: document.getElementById("fechaAlta").value,
+
+        // DATOS DOMICILIO
+        codPostal: parseInt(document.getElementById("CP").value) || 0,
+        estado: document.getElementById("estadosInput").value,
+        municipio: document.getElementById("municipio").value,
+        localidad: document.getElementById("localidad").value,
+        manzana: document.getElementById("manzana").value,
+        calle: document.getElementById("calle").value,
+        nInterior: parseInt(document.getElementById("numeroInt").value) || 0,
+        nExterior: parseInt(document.getElementById("numeroExt").value) || 0,
+        colonia: document.getElementById("colonia").value,
+        comoSeEntero: document.getElementById("comoSupiste").value,
+      };
+      console.log(datos);
+      try {
+        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/actualizarPaciente?nombrePaciente=${encodeURIComponent(nombre)}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(datos)
+
+        });
+        if (!res.ok) throw new Error("Error al actualizar los datos");
+        alert("✅ Datos actualizados correctamente.");
+        document.getElementById("formPaciente").reset();
+        bootstrap.Modal.getInstance(document.getElementById("modalPaciente")).hide();
+      } catch (error) {
+        alert("❌ No se pudieron actualizar los datos.");
+        console.log(error);
       }
     }
 
@@ -500,6 +575,22 @@
         .then(r => r.json())
         .then(data => {
           select.innerHTML = "Estado";
+          data.forEach(t => {
+            const option = new Option(t, t);
+            select.appendChild(option);
+          });
+        })
+        .catch(() => {
+          select.innerHTML = "<option>Error al cargar</option>";
+        });
+    }
+
+     function cargarLugarNacimiento(idSelect) {
+      const select = document.getElementById(idSelect);
+      fetch("https://api-railway-production-24f1.up.railway.app/api/test/Estados")
+        .then(r => r.json())
+        .then(data => {
+          select.innerHTML = '<option value="" disabled selected>Lugar de nacimiento</option>';
           data.forEach(t => {
             const option = new Option(t, t);
             select.appendChild(option);
@@ -580,12 +671,93 @@
         });
     }
 
+    function abrirModalNuevoPaciente() {
+      const modal = new bootstrap.Modal(document.getElementById("modalNuevoPaciente"));
+      modal.show();
+      cargarLugarNacimiento("NuevolugarNacimiento");
+      cargarTrabajadores("Nuevotrabajador");
+    }
+
+    async function nuevoPaciente() {
+      const datos = {
+        // DATOS GENERALES
+        nombre: document.getElementById("NuevonombrePaciente").value,
+        telefono: document.getElementById("Nuevotelefono").value,
+        sexo: document.getElementById("Nuevosexo").value,
+        fechaNacimiento: document.getElementById("NuevofechaNacimiento").value,
+        edad: document.getElementById("Nuevoedad").value,
+
+        // DATOS PERSONALES
+        lugarNacimiento: document.getElementById("NuevolugarNacimiento").value,
+        nivelEstudio: document.getElementById("NuevonivelEstudio").value,
+        gradoEstudio: document.getElementById("NuevogradoEstudio").value,
+        ocupacion: document.getElementById("Nuevoocupacion").value,
+        estadoCivil: document.getElementById("NuevoestadoCivil").value,
+        curp: document.getElementById("NuevoCURP").value,
+        rfc: document.getElementById("NuevoRFC").value,
+
+        // DATOS PROFESIONALES
+        empresa: document.getElementById("Nuevoempresa").value,
+        modalidad: document.getElementById("Nuevomodalidad").value,
+        planta: document.getElementById("Nuevoplanta").value,
+        area: document.getElementById("Nuevoarea").value,
+        profesional: document.getElementById("Nuevotrabajador").value,
+        estadoProfesional: document.getElementById("NuevoestadoProfesional").value,
+        discapacidad: document.getElementById("Nuevodiscapacidad").value,
+
+        // DATOS EMERGENCIA
+        contEmergencia: document.getElementById("NuevonombreContacto").value,
+        telefonoE: document.getElementById("NuevonumeroEmergencia").value,
+        parentescoEmergencia: document.getElementById("Nuevoparentesco").value,
+        motivoConsulta: document.getElementById("Nuevomotivo").value,
+        detalles: document.getElementById("Nuevodetalles").value,
+        fechaConsulta: document.getElementById("NuevofechaInicio").value,
+        fechaAlta: document.getElementById("NuevofechaAlta").value,
+
+        // DATOS DOMICILIO
+        codPostal: parseInt(document.getElementById("NuevoCP").value) || 0,
+        estado: document.getElementById("NuevoestadosInput").value,
+        municipio: document.getElementById("Nuevomunicipio").value,
+        localidad: document.getElementById("Nuevolocalidad").value,
+        manzana: document.getElementById("Nuevomanzana").value,
+        calle: document.getElementById("Nuevocalle").value,
+        nInterior: parseInt(document.getElementById("NuevonumeroInt").value) || 0,
+        nExterior: parseInt(document.getElementById("NuevonumeroExt").value) || 0,
+        colonia: document.getElementById("Nuevocolonia").value,
+        comoSeEntero: document.getElementById("NuevocomoSupiste").value,
+      };
+
+      console.log(datos);
+      try {
+        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/nuevoPaciente`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(datos)
+
+        });
+        if (!res.ok) throw new Error("Error al crear el nuevo paciente");
+        alert("✅ Datos guardados correctamente.");
+        document.getElementById("formPacienteNuevo").reset();
+        bootstrap.Modal.getInstance(document.getElementById("modalNuevoPaciente")).hide();
+      } catch (error) {
+        alert("❌ No se pudieron guardar los datos.");
+        console.log(error);
+      }
+    }
+
+
     document.addEventListener("DOMContentLoaded", () => {
       cargarTrabajadores("trabajador");
       cargarEstados("lugarNacimiento");
+      //cargarTrabajadores("NuevoTrabajador");
+      //cargarEstados("NuevoLugarNacimiento");
       cargarPacientes();
       const otro = document.getElementById("otro");
       otro.disabled = true;
+      const modalElement = document.getElementById("modalNuevoPaciente");
+
       document.getElementById("comoSupiste").addEventListener("change", () => {
         const valorComoSupiste = document.getElementById("comoSupiste").value.toLowerCase();
         if (valorComoSupiste.includes("otro")) {
@@ -645,6 +817,19 @@
         document.getElementById("edad").value = edad > 0 ? edad : "0";
       });
 
+       document.getElementById("NuevofechaNacimiento").addEventListener("change", () => {
+        const fechaInput = document.getElementById("NuevofechaNacimiento").value;
+        if (!fechaInput) return;
+        const Nacimiento = new Date(fechaInput);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - Nacimiento.getFullYear();
+        const mes = hoy.getMonth() - Nacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < Nacimiento.getDate())) {
+          edad--;
+        }
+        document.getElementById("Nuevoedad").value = edad > 0 ? edad : "0";
+      });
+
       // Pacientes (datalist)
       fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
         .then(response => response.json())
@@ -666,6 +851,15 @@
         const filtro = document.getElementById("busqueda").value.trim();
         cargarPacientes(filtro);
       })
+
+      document.getElementById("btnAplicarCambios").addEventListener("click", () => {
+        const nombre = document.getElementById("pacienteNombre").innerText.trim();
+        actualizarDatos(document.getElementById("pacienteNombre").innerText.trim());
+      })
+
+      document.getElementById("btnGuardarPaciente").addEventListener("click", () => {
+        nuevoPaciente();
+      });
 
       document.getElementById("tabla-pacientes").addEventListener("click", function (e) {
         if (e.target.tagName === "TD") {
