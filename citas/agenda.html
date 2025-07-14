@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Agenda | Fundación ADIS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="./assets/logocorto.png" />
+  <style>
+    body {
+      padding-top: 70px;
+      /* para que el contenido no se esconda debajo del navbar fijo */
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .agenda-layout {
+      display: flex;
+      gap: 2rem;
+      justify-content: space-between;
+    }
+
+    .tabla-container {
+      width: 50%;
+    }
+
+    .tools-container {
+      width: 50%;
+      padding-top: 10px;
+    }
+
+    #tabla-horarios td {
+      cursor: pointer;
+    }
+
+    /*# sourceMappingURL=Agenda.css.map */
+  </style>
+</head>
+
+<body class="bg-light">
+  <!-- ✅ Navbar fija -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="../assets/logocorto.png" width="48px" height="48px" class="d-inline-block align-text-top"
+          alt="Logo de la fundacion">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#">Agenda</a></li>
+          <li class="nav-item"><a class="nav-link" onclick="abrirVentanaP()">Pacientes</a></li>
+          <li class="nav-item"><a class="nav-link" onclick="abrirVentanaR()">Reportes</a></li>
+          <li class="nav-item"><a class="nav-link" onclick="abrirVentanaHC()">Historias clínicas</a></li>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" onclick="CerrarSesion()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                  class="bi bi-door-open" viewBox="0 0 16 16">
+                  <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
+                  <path
+                    d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
+                </svg>
+              </a></li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ Cuerpo dividido en 2 columnas -->
+  <div class="container agenda-layout mt-4">
+
+    <!-- 📅 Columna izquierda: tabla -->
+    <div class="tabla-container">
+      <table class="table table-bordered table-striped align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Horario</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-horarios">
+          <!-- Llenado con JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ✅ Columna derecha: calendario + select -->
+    <div class="tools-container">
+      <input type="date" class="form-control mb-3" id="fechaSeleccionada">
+      <select class="form-select mb-3" id="trabajador" required>
+        <option value="" disabled selected>Cargando usuarios...</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalCita" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nueva cita -
+            <span id="CitaHoraFecha" class="text-primary fs-6"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formCita">
+            <input type="hidden" id="hora" name="hora">
+            <div class="mb-3">
+              <label class="form-label">Nombre del paciente</label>
+              <input type="text" class="form-control" id="pacientes" list="listaPacientes" required>
+              <datalist id="listaPacientes">
+              </datalist>
+            </div>
+            <label class="form-label" style="width: 100%; background-color: rgb(208, 206, 204); ">Detalles de la
+              cita</label>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Cuota de recuperación" id="valor" required>
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="servicios" required>
+                <option value="" disabled selected>--- Cargando servicios... ---</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="seguros" required>
+                <option value="" disabled selected>--- Cargando seguros... ---</option>
+              </select>
+              <input type="text" placeholder="No.seguro" id="noseguros">
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="trabajadorModal">
+                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <textarea class="form-control" rows="3" placeholder="detalles de la cita" id="detalles"
+                required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Agendar</button>
+            <button type="button" class="btn btn-danger" style="background-color: brown;"
+              onclick="abrirModalBloqueo()">Bloquear</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check-circle-fill" viewBox="0 0 16 16">
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+      </symbol>
+      <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path
+          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+      </symbol>
+    </svg>
+  </div>
+
+  <div class="modal fade" id="modalEditarCita" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar cita
+            <span id="CitaHoraFecha" class="text-primary fs-6"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formEditarCita">
+            <input type="hidden" id="hora" name="hora">
+            <div class="mb-3">
+              <label class="form-label">Nombre del paciente</label>
+              <input type="text" class="form-control" id="Editarpaciente" required>
+            </div>
+            <label class="form-label" style="width: 100%; background-color: rgb(208, 206, 204); ">Detalles de la
+              cita</label>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Cuota de recuperación" id="Editarvalor" required>
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="Editarservicio" required>
+                <option value="" disabled selected>--- Cargando servicios... ---</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="Editarseguro" required>
+                <option value="" disabled selected>--- Cargando seguros... ---</option>
+              </select>
+              <input type="text" placeholder="No.seguro" id="Editarnseguro">
+            </div>
+            <div class="mb-3">
+              <select class="form-select mb-3" id="EditartrabajadorModal" required>
+                <option value="" disabled selected>--- Cargando usuarios... ---</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <textarea class="form-control" rows="3" placeholder="detalles de la cita" id="Editardetalles"
+                required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Aplicar cambios</button>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuEditar"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="../assets/menu.png" alt="Menú desplegable">
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuEditar">
+                <li>
+                  <a href="#" class="dropdown-item" onclick="AgendarUnoMas()">
+                    <img src="../assets/mas.png" alt="Agendar uno mas" style="width: 20px; margin-right: 8px;"> Agendar
+                    uno mas
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="dropdown-item" onclick="repetirCita()">
+                    <img src="../assets/repetir.png" alt="Repetir cita" style="width: 20px; margin-right: 8px;"> Repetir
+                    cita
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="dropdown-item" onclick="cancelarCita()">
+                    <img src="../assets/cancelar.png" alt="Cancelar cita" style="width: 20px; margin-right: 8px;">
+                    Cancelar cita
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="dropdown-item" onclick="cambiarHorario()">
+                    <img src="../assets/editar.png" alt="Editar horario" style="width: 20px; margin-right: 8px;">
+                    Cambiar horario
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalMotivo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Bloqueo de horario
+            <span id="CitaHoraFecha" class="text-primary fs-6"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formMotivo">
+            <input type="hidden" id="hora" name="hora">
+            <div class="mb-3">
+              <textarea name="motivo" id="motivo" class="form-control" rows="2"
+                placeholder="Motivo del bloqueo"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnBloquearHorario">
+              Bloquear horario
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalDesbloquearHorario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">desbloquear Horario
+            <span id="CitaHoraFecha" class="text-primary fs-6"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formMotivo">
+            <div class="mb-3">
+              <label>¿Esta seguro que desea desbloquear este horario?</label>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnDesbloquearHorario">
+              Bloquear horario
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="agenda.js"></script>
+</body>
+
+</html>
