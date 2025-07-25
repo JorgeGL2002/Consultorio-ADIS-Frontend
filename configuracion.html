@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración | Fundación ADIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/logocorto.png" />
+    <link rel="stylesheet" href="configuracion.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+            /* para que el contenido no se esconda debajo del navbar fijo */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .agenda-layout {
+            display: flex;
+            gap: 2rem;
+            justify-content: space-between;
+        }
+
+        .tabla-container {
+            width: 50%;
+        }
+
+        .tools-container {
+            width: 50%;
+            padding-top: 10px;
+        }
+
+        #tabla-horarios td {
+            cursor: pointer;
+        }
+
+        /*# sourceMappingURL=Agenda.css.map */
+    </style>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="assets/logocorto.png" alt="Logo de la fundacion" width="48" height="48"
+                    class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" onclick="abrirVentanaA()">Agenda</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="abrirVentanaP()">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="abrirVentanaR()">Reportes</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="abrirVentanaHC()">Historias clínicas</a></li>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"> <a class="nav-link active" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
+                                    <path
+                                        d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
+                                </svg>
+                            </a></li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4 px-3">
+        <div class="card mb-3 shadow-sm border-10">
+            <div class="card-header bg-primary text-white">
+                Opciones para empresas
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Empresas</h5>
+                <p class="card-text">Agregue o elimine empresas.</p>
+                <div class="mb-2 d-flex flex-column flex-md-row justify-content-md gap-2">
+                    <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formEmpresaDiv">Nueva empresa</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formBorrarEmpresaDiv">Borrar empresa</a>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="formEmpresaDiv">
+                <form id="formEmpresa">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <input type="text" id="nombreEmpresa" class="form-control form-control-sm w-100 w-md-auto"
+                            placeholder="Nombre de la empresa" required>
+                        <input type="text" id="notasEmpresa" class="form-control form-control-sm w-100 w-md-auto"
+                            placeholder="Notas (opcional)">
+                        <button class="btn btn-success btn-sm" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="collapse mt-3" id="formBorrarEmpresaDiv">
+                <form id="formBorrarEmpresa">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <select class="form-select mb-3" id="seguros" required>
+                            <option value="" disabled selected>Cargando empresas...</option>
+                        </select>
+                        <button class="btn btn-danger btn-sm" type="submit">Borrar empresa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-3 shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                Opciones para servicios
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Servicios</h5>
+                <p class="card-text">Agregue o elimine servicios.</p>
+                <div class="mb-2 d-flex flex-column flex-md-row justify-content-md gap-2">
+                    <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formServicioDiv">Nuevo servicio</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formBorrarServicioDiv">Borrar servicio</a>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="formServicioDiv">
+                <form id="formServicio">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <input type="text" id="nombreServicio" class="form-control form-control-sm w-100 w-md-auto"
+                            placeholder="Nombre del nuevo servicio" required>
+                        <input type="text" id="notasServicio" class="form-control form-control-sm w-100 w-md-auto"
+                            placeholder="Notas (opcional)">
+                        <button class="btn btn-success btn-sm" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="collapse mt-3" id="formBorrarServicioDiv">
+                <form id="formBorrarServicio">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <select class="form-select mb-3" id="servicios" required>
+                            <option value="" disabled selected>Cargando servicios...</option>
+                        </select>
+                        <button class="btn btn-danger btn-sm" type="submit">Borrar servicio</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="configuracion.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

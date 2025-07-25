@@ -1,0 +1,11 @@
+body {
+    padding-top: 70px;
+    /* para que el contenido no se esconda debajo del navbar fijo */
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
