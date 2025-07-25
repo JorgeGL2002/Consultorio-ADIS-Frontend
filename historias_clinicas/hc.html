@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="/assets/logocorto.png" />
+  <link rel="icon" type="image/svg+xml" href="../assets/logocorto.png" />
   <title>Historias Clinicas | Fundación ADIS</title>
 </head>
 
@@ -60,49 +60,74 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Notas de evolución</h5>
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+          <h5 class="modal-title">Registro clinico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body px-4 py-3">
           <form id="formDatosHC">
             <input type="hidden" id="hora" name="hora">
 
-            <!-- Paciente y tipo -->
+            <!-- Paciente y creador solo si es Especialista -->
             <div class="mb-3">
               <h5 class="mb-0 text-primary fw-bold" id="nombrePaciente">Paciente: <span id="pacienteNombre"
                   class="text-primary fs-6"></span></h5>
-              <p class="text-muted mb-1">Tipo: Notas de evolución</p>
+              <h5 class="mb-0 text-primary fw-bold" id="usuarioLogueado">Creado por: <span id="userLog"
+                  class="text-primary fs-6"></span></h5>
             </div>
 
-            <!-- Selección de cita -->
             <div class="mb-3">
-              <label for="cita" class="form-label fw-semibold">Selecciona una cita</label>
-              <select name="cita" id="cita" class="form-select">
-                <option value="" disabled selected>Selecciona una cita</option>
+              <label for="tipo" class="form-label fw-semibold">Tipo de registro</label>
+              <select name="tipo" id="tipo" class="form-select">
+                <option value="" disabled selected>Tipo</option>
+                <option value="nEvolucion">Notas de evolución</option>
+                <option value="HC">Historia Clinica</option>
               </select>
             </div>
 
-            <!-- Notas -->
-            <div class="mb-3">
-              <label for="notas" class="form-label fw-semibold">Notas</label>
-              <textarea name="notas" id="notas" class="form-control" rows="4"
-                placeholder="Escribe aquí las notas..."></textarea>
+            <!-- Notas de evolucion -->
+            <div id="seccionNotas" class="d-none">
+              <div class="mb-3">
+                <label for="notas" class="form-label fw-semibold">Notas de evolución</label>
+                <textarea name="notas" id="notas" class="form-control" rows="4"
+                  placeholder="Describa las notas de evolución del paciente" style="resize: vertical;" required></textarea>
+              </div>
             </div>
 
-            <!-- Notas adicionales -->
-            <div class="mb-3">
-              <label for="complemento" class="form-label fw-semibold">Notas adicionales</label>
-              <textarea name="complemento" id="complemento" class="form-control" rows="2"
-                placeholder="Información complementaria..."></textarea>
+            <!-- 📋 Sección: Historia clínica -->
+            <div id="seccionHC" class="d-none">
+              <div class="mb-3"><label class="form-label">Diagnóstico médico</label><textarea class="form-control"
+                  name="diagnostico" id="diagnostico" required></textarea></div>
+              <div class="mb-3"><label class="form-label">Motivo de consulta</label><textarea class="form-control"
+                  name="motivo" id="motivo" required></textarea></div>
+              <div class="mb-3"><label class="form-label">Problemas identificados</label><textarea class="form-control"
+                  name="problemas" id="problemas" required></textarea></div>
+              <div class="mb-3"><label class="form-label">Tratamientos afines</label><textarea class="form-control"
+                  name="tratamientos" id="tratamientos"></textarea></div>
+              <div class="mb-3"><label class="form-label">AHF</label><textarea class="form-control"
+                  name="ahf" id="ahf"></textarea></div>
+              <div class="mb-3"><label class="form-label">APNP</label><textarea class="form-control"
+                  name="apnp" id="apnp"></textarea></div>
+              <div class="mb-3"><label class="form-label">APP</label><textarea class="form-control"
+                  name="app" id="app"></textarea></div>
+              <div class="mb-3"><label class="form-label">Tratamiento farmacológico</label><textarea
+                  class="form-control" name="farmacologico" id="farmacologico"></textarea></div>
+              <div class="mb-3"><label class="form-label">Semiología del dolor</label><textarea class="form-control"
+                  name="semiologia" id="semiologia"></textarea></div>
+              <div class="mb-3"><label class="form-label">Evaluación física</label><textarea class="form-control"
+                  name="evaluacion_fisica" id="evaluacion_fisica" required></textarea></div>
+              <div class="mb-3"><label class="form-label">Evaluación funcional</label><textarea class="form-control"
+                  name="evaluacion_funcional" id="evaluacion_funcional"></textarea></div>
+              <div class="mb-3"><label class="form-label">Objetivos terapéuticos</label><textarea class="form-control"
+                  name="objetivos" id="objetivos"></textarea></div>
             </div>
 
-            <!-- Botón -->
-            <div class="text-end">
+            <!-- Boton de guardar -->
+            <div class="text-end mt-4">
               <button type="submit" class="btn btn-success" id="btnGuardarHC">
-                <i class="bi bi-save me-1"></i> Guardar notas
+                <i class="bi bi-save me-1"></i> Guardar registro
               </button>
             </div>
+
           </form>
         </div>
       </div>
