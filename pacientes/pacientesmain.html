@@ -37,17 +37,17 @@
     </div>
   </nav>
 
-  <div class="container mt-4">
-    <div class="d-flex justify-content-center align-items-center mb-3 gap-2">
+   <div class="container mt-4">
+    <div class="d-flex flex-column flex-md-row justify-content-center align-items-stretch align-items-md-center mb-3 gap-2">
 
-      <div class="input-group w-50">
+      <div class="input-group w-100 w-md-50">
         <input type="text" id="busqueda" placeholder="Buscar paciente" class="form-control" list="listaPacientes">
         <datalist id="listaPacientes">
         </datalist>
         <button type="button" id="buscar" class="btn btn-primary">Buscar</button>
       </div>
 
-      <button type="button" id="nuevoPaciente" class="btn btn-primary" title="Nuevo paciente"
+      <button type="button" id="nuevoPaciente" class="btn btn-primary d-flex align-items-center justify-content-center" title="Nuevo paciente"
         onclick="abrirModalNuevoPaciente()"><img src="../assets/agregar.png" style="width: 20px; height: 20px;"
           alt="Agregar nuevo paciente">
       </button>
@@ -66,7 +66,7 @@
       </table>
     </div>
   </div>
-
+  
   <div class="modal fade" id="modalPaciente" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
