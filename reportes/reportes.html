@@ -6,8 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="/assets/logocorto.png" />
+  <link rel="icon" type="image/svg+xml" href="../assets/logocorto.png" />
   <title>Reportes | Fundación ADIS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .report-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .report-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #0d6efd;
+    }
+
+    .filter-section {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+  </style>
 </head>
 
 <body class="bg-light">
@@ -30,17 +56,148 @@
       </div>
     </div>
   </nav>
-  <script>
-    function abrirVentanaP() {
-      window.location.href = '../pacientes/pacientesmain.html';
-    }
-    function abrirVentanaA() {
-      window.location.href = '../citas/agenda.html';
-    }
-    function abrirVentanaHC() {
-      window.location.href = '../historias clinicas/hc.html';
-    }
-  </script>
+
+  <div class="container py-5">
+    <h1 class="text-center mb-5"><i class="fas fa-file-alt me-2"></i>Generador de Reportes</h1>
+
+    <!-- Filtros comunes -->
+    <div class="filter-section mb-4">
+      <h4><i class="fas fa-filter me-2"></i>Filtros</h4>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="month" class="form-label">Mes</label>
+          <select class="form-select" id="month">
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="year" class="form-label">Año</label>
+          <input type="number" class="form-control" id="year" min="2000" max="2100" value="2023">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button class="btn btn-primary w-100" id="applyFilters">
+            <i class="fas fa-check me-2"></i>Aplicar Filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtros adicionales para reporte personal -->
+      <div class="row g-3 mt-3" id="personalFilters" style="display: none;">
+        <div class="col-md-6 mb-3">
+          <label for="professionalId" class="form-label">ID del Profesional</label>
+          <select class="form-select mb-3" id="trabajador">
+            <option value="" disabled selected>Cargando usuarios...</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="professionalName" class="form-label">Rol del Profesional</label>
+          <input type="text" class="form-control" id="rolInput">
+        </div>
+      </div>
+
+      <!-- Filtros para historias clínicas -->
+      <div class="row g-3 mt-3" id="hcFilters" style="display: none;">
+        
+      </div>
+    </div>
+
+    <!-- Cards de reportes -->
+    <div class="row g-4">
+      <!-- Reporte Mensual de Citas -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card" onclick="generateReport('monthly')">
+          <div class="card-body text-center">
+            <div class="card-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h5 class="card-title">Reporte Mensual de Citas</h5>
+            <p class="card-text">Genera un reporte en Excel con todas las citas agendadas en el mes seleccionado.</p>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-download me-2"></i>Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporte Personal de Citas -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card" onclick="generateReport('personal')">
+          <div class="card-body text-center">
+            <div class="card-icon">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <h5 class="card-title">Reporte Personal de Citas</h5>
+            <p class="card-text">Genera un reporte de las citas atendidas por un profesional específico.</p>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-download me-2"></i>Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporte de Trabajadores -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card" onclick="generateReport('workers')">
+          <div class="card-body text-center">
+            <div class="card-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h5 class="card-title">Reporte de Trabajadores</h5>
+            <p class="card-text">Genera un listado completo de todos los trabajadores registrados.</p>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-download me-2"></i>Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporte de Historias Clínicas -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card" onclick="generateReport('records')">
+          <div class="card-body text-center">
+            <div class="card-icon">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <h5 class="card-title">Reporte de Historias Clínicas</h5>
+            <p class="card-text">Genera un reporte de las historias clínicas según rol y profesional.</p>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-download me-2"></i>Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporte de Pacientes -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card" onclick="generateReport('patients')">
+          <div class="card-body text-center">
+            <div class="card-icon">
+              <i class="fas fa-procedures"></i>
+            </div>
+            <h5 class="card-title">Reporte de Pacientes</h5>
+            <p class="card-text">Genera un reporte completo con todos los pacientes registrados.</p>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-download me-2"></i>Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="reportes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
