@@ -45,6 +45,45 @@ function cargarSeguros(idSelect) {
         });
 }
 
+function mostrarAlerta(tipo, mensaje) {
+    const iconos = {
+        success: "check-circle-fill",
+        warning: "exclamation-triangle-fill",
+        danger: "exclamation-triangle-fill",
+        info: "info-fill"
+    };
+
+    const colores = {
+        success: "text-success",
+        warning: "text-warning",
+        danger: "text-danger",
+        info: "text-info"
+    };
+
+    const alerta = document.createElement("div");
+    alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
+    alerta.style.maxWidth = "800px";
+    alerta.style.fontSize = "0.9rem";
+    alerta.style.wordWrap = "break-word";
+    alerta.style.paddingTop = "70px";
+
+    alerta.innerHTML = `
+    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+        <use xlink:href="#${iconos[tipo]}"/>
+    </svg>
+    <div>${mensaje}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+    document.getElementById("alertContainer").appendChild(alerta);
+
+    setTimeout(() => {
+        alerta.classList.remove("show");
+        alerta.classList.add("hide");
+        setTimeout(() => alerta.remove(), 500);
+    }, 3000);
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarSeguros("seguros");
@@ -55,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const nombreServicio = document.getElementById("nombreServicio").value.trim();
         const notasServicio = document.getElementById("notasServicio").value.trim();
         if (!nombreServicio) {
-            alert("warning", "El nombre del servicio es obligatorio");
+            mostrarAlerta("warning", "El nombre del servicio es obligatorio");
             return;
         }
         try {
@@ -63,12 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST"
             });
             if (!response.ok) throw new Error("Error al crear el servicio");
-            alert("success", "Servicio creado correctamente", true);
+            mostrarAlerta("success", "Servicio creado correctamente");
             cargarServicios("servicios");
             document.getElementById("formServicio").reset(); // Limpiar el formulario
         } catch (error) {
             console.error("Error al crear el servicio:", error);
-            alert("danger", "Error al crear el servicio");
+            mostrarAlerta("danger", "Error al crear el servicio");
         }
     });
 
@@ -77,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const nombreEmpresa = document.getElementById("nombreEmpresa").value.trim();
         const notasEmpresa = document.getElementById("notasEmpresa").value.trim();
         if (!nombreEmpresa) {
-            alert("warning", "El nombre de la empresa es obligatorio");
+            mostrarAlerta("warning", "El nombre de la empresa es obligatorio");
             return;
         }
         try {
@@ -85,12 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST"
             });
             if (!response.ok) throw new Error("Error al crear la empresa");
-            alert("success", "Empresa creada correctamente", true);
+            mostrarAlerta("success", "Empresa creada correctamente");
             document.getElementById("formEmpresa").reset(); // Limpiar el formulario
             cargarSeguros("seguros");
         } catch (error) {
             console.error("Error al crear la empresa:", error);
-            alert("danger", "Error al crear la empresa");
+            mostrarAlerta("danger", "Error al crear la empresa");
         }
     })
 
@@ -98,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const seguroSeleccionado = document.getElementById("seguros").value.trim();
         if (!seguroSeleccionado) {
-            alert("warning", "Selecciona una empresa");
+            mostrarAlerta("warning", "Selecciona una empresa");
             return;
         }
         try {
@@ -106,12 +145,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "DELETE"
             });
             if (!response.ok) throw new Error("Error al borrar la empresa");
-            alert("success", "Empresa borrada correctamente", true);
+            mostrarAlerta("success", "Empresa borrada correctamente");
             cargarSeguros("seguros");
             document.getElementById("formBorrarEmpresa").reset(); // Limpiar el formulario
         } catch (error) {
             console.error("Error al borrar la empresa:", error);
-            alert("danger", "Error al borrar la empresa");
+            mostrarAlerta("danger", "Error al borrar la empresa");
         }
     });
 
@@ -119,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const servicioSeleccionado = document.getElementById("servicios").value.trim();
         if (!servicioSeleccionado) {
-            alert("warning", "Selecciona un servicio");
+            mostrarAlerta("warning", "Selecciona un servicio");
             return;
         }
         try {
@@ -127,12 +166,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "DELETE"
             });
             if (!response.ok) throw new Error("Error al borrar el servicio");
-            alert("success", "Servicio borrado correctamente", true);
+            mostrarAlerta("success", "Servicio borrado correctamente");
             cargarServicios("servicios");
             document.getElementById("formBorrarServicio").reset(); // Limpiar el formulario
         } catch (error) {
             console.error("Error al borrar el servicio:", error);
-            alert("danger", "Error al borrar el servicio");
+            mostrarAlerta("danger", "Error al borrar el servicio");
         }
     });
 
