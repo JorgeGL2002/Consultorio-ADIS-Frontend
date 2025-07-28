@@ -36,7 +36,7 @@ async function getRolTrabajador(nombre) {
     console.log("Nombre del trabajador seleccionado:", nombre);
 
     if (!nombre || nombre === "Selecciona un trabajador") {
-        alert("⚠️ Debes seleccionar un trabajador válido");
+        mostrarAlerta("warning", "Debes seleccionar un trabajador válido");
         return null;
     }
 
@@ -46,7 +46,7 @@ async function getRolTrabajador(nombre) {
         const data = await res.json();
         return data;
     } catch (e) {
-        alert("❌ Error al obtener ID del trabajador");
+        mostrarAlerta("danger", "Error al obtener ID del trabajador");
         console.error(e);
         return null;
     }
@@ -56,7 +56,7 @@ async function obtenerIdTrabajador(nombre) {
     console.log("Nombre del trabajador seleccionado:", nombre);
 
     if (!nombre || nombre === "Selecciona un trabajador") {
-        alert("⚠️ Debes seleccionar un trabajador válido");
+        mostrarAlerta("warning", "Debes seleccionar un trabajador válido");
         return null;
     }
 
@@ -66,7 +66,7 @@ async function obtenerIdTrabajador(nombre) {
         const data = await res.json();
         return data;
     } catch (e) {
-        alert("❌ Error al obtener ID del trabajador");
+        mostrarAlerta("danger", "Error al obtener ID del trabajador");
         console.error(e);
         return null;
     }
@@ -86,6 +86,45 @@ function showFilters(reportType) {
     } else if (reportType === 'records' && rol !== "ESPECIALISTA") {
         document.getElementById('hcFilters').style.display = 'flex';
     }
+}
+
+function mostrarAlerta(tipo, mensaje) {
+    const iconos = {
+        success: "check-circle-fill",
+        warning: "exclamation-triangle-fill",
+        danger: "exclamation-triangle-fill",
+        info: "info-fill"
+    };
+
+    const colores = {
+        success: "text-success",
+        warning: "text-warning",
+        danger: "text-danger",
+        info: "text-info"
+    };
+
+    const alerta = document.createElement("div");
+    alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
+    alerta.style.maxWidth = "800px";
+    alerta.style.fontSize = "0.9rem";
+    alerta.style.wordWrap = "break-word";
+    alerta.style.paddingTop = "70px";
+
+    alerta.innerHTML = `
+    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+        <use xlink:href="#${iconos[tipo]}"/>
+    </svg>
+    <div>${mensaje}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+    document.getElementById("alertContainer").appendChild(alerta);
+
+    setTimeout(() => {
+        alerta.classList.remove("show");
+        alerta.classList.add("hide");
+        setTimeout(() => alerta.remove(), 500);
+    }, 3000);
 }
 
 // Asignar eventos a las cards
@@ -108,7 +147,7 @@ async function generateReport(reportType) {
     const year = document.getElementById('year').value;
 
     if (!month || !year) {
-        alert("⚠️ Debes seleccionar mes y año");
+        mostrarAlerta("warning", "Debes seleccionar mes y año");
         return;
     }
 
@@ -118,7 +157,7 @@ async function generateReport(reportType) {
     try {
         switch (reportType) {
             case 'monthly':
-                if (rol === "ESPECIALISTA") return alert("⚠️ No tienes permisos para este reporte");
+                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reporteMensualCitas';
                 break;
 
@@ -130,10 +169,10 @@ async function generateReport(reportType) {
                 } else {
                     const nombreProfesional = document.getElementById('trabajador').value;
                     if (!nombreProfesional || nombreProfesional.includes("Selecciona"))
-                        return alert("⚠️ Debes seleccionar un profesional válido");
+                        mostrarAlerta("warning", "Debes seleccionar un profesional");
 
                     const idProfesional = await obtenerIdTrabajador(nombreProfesional);
-                    if (!idProfesional) return alert("❌ No se pudo obtener el ID del profesional");
+                    if (!idProfesional) return mostrarAlerta("warning", "No se encontró al profesional");
 
                     params.append('ID', idProfesional);
                     params.append('profesional', nombreProfesional);
@@ -141,7 +180,7 @@ async function generateReport(reportType) {
                 break;
 
             case 'workers':
-                if (rol !== "SUPER USUARIO") return alert("⚠️ Solo SUPER USUARIO puede generar este reporte");
+                if (rol !== "SUPER USUARIO") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reporteTrabajadores';
                 break;
 
@@ -159,7 +198,7 @@ async function generateReport(reportType) {
                 break;
 
             case 'patients':
-                if (rol === "ESPECIALISTA") return alert("⚠️ No tienes permisos para este reporte");
+                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reportePacientes';
                 break;
         }
@@ -169,7 +208,7 @@ async function generateReport(reportType) {
 
     } catch (err) {
         console.error("Error generando el reporte:", err);
-        alert("❌ Error al generar el reporte");
+        mostrarAlerta("danger", "Error al generar el reporte");
     }
 }
 
@@ -192,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
                 cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
             } else {
-                alert("❌ No se pudo obtener el ID del profesional seleccionado");
+                mostrarAlerta("warning", "No se pudo obtener el ID del profesional seleccionado");
             }
         });
     }
