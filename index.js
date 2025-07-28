@@ -51,7 +51,6 @@ function mostrarAlerta(tipo, mensaje, recargar = false) {
     alerta.style.maxWidth = "800px";
     alerta.style.fontSize = "0.9rem";
     alerta.style.wordWrap = "break-word";
-    alerta.style.paddingTop = "70px";
 
     alerta.innerHTML = `
     <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
