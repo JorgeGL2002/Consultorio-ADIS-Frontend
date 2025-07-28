@@ -32,7 +32,8 @@
   </nav>
 
   <div class="container mt-4">
-    <div class="d-flex flex-column flex-md-row  justify-content-center align-items-stretch align-items-md-center mb-3 gap-2">
+    <div
+      class="d-flex flex-column flex-md-row  justify-content-center align-items-stretch align-items-md-center mb-3 gap-2">
 
       <div class="input-group w-100 w-md-50">
         <input type="text" id="busqueda" placeholder="Buscar paciente" class="form-control" list="listaPacientes">
@@ -89,7 +90,8 @@
               <div class="mb-3">
                 <label for="notas" class="form-label fw-semibold">Notas de evolución</label>
                 <textarea name="notas" id="notas" class="form-control" rows="4"
-                  placeholder="Describa las notas de evolución del paciente" style="resize: vertical;" required></textarea>
+                  placeholder="Describa las notas de evolución del paciente" style="resize: vertical;"
+                  required></textarea>
               </div>
             </div>
 
@@ -103,12 +105,12 @@
                   name="problemas" id="problemas" required></textarea></div>
               <div class="mb-3"><label class="form-label">Tratamientos afines</label><textarea class="form-control"
                   name="tratamientos" id="tratamientos"></textarea></div>
-              <div class="mb-3"><label class="form-label">AHF</label><textarea class="form-control"
-                  name="ahf" id="ahf"></textarea></div>
-              <div class="mb-3"><label class="form-label">APNP</label><textarea class="form-control"
-                  name="apnp" id="apnp"></textarea></div>
-              <div class="mb-3"><label class="form-label">APP</label><textarea class="form-control"
-                  name="app" id="app"></textarea></div>
+              <div class="mb-3"><label class="form-label">AHF</label><textarea class="form-control" name="ahf"
+                  id="ahf"></textarea></div>
+              <div class="mb-3"><label class="form-label">APNP</label><textarea class="form-control" name="apnp"
+                  id="apnp"></textarea></div>
+              <div class="mb-3"><label class="form-label">APP</label><textarea class="form-control" name="app"
+                  id="app"></textarea></div>
               <div class="mb-3"><label class="form-label">Tratamiento farmacológico</label><textarea
                   class="form-control" name="farmacologico" id="farmacologico"></textarea></div>
               <div class="mb-3"><label class="form-label">Semiología del dolor</label><textarea class="form-control"
@@ -132,6 +134,19 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 220px;">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check-circle-fill" viewBox="0 0 16 16" style="width: 20px; margin-right: 8px;">
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+      </symbol>
+      <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16" style="width: 20px; margin-right: 8px;">
+        <path
+          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+      </symbol>
+    </svg>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
