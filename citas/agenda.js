@@ -31,6 +31,45 @@ for (let h = 8; h <= 20; h++) {
   if (h < 20) horarios.push(`${h}:30`);
 }
 
+function mostrarAlerta(tipo, mensaje) {
+  const iconos = {
+    success: "check-circle-fill",
+    warning: "exclamation-triangle-fill",
+    danger: "exclamation-triangle-fill",
+    info: "info-fill"
+  };
+
+  const colores = {
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+    info: "text-info"
+  };
+
+  const alerta = document.createElement("div");
+  alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
+  alerta.style.maxWidth = "800px";
+  alerta.style.fontSize = "0.9rem";
+  alerta.style.wordWrap = "break-word";
+  alerta.style.paddingTop = "70px";
+
+  alerta.innerHTML = `
+    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+        <use xlink:href="#${iconos[tipo]}"/>
+    </svg>
+    <div>${mensaje}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  document.getElementById("alertContainer").appendChild(alerta);
+
+  setTimeout(() => {
+    alerta.classList.remove("show");
+    alerta.classList.add("hide");
+    setTimeout(() => alerta.remove(), 500);
+  }, 3000);
+}
+
 fechaInput.addEventListener("change", async () => {
   const nuevaFecha = fechaInput.value;
 
@@ -58,11 +97,11 @@ fechaInput.addEventListener("change", async () => {
       if (idTrabajador) {
         await cargarHorarios(nuevaFecha);
       } else {
-        alert("❌ No se pudo obtener el ID del trabajador seleccionado");
+        mostrarAlerta("danger", "Error al obtener ID del trabajador.")
       }
     } catch (error) {
       console.error("Error obteniendo ID del trabajador:", error);
-      alert("❌ Error al intentar cargar horarios para el trabajador.");
+      mostrarAlerta("danger", "Error al obtener ID del trabajador.");
     }
   }
 });
@@ -120,93 +159,6 @@ async function AgendarUnoMas() {
   document.getElementById("fechaSeleccionada").value = fecha;
   bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
   abrirModal(hora);
-}
-
-async function repetirCita() {
-  const idCita = document.getElementById("modalEditarCita").dataset.idCita;
-  if (!idCita) return alert("No hay un ID");
-
-  const nuevaFecha = prompt("Nueva fecha (YYYY-MM-DD):");
-  const nuevaHora = prompt("Nueva hora (HH:MM):");
-  const horaNormalizada = normalizarHora(nuevaHora);
-
-  if (!nuevaFecha || !horaNormalizada) return;
-
-  try {
-    const url = `https://api-railway-production-24f1.up.railway.app/api/test/repetirCita?idCita=${idCita}&nuevaFecha=${nuevaFecha}&nuevaHora=${horaNormalizada}`;
-    const res = await fetch(url, { method: "POST" });
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      alert("Cita repetida");
-      bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
-
-      const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
-      cargarHorarios(fechaInput.value);
-    } else {
-      alert("Error al repetir la cita");
-    }
-  } catch (e) {
-    console.error("Error de red o parsing:", e);
-    alert("Error al procesar la solicitud.");
-  }
-}
-
-async function cancelarCita() {
-  const idCita = document.getElementById("modalEditarCita").dataset.idCita;
-  if (!idCita) return alert("No hay un ID");
-
-  const confirmar = confirm("¿Estás seguro de que deseas cancelar esta cita?");
-  if (!confirmar) return;
-
-  try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCita?idCita=${idCita}`, { method: "PUT" });
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      alert("Cita cancelada");
-      bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
-
-      const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
-      cargarHorarios(fechaInput.value);
-    } else {
-      alert("Error al cancelar la cita");
-    }
-  } catch (e) {
-    console.error("Error de red o parsing:", e);
-    alert("Error al procesar la solicitud.");
-  }
-}
-
-async function cambiarHorario() {
-  const idCita = document.getElementById("modalEditarCita").dataset.idCita;
-  if (!idCita) return alert("No hay un ID");
-
-  const nuevaFecha = prompt("Nueva fecha (YYYY-MM-DD):");
-  const nuevaHora = prompt("Nueva hora (HH:MM):");
-  const horaNormalizada = normalizarHora(nuevaHora);
-
-  if (!nuevaFecha || !horaNormalizada) return;
-
-  try {
-    const url = `https://api-railway-production-24f1.up.railway.app/api/test/cambiarHorario?idCita=${idCita}&nuevaFecha=${nuevaFecha}&nuevaHora=${horaNormalizada}`;
-    const res = await fetch(url, { method: "PUT" });
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      alert("Horario editado");
-      bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
-
-      const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
-      cargarHorarios(fechaInput.value);
-    } else {
-      alert("Error al editar el horario");
-      console.error("Respuesta no exitosa:", data);
-    }
-  } catch (e) {
-    console.error("Error de red o parsing:", e);
-    alert("Error al procesar la solicitud.");
-  }
 }
 
 async function obtenerProfesionalParaHorarios() {
@@ -342,7 +294,7 @@ async function obtenerIdTrabajador(nombre) {
   console.log("Nombre del trabajador seleccionado:", nombre);
 
   if (!nombre || nombre === "Selecciona un trabajador") {
-    alert("⚠️ Debes seleccionar un trabajador válido");
+    mostrarAlerta("error", "Selecciona un trabajador");
     return null;
   }
 
@@ -352,7 +304,7 @@ async function obtenerIdTrabajador(nombre) {
     const data = await res.json();
     return data;
   } catch (e) {
-    alert("❌ Error al obtener ID del trabajador");
+    mostrarAlerta("error", "No se pudo obtener el ID del trabajador");
     console.error(e);
     return null;
   }
@@ -367,7 +319,7 @@ async function abrirModalEditarCitaPorID(idCita) {
     abrirModalEditarCita(datosCita.hora, datosCita);
   } catch (error) {
     console.error("Error al obtener la cita:", error);
-    alert("❌ No se pudo obtener la información de la cita");
+    mostrarAlerta("error", "Error al obtener la cita");
   }
 }
 
@@ -450,6 +402,27 @@ function abrirModalAusencia() {
   modal.show();
 }
 
+function abrirModalDesbloqueo() {
+  bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
+
+  const modal = new bootstrap.Modal(document.getElementById("modalCancelar"));
+  modal.show();
+}
+
+function abrirModalRepetirCita() {
+  bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
+
+  const modal = new bootstrap.Modal(document.getElementById("modalRepetirCita"));
+  modal.show();
+}
+
+function abrirModalCambiarHorario() {
+  bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
+
+  const modal = new bootstrap.Modal(document.getElementById("modalCambiarHorario"));
+  modal.show();
+}
+
 function abrirModalDesbloquearHorario() {
   const hora = document.getElementById("hora").value;
   const fechaSeleccionada = fechaInput.value;
@@ -494,36 +467,6 @@ function abrirModalEditarCita(hora, datosCita) {
   modal.show();
 }
 
-function mostrarAlerta(tipo, mensaje, recargar = false) {
-  const iconos = {
-    success: "check-circle-fill",
-    warning: "exclamation-triangle-fill",
-    danger: "exclamation-triangle-fill",
-    info: "info-fill"
-  };
-  const alerta = document.createElement("div");
-  alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
-  alerta.role = "alert";
-  alerta.innerHTML = `
-        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="${tipo}">
-            <use xlink:href="#${iconos[tipo]}"/>
-        </svg>
-        <div>${mensaje}</div>
-        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-  document.getElementById("alertContainer").appendChild(alerta);
-
-  setTimeout(() => {
-    alerta.classList.remove("show");
-    alerta.classList.add("hide");
-    setTimeout(() => alerta.remove(), 500);
-
-    if (recargar) {
-      location.reload(); // 🔄 recarga la página después del tiempo
-    }
-  }, 5000);
-}
-
 document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
@@ -548,11 +491,11 @@ document.getElementById("modalEditarCita").addEventListener("submit", async (e) 
 
   const resultado = await response.json();
   if (response.ok && resultado.success) {
-    alert("✅ Cambios guardados correctamente");
+    mostrarAlerta("success", "Cambios guardados correctamente");
     bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
     cargarHorarios(fechaInput.value);
   } else {
-    alert("❌ " + (resultado.error || "No se pudieron aplicar los cambios"));
+    mostrarAlerta("error", "No se pudieron aplicar los cambios");
   }
 });
 
@@ -572,7 +515,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
   console.log("Usuario", nombre, "ID", id, "Rol", rol);
   cargarHorarios(fechaHoy);
-
+  if (nombre !== "Psic Majo García" && id !== 6) {
+    document.getElementById("hora").disabled = true;
+  }
   const celdaCheck = document.createElement("td");
   celdaCheck.innerHTML = `<input type="checkbox" class="check-horario" value="${hora}">`;
 
@@ -648,8 +593,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-
 
   if (rol !== "RECEPCIÓN") {
     document.getElementById("trabajador").addEventListener("change", () => {
@@ -764,6 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("formCita").addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const nombrePaciente = document.getElementById("pacientes").value;
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
@@ -808,12 +752,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const resultado = await res.json();
     if (res.ok && resultado.success) {
-      alert("✅ " + resultado.message);
+      mostrarAlerta("success", "Cita agendada correctamente.");
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
       document.getElementById("formCita").reset();
     } else {
-      alert("❌ Error: " + (resultado.error || "No se pudo agendar la cita."));
+      mostrarAlerta("warning", "No se pudo agendar la cita.");
     }
   });
 
@@ -821,14 +765,14 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const motivo = document.getElementById("motivo").value.trim();
-    if (!motivo) return alert("⚠️ Debes ingresar un motivo.");
+    if (!motivo) return mostrarAlerta("warning", "Por favor, ingrese un motivo válido.");
 
     const fecha = document.getElementById("fechaSeleccionada").value;
     const idSesion = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? (selectedIdProfesional || id)
       : id;
 
-    if (!idSesion) return alert("❌ ID de profesional inválido.");
+    if (!idSesion) return mostrarAlerta("warning", "No hay un ID válido para el profesional.");
 
     await Promise.all(seleccionados.map(async (horaNormal) => {
       const hora = horaNormal.length === 5 ? horaNormal + ":00"
@@ -848,7 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }));
 
-    alert(`✅ ${seleccionados.length} horario(s) bloqueado(s).`);
+    mostrarAlerta("success", "Horarios bloqueados correctamente.");
     modalMotivo.hide();
     document.getElementById("formMotivo").reset();
     document.querySelectorAll(".check-horario").forEach(chk => chk.checked = false);
@@ -861,7 +805,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const idCita = document.getElementById("modalEditarCita").dataset.idCita;
     if (!idCita) {
-      mostrarToast("No hay un ID válido para la cita", "danger");
+      mostrarAlerta("warning", "No hay un ID válido para la cita");
       return;
     }
 
@@ -873,25 +817,118 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        alert("✅ Cita marcada como ausente", "success");
+        mostrarAlerta("success", "Cita marcada como ausente");
         bootstrap.Modal.getInstance(document.getElementById("modalAusencia")).hide();
         cargarHorarios(fechaInput.value);
       } else {
-        alert("❌ Error al marcar la cita como ausente", "danger");
+        mostrarAlerta("warning", "Error al marcar la cita como ausente");
       }
     } catch (err) {
       console.error(err);
-      alert("❌ Error de conexión con el servidor", "danger");
+      mostrarAlerta("danger", "Error de conexión con el servidor");
     }
-  })
+  });
+
+  document.getElementById("formCancelar").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const idCita = document.getElementById("modalEditarCita").dataset.idCita;
+    if (!idCita) {
+      mostrarAlerta("warning", "No hay un ID válido para la cita");
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCita?idCita=${idCita}`, {
+        method: "PUT"
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        mostrarAlerta("success", "Cita cancelada");
+        bootstrap.Modal.getInstance(document.getElementById("modalCancelar")).hide();
+        cargarHorarios(fechaInput.value);
+      } else {
+        mostrarAlerta("warning", "Error al cancelar la cita");
+      }
+    } catch (err) {
+      console.error(err);
+      mostrarAlerta("danger", "Error de conexión con el servidor");
+    }
+  });
+
+  document.getElementById("modalRepetirCita").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const idCita = document.getElementById("modalEditarCita").dataset.idCita;
+    if (!idCita) return mostrarAlerta("warning", "No hay un ID válido para la cita");
+
+    const nuevaFecha = document.getElementById("fechaRC").value;
+    const nuevaHora = document.getElementById("horaRC").value;
+    console.log(nuevaHora);
+    const horaNormalizada = normalizarHora(nuevaHora);
+    console.log(horaNormalizada);
+    if (!nuevaFecha || !horaNormalizada) return mostrarAlerta("warning", "Por favor, ingrese una fecha y hora válidas.");
+
+    try {
+      const url = `https://api-railway-production-24f1.up.railway.app/api/test/repetirCita?idCita=${idCita}&nuevaFecha=${nuevaFecha}&nuevaHora=${horaNormalizada}`;
+      const res = await fetch(url, { method: "POST" });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        mostrarAlerta("success", "Cita repetida");
+        bootstrap.Modal.getInstance(document.getElementById("modalRepetirCita")).hide();
+
+        const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
+        document.getElementById("formRepetirCita").reset();
+        cargarHorarios(fechaInput.value);
+      } else {
+        mostrarAlerta("warning", "Error al repetir la cita");
+      }
+    } catch (e) {
+      console.error("Error de red o parsing:", e);
+      mostrarAlerta("danger", "Error al procesar la solicitud.");
+    }
+  });
+
+  document.getElementById("modalCambiarHorario").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const idCita = document.getElementById("modalEditarCita").dataset.idCita;
+    if (!idCita) return alert("No hay un ID");
+
+    const nuevaFecha = document.getElementById("fechaCH").value;
+    const nuevaHora = document.getElementById("horaCH").value;
+    const horaNormalizada = normalizarHora(nuevaHora);
+
+    if (!nuevaFecha || !horaNormalizada) return;
+
+    try {
+      const url = `https://api-railway-production-24f1.up.railway.app/api/test/cambiarHorario?idCita=${idCita}&nuevaFecha=${nuevaFecha}&nuevaHora=${horaNormalizada}`;
+      const res = await fetch(url, { method: "PUT" });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        mostrarAlerta("success", "Horario editado");
+        const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
+        bootstrap.Modal.getInstance(document.getElementById("modalCambiarHorario")).hide();
+        document.getElementById("formCambiarHorario").reset();
+        cargarHorarios(fechaInput.value);
+      } else {
+        mostrarAlerta("warning", "Error al cambiar el horario");
+        console.error("Respuesta no exitosa:", data);
+      }
+    } catch (e) {
+      console.error("Error de red o parsing:", e);
+      mostrarAlerta("danger", "Error al procesar la solicitud.");
+    }
+  });
 });
 
 function abrirVentanaConfiguracion() {
-  if(rol !== "SUPER USUARIO") {
-    alert("No tiene permisos para acceder a esta sección");
+  if (rol !== "SUPER USUARIO") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
-     window.location.href = '/configuracion.html';
+    window.location.href = '/frontend/configuracion.html';
   }
 }
 
@@ -908,6 +945,6 @@ function abrirVentanaR() {
 }
 
 function CerrarSesion() {
-  window.location.href = '/index.html';
+  window.location.href = '/frontend/index.html';
   localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
 }
