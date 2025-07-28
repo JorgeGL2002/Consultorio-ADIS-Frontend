@@ -114,7 +114,7 @@ async function obtenerIdPaciente(nombre) {
   console.log("Nombre del paciente seleccionado:", nombre);
 
   if (!nombre || nombre === "Selecciona un paciente") {
-    alert("⚠️ Debes seleccionar un paciente válido");
+    mostrarAlerta("warning", "Por favor, selecciona un paciente");
     return null;
   }
 
@@ -124,10 +124,49 @@ async function obtenerIdPaciente(nombre) {
     const data = await res.json();
     return data;
   } catch (e) {
-    alert("❌ Error al obtener ID del paciente");
+    mostrarAlerta("danger", "Error al obtener el ID del paciente");
     console.error(e);
     return null;
   }
+}
+
+function mostrarAlerta(tipo, mensaje) {
+  const iconos = {
+    success: "check-circle-fill",
+    warning: "exclamation-triangle-fill",
+    danger: "exclamation-triangle-fill",
+    info: "info-fill"
+  };
+
+  const colores = {
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+    info: "text-info"
+  };
+
+  const alerta = document.createElement("div");
+  alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
+  alerta.style.maxWidth = "800px";
+  alerta.style.fontSize = "0.9rem";
+  alerta.style.wordWrap = "break-word";
+  alerta.style.paddingTop = "70px";
+
+  alerta.innerHTML = `
+    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+        <use xlink:href="#${iconos[tipo]}"/>
+    </svg>
+    <div>${mensaje}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  document.getElementById("alertContainer").appendChild(alerta);
+
+  setTimeout(() => {
+    alerta.classList.remove("show");
+    alerta.classList.add("hide");
+    setTimeout(() => alerta.remove(), 500);
+  }, 3000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -190,32 +229,32 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tipo === 'nEvolucion') {
         success = await notasEvolucion();
         if (success) {
-          alert("Notas de evolución guardadas correctamente.");
+          mostrarAlerta("success", "Notas de evolución guardadas correctamente.");
           document.getElementById("seccionNotas").classList.add("d-none");
           e.target.reset(); // solo si todo fue bien
           modal.hide();
         } else {
-          alert("Ocurrió un error al guardar las notas.");
+          mostrarAlerta("danger", "Ocurrió un error al guardar las notas de evolución.");
           return;
         }
       } else if (tipo === 'HC') {
         success = await guardarHistoriaClinica();
         if (success) {
-          alert("Historia clínica guardada correctamente.");
+          mostrarAlerta("success", "Historia clínica guardada correctamente.");
           document.getElementById("seccionHC").classList.add("d-none");
           e.target.reset(); // solo si todo fue bien
           modal.hide();
         } else {
-          alert("Ocurrió un error al guardar la historia clínica.");
+          mostrarAlerta("warning", "Ocurrió un error al guardar la historia clínica.");
           return;
         }
       } else {
-        alert("Selecciona un tipo de registro válido.");
+        mostrarAlerta("warning", "Seleccione un tipo de documento válido.");
         return;
       }
     } catch (error) {
       console.error("Error al guardar:", error);
-      alert("Error inesperado al guardar los datos.");
+      mostrarAlerta("danger", "Ocurrió un error al guardar los datos.");
     }
   });
 });
