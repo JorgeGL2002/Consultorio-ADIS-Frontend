@@ -308,6 +308,7 @@ async function cargarHorarios(fecha) {
   }
 }
 
+
 async function obtenerIdTrabajador(nombre) {
   console.log("Nombre del trabajador seleccionado:", nombre);
 
