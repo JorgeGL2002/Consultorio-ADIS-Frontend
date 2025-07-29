@@ -176,6 +176,24 @@ async function obtenerProfesionalParaHorarios() {
   return [nombreProfesional, idProfesional];
 }
 
+function desbloquearHorario(fecha, hora, rol, id) {
+    const confirmar = confirm("¿Estás seguro de que deseas desbloquear este horario?");
+    if (!confirmar) return;
+
+    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/desbloquearHorario?fecha=${fecha}&hora=${hora}&rol=${rol}&idSesion=${id}`, {
+      method: "DELETE"
+    }).then(response => response.json()).then(data => {
+      if (data.success) {
+        cargarHorarios(fechaInput.value);
+        alert("Horario desbloqueado");
+      } else {
+        console.error("Error al desbloquear horario");
+      }
+    }).catch(error => {
+      console.error("Error al desbloquear horario:", error);
+    });
+  }
+
 async function cargarHorarios(fecha) {
   try {
     const { nombre, id } = await obtenerProfesionalContexto();
@@ -499,23 +517,7 @@ document.getElementById("modalEditarCita").addEventListener("submit", async (e) 
   }
 });
 
- function desbloquearHorario(fecha, hora, rol, id) {
-    const confirmar = confirm("¿Estás seguro de que deseas desbloquear este horario?");
-    if (!confirmar) return;
-
-    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/desbloquearHorario?fecha=${fecha}&hora=${hora}&rol=${rol}&idSesion=${id}`, {
-      method: "DELETE"
-    }).then(response => response.json()).then(data => {
-      if (data.success) {
-        cargarHorarios(fechaInput.value);
-        alert("Horario desbloqueado");
-      } else {
-        console.error("Error al desbloquear horario");
-      }
-    }).catch(error => {
-      console.error("Error al desbloquear horario:", error);
-    });
-  }
+ 
 
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
