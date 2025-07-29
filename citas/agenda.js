@@ -292,7 +292,7 @@ async function cargarHorarios(fecha) {
       </span>`;
         celdaDetalle.classList.add("celda-bloqueo");
         celdaDetalle.style.cursor = "pointer";
-        celdaDetalle.addEventListener("click", () => desbloquearHorario(fecha, horaNormalizada, rol, id));
+        celdaDetalle.addEventListener("click", () => abrirModalDesbloquearHorario(bloqueo.hora));
       } else {
         celdaDetalle.innerHTML = `
       <button class="btn btn-outline-primary btn-sm" onclick="abrirModal('${hora}')">Agendar</button>`;
@@ -441,11 +441,10 @@ function abrirModalCambiarHorario() {
   modal.show();
 }
 
-function abrirModalDesbloquearHorario() {
-  const hora = document.getElementById("hora").value;
+function abrirModalDesbloquearHorario(hora) {
+  document.getElementById("horaD").value = hora;
   const fechaSeleccionada = fechaInput.value;
   document.getElementById("CitaHoraFecha").textContent = `${hora} - ${fechaSeleccionada}`;
-  document.getElementById("hora").value = hora;
   const modal = new bootstrap.Modal(document.getElementById("modalDesbloquearHorario"));
   modal.show();
 }
@@ -666,11 +665,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("btnDesbloquearHorario").addEventListener("click", () => {
-    const hora = document.getElementById("hora").value;
+ document.getElementById("formDesbloquearHorario").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const hora = document.getElementById("horaD").value;
+    const normalizar = normalizarHora(hora);
     const fecha = document.getElementById("fechaSeleccionada").value;
-    desbloquearHorario(fecha, hora);
-  })
+    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/desbloquearHorario?fecha=${fecha}&hora=${normalizar}&rol=${rol}&idSesion=${id}`, {
+      method: "DELETE"
+    }).then(response => response.json()).then(data => {
+      if (data.success) {
+         bootstrap.Modal.getInstance(document.getElementById("modalDesbloquearHorario")).hide();
+        cargarHorarios(fechaInput.value);
+        mostrarAlerta("success", "Horario desbloqueado correctamente");
+      } else {
+        console.error("Error al desbloquear horario");
+      }
+    }).catch(error => {
+      console.error("Error al desbloquear horario:", error);
+    });
+  });
 
   // Pacientes (datalist)
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
