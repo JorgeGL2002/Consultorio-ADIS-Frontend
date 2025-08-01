@@ -1204,7 +1204,7 @@ function abrirVentanaConfiguracion() {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
-    window.location.href = '/frontend/configuracion.html';
+    window.location.href = '/configuracion.html';
   }
 }
 
