@@ -138,26 +138,17 @@ function construirUrlAusencia(fecha, rol, nombreProfesional, idProfesional) {
   return url;
 }
 
-function normalizarHora(hora) {
-  if (!hora) return null;
-  if (/^\d{1,2}:\d{2}$/.test(hora)) {
-    return hora + ":00"; // ej: "13:00" => "13:00:00"
-  } else if (/^\d{1,2}:\d{2}:\d{2}$/.test(hora)) {
-    return hora; // ya viene bien
-  } else {
-    return null; // formato inválido
-  }
-}
-
 async function AgendarUnoMas() {
   const hora = localStorage.getItem("horaCita");
+  const horaFormateada = hora.split(':').slice(0,2).join(':');
+  console.log("Hora: ", horaFormateada);
   const fecha = localStorage.getItem("fechaCita");
 
-  document.getElementById("CitaHoraFecha").textContent = `${hora} - ${fecha}`;
-  document.getElementById("hora").value = hora;
+  document.getElementById("CitaHoraFecha").textContent = `${horaFormateada} - ${fecha}`;
+  document.getElementById("hora").value = horaFormateada;
   document.getElementById("fechaSeleccionada").value = fecha;
   bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
-  abrirModal(hora);
+  abrirModal(horaFormateada);
 }
 
 async function obtenerProfesionalParaHorarios() {
@@ -173,6 +164,106 @@ async function obtenerProfesionalParaHorarios() {
   }
 
   return [nombreProfesional, idProfesional];
+}
+
+async function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
+  const select = document.getElementById(idSelect);
+  const currentValue = select.value;
+  try {
+    const response = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/empresa");
+    const empresasAPI = await response.json();
+
+    //Coincidencia exacta (case insensitive)
+    const coincidencia = Array.from(select.options).find(option =>
+      option.value.toLowerCase() === empresaPaciente.toLowerCase()
+    );
+
+    // Si encontramos coincidencia en las opciones existentes
+    if (coincidencia) {
+      select.value = coincidencia.value;
+    }
+    // Si no hay coincidencia pero existe en la API
+    else if (empresasAPI.some(emp => emp.toLowerCase() === empresaPaciente.toLowerCase())) {
+      // Creamos nueva opción solo si no existe
+      if (!Array.from(select.options).some(opt => opt.value === empresaPaciente)) {
+        const newOption = new Option(empresaPaciente, empresaPaciente);
+        select.add(newOption);
+      }
+      select.value = empresaPaciente;
+    }
+    // Restauramos el valor anterior si no hubo coincidencia
+    else if (currentValue) {
+      select.value = currentValue;
+    }
+
+  } catch (err) {
+    console.error("Error al verificar empresas:", err);
+    // Restauramos el valor original si hay error
+    if (currentValue) {
+      select.value = currentValue;
+    }
+  }
+}
+
+async function cargarEmpresayNempleado(nombre) {
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${nombre}`);
+    if (!res.ok) throw new Error("Paciente no encontrado");
+    const data = await res.json();
+
+    const empresaSelect = document.getElementById("seguros");
+    empresaSelect.value = cargarEmpresa(data.empresa);
+
+    const inputEmpleado = document.getElementById("noseguros");
+    inputEmpleado.value = data.empleado;
+
+    return data;
+  } catch (e) {
+    mostrarAlerta("error", "No se pudo cargar empresa/empleado");
+    console.error(e);
+    return null;
+  }
+}
+
+function normalizarHora(hora) {
+  if (!hora) return null;
+
+  // Si viene con segundos, los removemos
+  if (/^\d{1,2}:\d{2}:\d{2}$/.test(hora)) {
+    hora = hora.slice(0, 5); // ej: "08:10:00" -> "08:10"
+  }
+
+  const [h, m] = hora.split(':');
+  if (!h || !m) return null;
+
+  return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
+}
+
+function extraerHorariosIntermedios(citas, bloqueos, ausencias) {
+  const horariosSet = new Set();
+
+  const procesar = (array) => {
+    array.forEach(item => {
+      const h = item.hora?.slice(0, 5);
+      if (h && !horarios.includes(h)) {
+        const [hh, mm] = h.split(':').map(Number);
+        // Solo agregar si no está dentro de un bloque estándar
+        const minutosTotales = hh * 60 + mm;
+        const bloqueInicio = Math.floor(minutosTotales / 30) * 30;
+        const diff = minutosTotales - bloqueInicio;
+
+        if (diff > 0 && diff < 30) {
+          horariosSet.add(h);
+        }
+      }
+    });
+  };
+
+  procesar(citas);
+  procesar(bloqueos);
+  procesar(ausencias);
+
+  return [...horariosSet];
 }
 
 async function cargarHorarios(fecha) {
@@ -216,14 +307,20 @@ async function cargarHorarios(fecha) {
       tabla.innerHTML = "<tr><td colspan='2'>Datos no disponibles</td></tr>";
       return;
     }
+    const horariosIntermedios = extraerHorariosIntermedios(citas, bloqueos, ausencias);
 
+    // Combinar, evitar duplicados y ordenar
+    const horariosTotales = [...new Set([...horarios])].sort((a, b) => {
+      const [ha, ma] = a.split(':').map(Number);
+      const [hb, mb] = b.split(':').map(Number);
+      return ha * 60 + ma - (hb * 60 + mb);
+    });
     console.log("Citas desde API:", citas);
     console.log("Ausencias desde API:", ausencias);
     console.log("Bloqueos desde API:", bloqueos);
-
     tabla.innerHTML = "";
 
-    for (const hora of horarios) {
+    for (const hora of horariosTotales) {
       const fila = document.createElement("tr");
 
       // Celda con checkbox
@@ -235,11 +332,16 @@ async function cargarHorarios(fecha) {
       const celdaHora = document.createElement("td");
       celdaHora.textContent = hora;
       fila.appendChild(celdaHora);
-
-      const horaNormalizada = normalizarHora(hora);
       const celdaDetalle = document.createElement("td");
+      const [horaInicioH, horaInicioM] = hora.split(':').map(Number);
+      const horaInicioMinutos = horaInicioH * 60 + horaInicioM;
+      const horaFinMinutos = horaInicioMinutos + 30;
 
-      const citasHora = citas.filter(c => c.hora?.slice(0, 5) === hora.padStart(5, '0'));
+      const citasHora = citas.filter(c => {
+        const [ch, cm] = c.hora?.split(':').map(Number);
+        const citaMinutos = ch * 60 + cm;
+        return citaMinutos >= horaInicioMinutos && citaMinutos < horaFinMinutos;
+      });
       const bloqueo = bloqueos.find(b => b.hora?.slice(0, 5) === hora.padStart(5, '0'));
       const ausencia = ausencias.find(a => a.hora?.slice(0, 5) === hora.padStart(5, '0'));
 
@@ -436,6 +538,7 @@ function abrirModalEditarCita(hora, datosCita) {
   localStorage.setItem("fechaCita", datosCita.fecha);
   // ID de la cita
   document.getElementById("modalEditarCita").dataset.idCita = datosCita.idCita;
+  localStorage.setItem("idCita", datosCita.idCita);
   // 🔍 Muestra los datos que vienen de la API
   console.log("Cita recibida para editar:", datosCita);
 
@@ -474,7 +577,7 @@ async function obtenerTelefonoPaciente(nombre) {
   }
 
   try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/telefonoPaciente?nombrePaciente=${nombre}`);
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/telefonoPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
     if (!res.ok) throw new Error("No se encontró al paciente");
     const data = await res.json();
     return data;
@@ -482,6 +585,55 @@ async function obtenerTelefonoPaciente(nombre) {
     mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
     console.error(e);
   }
+}
+
+let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
+function verificarCambiosEnCitas() {
+  fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadosCita')
+    .then(res => res.json())
+    .then(citas => {
+      citas.forEach(cita => {
+        const id = cita.idCita;
+        const nuevoEstado = cita.estado;
+        const estadoAnterior = estadosAnteriores[id];
+
+        if (estadoAnterior && estadoAnterior !== nuevoEstado) {
+          mostrarAlerta('info', `La cita ${id} ha cambiado de estado a ${nuevoEstado}`);
+        }
+
+        // Actualizar el estado almacenado
+        estadosAnteriores[id] = nuevoEstado;
+      });
+
+      // Guardar en localStorage para futuras comparaciones
+      localStorage.setItem("estadosCitas", JSON.stringify(estadosAnteriores));
+    })
+    .catch(err => {
+      console.error("Error al verificar los estados de las citas", err);
+    });
+}
+
+function enviarRecordatorio(telefono, idCita) {
+  fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatorio', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      telefono: telefono,
+      idCita: idCita,
+      plantilla: 'recordatorio_de_cita'
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      mostrarAlerta("success", "Recordatorio enviado");
+      console.log(data);
+    })
+    .catch(err => {
+      mostrarAlerta("error", "Error al enviar recordatorio");
+      console.error(err);
+    });
 }
 
 document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
@@ -520,6 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
   fechaInput.valueAsDate = new Date();
   const fechaHoy = fechaInput.value;
+  document.getElementById("fechaTabla").textContent = fechaHoy;
   cargarTrabajadores("trabajador");
   cargarTrabajadores("trabajadorModal");
   cargarTrabajadores("EditartrabajadorModal");
@@ -532,9 +685,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
   console.log("Usuario", nombre, "ID", id, "Rol", rol);
   cargarHorarios(fechaHoy);
-  if (nombre !== "Psic Majo García" && id !== 6) {
-    document.getElementById("hora").disabled = true;
-  }
+  const inputHora = document.getElementById("hora");
+  setInterval(verificarCambiosEnCitas(), 30000);
+  inputHora.disabled = true;
+  selectPrincipal.addEventListener("change", () => {
+    const nombre = selectPrincipal.value;
+    const esMajo = nombre === "Psic Majo García";
+
+    inputHora.disabled = !esMajo;
+    console.log("Select cambió a:", nombre, "| ¿Desbloquear hora?", esMajo);
+  });
   const celdaCheck = document.createElement("td");
   celdaCheck.innerHTML = `<input type="checkbox" class="check-horario" value="${hora}">`;
 
@@ -575,6 +735,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const fechaValor = fechaInput.value;
 
       if (rol === "ESPECIALISTA") {
+        document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
       } else {
         const nombre = selectPrincipal?.value?.trim();
@@ -584,6 +745,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("idSelectPrincipal", id);
           }
         }
+        document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
       }
     });
@@ -601,7 +763,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${nombre}`);
         if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
         const data = await res.json();
-        mostrarAlerta("success", "✅ Profesional seleccionado correctamente");
         console.log("ID del trabajador guardado:", data);
         localStorage.setItem("idTrabajadorSeleccionado", data);
       } catch (e) {
@@ -640,6 +801,37 @@ document.addEventListener("DOMContentLoaded", () => {
     modalMotivo.show();
   });
 
+  document.getElementById("recordatorioWhastApp").addEventListener("click", async () => {
+    try {
+      const nombrePacienteRecordatorio = document.getElementById("Editarpaciente").value;
+      const idCita = localStorage.getItem("idCita");
+      if (!nombrePacienteRecordatorio) {
+        mostrarAlerta("error", "Por favor, selecciona un paciente");
+        return;
+      }
+      const telefono = await obtenerTelefonoPaciente(nombrePacienteRecordatorio);
+      console.log("Teléfono del paciente:", telefono);
+      if (!telefono || telefono.length === 0) {
+        mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
+        return;
+      }
+      console.log("ID de la cita:", idCita);
+      console.log("Teléfono a enviar:", telefono[0]);
+      enviarRecordatorio(telefono[0], idCita);
+    } catch (error) {
+      console.log("Error al enviar el recordatorio:", error);
+      mostrarAlerta("error", "No se pudo enviar el recordatorio");
+    }
+  });
+
+  document.getElementById("formMotivo").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const motivo = document.getElementById("motivo").value;
+    const fecha = document.getElementById("fechaSeleccionada").value;
+    const hora = seleccionados.join(",");
+    const rol = localStorage.getItem("rol");
+  });
+
   document.getElementById("checkAll").addEventListener("change", function () {
     const check = document.querySelectorAll(".check-horario");
     check.forEach(chk => chk.checked = this.checked);
@@ -672,7 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "DELETE"
     }).then(response => response.json()).then(data => {
       if (data.success) {
-         bootstrap.Modal.getInstance(document.getElementById("modalDesbloquearHorario")).hide();
+        bootstrap.Modal.getInstance(document.getElementById("modalDesbloquearHorario")).hide();
         cargarHorarios(fechaInput.value);
         mostrarAlerta("success", "Horario desbloqueado correctamente");
       } else {
@@ -700,21 +892,35 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al cargar pacientes:", error);
     });
 
-  document.getElementById("seguros").addEventListener("change", () => {
-    const seguros = document.getElementById("seguros").value.toLowerCase();
+  document.getElementById("seguros").addEventListener("change", (e) => {
+    // Variables comunes
+    const seleccionada = e.target.value.trim();
+    const inputEmpleado = document.getElementById("noseguros");
     const valorInput = document.getElementById("valor");
-    const noseguros = document.getElementById("noseguros");
+    const segurosValue = seleccionada.toLowerCase();
 
-    if (seguros.includes("cita") || seguros.includes("ninguno")) {
+    // Primera parte: Manejo del número de empleado
+    if (seleccionada !== empresaPacienteOriginal) {
+      inputEmpleado.value = "";
+    } else {
+      inputEmpleado.value = numeroEmpleadoOriginal;
+    }
+
+    // Segunda parte: Habilitar/deshabilitar campos según tipo de seguro
+    if (segurosValue.includes("cita") || segurosValue.includes("ninguno")) {
       valorInput.disabled = false;
       valorInput.value = "";
-      noseguros.disabled = true;
-      noseguros.value = "";
+      inputEmpleado.disabled = true;
+      inputEmpleado.value = "";
     } else {
       valorInput.disabled = true;
       valorInput.value = "0";
-      noseguros.disabled = false;
-      noseguros.value = "";
+      inputEmpleado.disabled = false;
+
+      // Mantener el valor original si corresponde
+      if (seleccionada === empresaPacienteOriginal) {
+        inputEmpleado.value = numeroEmpleadoOriginal;
+      }
     }
   });
 
@@ -724,7 +930,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombrePaciente = document.getElementById("pacientes").value;
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
-
+    cargarEmpresayNempleado(nombrePaciente);
     const [idPaciente, idEspecialista, idServicio] = await Promise.all([
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/pacientesByName?nombrePaciente=${encodeURIComponent(nombrePaciente)}`).then(r => r.json()),
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${encodeURIComponent(nombreProfesional)}`).then(r => r.json()),
@@ -766,9 +972,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultado = await res.json();
     if (res.ok && resultado.success) {
       mostrarAlerta("success", "Cita agendada correctamente.");
+      document.getElementById("formCita").reset();
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
-      document.getElementById("formCita").reset();
     } else {
       mostrarAlerta("warning", "No se pudo agendar la cita.");
     }
@@ -776,24 +982,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("formMotivo").addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const motivo = document.getElementById("motivo").value.trim();
     if (!motivo) return mostrarAlerta("warning", "Por favor, ingrese un motivo válido.");
 
     const fecha = document.getElementById("fechaSeleccionada").value;
-    const idSesion = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
-      ? (selectedIdProfesional || id)
-      : id;
+    let idProfesional = id;
+    if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
+      idProfesional = await obtenerIdTrabajador(document.getElementById("trabajador").value);
+      console.log("El id por parte del select es:", idProfesional);
+    }
 
-    if (!idSesion) return mostrarAlerta("warning", "No hay un ID válido para el profesional.");
+    if (!idProfesional) return mostrarAlerta("warning", "No hay un ID válido para el profesional.");
 
     await Promise.all(seleccionados.map(async (horaNormal) => {
       const hora = horaNormal.length === 5 ? horaNormal + ":00"
         : horaNormal.length === 4 ? "0" + horaNormal + ":00"
           : horaNormal;
-      const datosBloqueo = { idProfesional: idSesion, hora, fecha, motivo };
+      const datosBloqueo = { idProfesional, hora, fecha, motivo };
 
-      const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/BloquearHorarios?Sessionrol=${rol}&Sessionid=${idSesion}`, {
+      const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/BloquearHorarios?Sessionrol=${rol}&Sessionid=${idProfesional}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datosBloqueo)
@@ -934,6 +1141,62 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarAlerta("danger", "Error al procesar la solicitud.");
     }
   });
+
+  const modalCita = document.getElementById("modalCita");
+  const modalEditarCita = document.getElementById("modalEditarCita");
+  const modalMotivoAccion = document.getElementById("modalMotivo");
+  const modalAusencia = document.getElementById("modalAusencia");
+  const modalCancelar = document.getElementById("modalCancelar");
+  const modalRepetirCita = document.getElementById("modalRepetirCita");
+  const modalCambiarHorario = document.getElementById("modalCambiarHorario");
+  let empresaPacienteOriginal = ""; // Para comparar si el usuario regresa a la empresa original
+  let numeroEmpleadoOriginal = "";
+
+  modalCita.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formCita");
+    form.reset();
+  });
+
+  modalEditarCita.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formEditarCita");
+    form.reset();
+  });
+
+  modalMotivoAccion.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formMotivoAccion");
+    form.reset();
+  });
+
+  modalAusencia.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formAusencia");
+    form.reset();
+  });
+
+  modalCancelar.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formCancelar");
+    form.reset();
+  });
+
+  modalRepetirCita.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formRepetirCita");
+    form.reset();
+  });
+
+  modalCambiarHorario.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formCambiarHorario");
+    form.reset();
+  });
+
+  document.getElementById("pacientes").addEventListener("change", async (e) => {
+    const nombre = e.target.value.trim();
+    if (nombre) {
+      const data = await cargarEmpresayNempleado(nombre);
+      if (data) {
+        empresaPacienteOriginal = data.empresa;
+        numeroEmpleadoOriginal = data.empleado;
+      }
+    }
+  });
 });
 
 function abrirVentanaConfiguracion() {
@@ -941,7 +1204,7 @@ function abrirVentanaConfiguracion() {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
-    window.location.href = '/configuracion.html';
+    window.location.href = '/frontend/configuracion.html';
   }
 }
 
@@ -958,6 +1221,6 @@ function abrirVentanaR() {
 }
 
 function CerrarSesion() {
-  window.location.href = '/index.html';
+  window.location.href = '/frontend/index.html';
   localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
 }

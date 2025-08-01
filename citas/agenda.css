@@ -1,4 +1,4 @@
-body {
+    body {
       padding-top: 70px;
       /* para que el contenido no se esconda debajo del navbar fijo */
     }
@@ -72,66 +72,50 @@ body {
 
     @media (max-width: 768px) {
       .agenda-layout {
-        flex-direction: column;
-        gap: 10px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
       }
 
-      /* Solo la columna de herramientas se va arriba */
       .tools-container {
-        order: -1;
+        order: -1 !important;
         width: 100% !important;
-        flex: 1 1 100%;
       }
 
       .tabla-container {
-        order: 0;
-        /* Mantener la tabla abajo */
+        order: 0 !important;
         width: 100% !important;
-        flex: 1 1 100%;
       }
     }
 
     .calendar {
       width: 100%;
-      max-width: none;
+      max-width: 350px;
       margin: auto;
       border: 10px solid #ccc;
       border-radius: 10px;
       padding: 10px;
       background: white;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .flatpickr-calendar {
-      width: 100% !important;
       box-sizing: border-box;
-      text-align: center;
     }
 
-    .flatpickr-days,
-    .flatpickr-days .dayContainer {
-      display: grid !important;
+    .flatpickr-months {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Día de la semana (Lun, Mar, etc.) */
+    .flatpickr-weekdays {
+      display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      justify-items: center;
-      width: 100% !important;
-      margin: 0 auto;
-    }
-
-    /* Día individual */
-    .flatpickr-day {
+      font-weight: bold;
       text-align: center;
-      padding: 0;
-      width: 100%;
-      max-width: 40px;
-      height: 40px;
-      line-height: 40px;
-      border-radius: 6px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .flatpickr-day.today {
-      border: 10px solid #007bff !important;
+      margin-bottom: 5px;
     }
 
     /*# sourceMappingURL=Agenda.css.map */
