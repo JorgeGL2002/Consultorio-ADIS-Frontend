@@ -187,13 +187,13 @@ async function generateReport(reportType) {
             case 'records':
                 url += '/reporteHistoriasClinicas';
                 if (rol === "ESPECIALISTA") {
-                    params.append('rol', userRole);
-                    params.append('id', userId);
-                } else {
+                    params.append('rol', rol);
+                    params.append('usuario', nombre);
+                } else if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
                     const rolUsuario = document.getElementById('rolInput').value || userRole;
-                    const idUsuario = localStorage.getItem("idSelectPrincipal") || '0';
+                    const usuario = document.getElementById('trabajador').value || userName;
                     params.append('rol', rolUsuario);
-                    params.append('id', idUsuario);
+                    params.append('usuario', usuario);
                 }
                 break;
 
@@ -229,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (selectedIdProfesional) {
                 localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
-                cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
             } else {
                 mostrarAlerta("warning", "No se pudo obtener el ID del profesional seleccionado");
             }
