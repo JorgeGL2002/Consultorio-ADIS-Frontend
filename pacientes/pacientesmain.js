@@ -59,13 +59,14 @@ async function recuperarDatos(nombre) {
     document.getElementById("RFC").value = paciente.rfc || "";
 
     // DATOS PROFESIONALES
-    document.getElementById("empresa").value = paciente.empresa || "";
-    cargarSelect("modalidad", opcionesSelect.modalidad, datos.modalidad);
+    document.getElementById("seguros").value = cargarEmpresa(paciente.empresa);
+    document.getElementById("numero_empleado").value = paciente.numero_empleado || "";
+    document.getElementById("modalidad").value = cargarModalidad(paciente.modalidad);
     document.getElementById("planta").value = paciente.planta || "";
     document.getElementById("area").value = paciente.area || "";
     document.getElementById("trabajador").value = paciente.profesional || "";
     document.getElementById("estadoProfesional").value = paciente.estadoProfesional || "";
-    cargarSelect("discapacidad", opcionesSelect.discapacidad, datos.discapacidad);
+    document.getElementById("discapacidad").value = cargarDiscapacidad(paciente.discapacidad);
 
     // DATOS EMERGENCIA
     document.getElementById("nombreContacto").value = paciente.contEmergencia || "";
@@ -111,7 +112,8 @@ async function actualizarDatos(nombre) {
     rfc: document.getElementById("RFC").value,
 
     // DATOS PROFESIONALES
-    empresa: document.getElementById("empresa").value,
+    empresa: document.getElementById("seguros").value,
+    numero_empleado: document.getElementById("numero_empleado").value,
     modalidad: document.getElementById("modalidad").value,
     planta: document.getElementById("planta").value,
     area: document.getElementById("area").value,
@@ -176,6 +178,21 @@ function cargarTrabajadores(idSelect) {
     });
 }
 
+function cargarSeguros(idSelect) {
+  const select = document.getElementById(idSelect);
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/seguros")
+    .then(r => r.json())
+    .then(data => {
+      select.innerHTML = "<option value='' disabled selected>Selecciona una empresa</option>";
+      data.forEach(s => {
+        const option = new Option(s, s);
+        select.appendChild(option);
+      });
+    }).catch(() => {
+      select.innerHTML = "<option>Error al cargar</option>";
+    });
+}
+
 function cargarEstados(idSelect) {
   const select = document.getElementById(idSelect);
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/Estados")
@@ -228,6 +245,60 @@ function cargarColonia(coloniaPaciente, idSelect = "colonia") {
     .catch(err => console.error("Error al cargar colonias:", err));
 }
 
+function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
+  const select = document.getElementById(idSelect);
+  // Limpia el select
+  select.innerHTML = '<option value="" disabled selected>Empresa</option>';
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/empresa")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(nombre => {
+        const option = new Option(nombre, nombre);
+        if (nombre.toLowerCase() === empresaPaciente.toLowerCase()) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    })
+    .catch(err => console.error("Error al cargar empresas:", err));
+}
+
+function cargarModalidad(modalidadPaciente, idSelect = "modalidad") {
+  const select = document.getElementById(idSelect);
+  // Limpia el select
+  select.innerHTML = '<option value="" disabled selected>Modalidad</option>';
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/modalidad")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(nombre => {
+        const option = new Option(nombre, nombre);
+        if (nombre.toLowerCase() === modalidadPaciente.toLowerCase()) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    })
+    .catch(err => console.error("Error al cargar modalidad:", err));
+}
+
+function cargarDiscapacidad(discapacidadPaciente, idSelect = "discapacidad") {
+  const select = document.getElementById(idSelect);
+  // Limpia el select
+  select.innerHTML = '<option value="" disabled selected>Discapacidad</option>';
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/discapacidad")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(nombre => {
+        const option = new Option(nombre, nombre);
+        if (nombre.toLowerCase() === discapacidadPaciente.toLowerCase()) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    })
+    .catch(err => console.error("Error al cargar discapacidades:", err));
+}
+
 function cargarSexo(sexoPaciente, idSelect = "sexo") {
   const select = document.getElementById(idSelect);
 
@@ -267,7 +338,6 @@ function mostrarAlerta(tipo, mensaje) {
   alerta.style.maxWidth = "800px";
   alerta.style.fontSize = "0.9rem";
   alerta.style.wordWrap = "break-word";
-  alerta.style.paddingTop = "70px";
 
   alerta.innerHTML = `
     <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
@@ -289,6 +359,7 @@ function mostrarAlerta(tipo, mensaje) {
 function abrirModalPacientes() {
   const modal = new bootstrap.Modal(document.getElementById("modalPaciente"));
   modal.show();
+  cargarSeguros("seguros");
 }
 
 function cargarPacientes(filtro = "") {
@@ -320,6 +391,7 @@ function cargarPacientes(filtro = "") {
 function abrirModalNuevoPaciente() {
   const modal = new bootstrap.Modal(document.getElementById("modalNuevoPaciente"));
   modal.show();
+  cargarSeguros("Nuevoseguro");
   cargarLugarNacimiento("NuevolugarNacimiento");
   cargarTrabajadores("Nuevotrabajador");
 }
@@ -343,7 +415,8 @@ async function nuevoPaciente() {
     rfc: document.getElementById("NuevoRFC").value,
 
     // DATOS PROFESIONALES
-    empresa: document.getElementById("Nuevoempresa").value,
+    empresa: document.getElementById("Nuevoseguro").value,
+    numero_empleado: document.getElementById("Nuevonumero_empleado").value,
     modalidad: document.getElementById("Nuevomodalidad").value,
     planta: document.getElementById("Nuevoplanta").value,
     area: document.getElementById("Nuevoarea").value,
@@ -400,19 +473,44 @@ document.addEventListener("DOMContentLoaded", () => {
   //cargarTrabajadores("NuevoTrabajador");
   //cargarEstados("NuevoLugarNacimiento");
   cargarPacientes();
-  const otro = document.getElementById("otro");
+  let otro = document.getElementById("otro");
+  const labelOtro = document.getElementById("labelOtro");
   otro.hidden = true;
+  labelOtro.hidden = true;
   const modalElement = document.getElementById("modalNuevoPaciente");
-  const valorComoSupiste = document.getElementById("comoSupiste").value.toLowerCase();
+  let valorComoSupiste = document.getElementById("comoSupiste").value.toLowerCase();
+  const empresaSelects = [
+    { selectId: "seguros", inputId: "numero_empleado" },
+    { selectId: "Nuevoseguro", inputId: "Nuevonumero_empleado" }
+  ];
 
+  empresaSelects.forEach(({ selectId, inputId }) => {
+    const select = document.getElementById(selectId);
+    const input = document.getElementById(inputId);
+
+    // Inicialmente ocultamos el input y le asignamos 0
+    input.value = 0;
+    input.style.display = "none";
+
+    select.addEventListener("change", () => {
+      if (select.value === "") {
+        input.value = 0;
+        input.style.display = "none";
+      } else {
+        input.value = "";
+        input.style.display = "block";
+      }
+    });
+  });
 
   document.getElementById("comoSupiste").addEventListener("change", (e) => {
-    valorComoSupiste = e.target.value.toLowerCase();
-    if (valorComoSupiste.includes("otro")) {
-      otro.hidden = true;
-      otro.value = "";
-    } else {
+    if (valorComoSupiste === "otro") {
+      labelOtro.hidden = false;
       otro.hidden = false;
+      otro.value = ""; // permitir que el usuario escriba
+    } else {
+      labelOtro.hidden = true;
+      otro.hidden = true;
       otro.value = "No aplica";
     }
   });
@@ -433,6 +531,37 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("localidad").value = datos[0].localidad;
 
           const coloniaSelect = document.getElementById("colonia");
+          coloniaSelect.innerHTML = "Colonia";
+          datos.forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = d.colonia;
+            opt.textContent = d.colonia;
+            coloniaSelect.appendChild(opt);
+          });
+        }
+      } catch (error) {
+        mostrarAlerta("danger", "No se pudo encontrar información del código postal.");
+        console.log(error);
+      }
+    }
+  });
+
+  document.getElementById("NuevoCP").addEventListener("keypress", async (e) => {
+    if (e.key === "Enter") {
+      const cp = e.target.value.trim();
+      console.log("CP:", cp);
+      if (!cp) return;
+      try {
+        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/domicilio?cp=${cp}`);
+        if (!res.ok) throw new Error("Error de CP");
+        const datos = await res.json();
+        if (datos.length > 0) {
+
+          document.getElementById("NuevoestadosInput").value = datos[0].estado;
+          document.getElementById("Nuevomunicipio").value = datos[0].municipio;
+          document.getElementById("Nuevolocalidad").value = datos[0].localidad;
+
+          const coloniaSelect = document.getElementById("Nuevocolonia");
           coloniaSelect.innerHTML = "Colonia";
           datos.forEach(d => {
             const opt = document.createElement("option");

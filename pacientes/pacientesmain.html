@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="/assets/logocorto.png" />
+  <link rel="icon" type="image/svg+xml" href="../assets/logocorto.png" />
   <title>Pacientes | Fundación ADIS</title>
 
   <style>
@@ -17,7 +17,8 @@
 </head>
 
 <body class="bg-light">
-  <!-- ✅ Navbar fija -->
+
+  <!-- ✅ Navbar fija --> 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -78,27 +79,35 @@
         </div>
         <div class="modal-body">
           <form id="formPaciente">
-
             <!-- DATOS DEL PACIENTE -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos del paciente</label>
+
               <input type="hidden" id="nombrePaciente" name="nombrePaciente">
+
+              <label for="telefono">Teléfono</label>
               <input type="text" class="form-control mb-3" id="telefono" name="telefono" placeholder="Teléfono"
                 required>
 
+              <label for="sexo">Sexo</label>
               <select name="sexo" id="sexo" class="form-select mb-3" required>
                 <option value="">Sexo</option>
                 <option value="M">M</option>
                 <option value="F">F</option>
               </select>
 
+              <label for="fechaNacimiento">Fecha de nacimiento</label>
               <input type="date" class="form-control mb-3" id="fechaNacimiento" name="fechaNacimiento" required>
+
+              <label for="edad">Edad</label>
               <input type="number" class="form-control mb-3" id="edad" name="edad" placeholder="Edad" required>
 
+              <label for="lugarNacimiento">Lugar de nacimiento</label>
               <select name="lugarNacimiento" id="lugarNacimiento" class="form-select mb-3">
                 <option value="" disabled selected>Lugar de nacimiento</option>
               </select>
 
+              <label for="nivelEstudio">Nivel de estudio</label>
               <select name="nivelEstudio" id="nivelEstudio" class="form-select mb-3">
                 <option value="" disabled selected>Nivel de estudio</option>
                 <option value="primaria">Primaria</option>
@@ -108,9 +117,15 @@
                 <option value="posgrado">Posgrado</option>
                 <option value="doctorado">Doctorado</option>
               </select>
+
+              <label for="gradoEstudio">Grado de estudio</label>
               <input type="text" class="form-control mb-3" id="gradoEstudio" name="gradoEstudio"
                 placeholder="Grado de estudio">
+
+              <label for="ocupacion">Ocupación</label>
               <input type="text" class="form-control mb-3" id="ocupacion" name="ocupacion" placeholder="Ocupación">
+
+              <label for="estadoCivil">Estado civil</label>
               <select name="estadoCivil" id="estadoCivil" class="form-select mb-3">
                 <option value="" disabled selected>Estado civil</option>
                 <option value="Soltero">Soltero</option>
@@ -118,24 +133,46 @@
                 <option value="Viudo">Viudo</option>
                 <option value="Divorciado">Divorciado</option>
               </select>
+
+              <label for="CURP">CURP</label>
               <input type="text" class="form-control mb-3" name="CURP" id="CURP" placeholder="CURP">
+
+              <label for="RFC">RFC</label>
               <input type="text" class="form-control mb-3" name="RFC" id="RFC" placeholder="RFC">
             </div>
 
             <!-- DOMICILIO -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos de domicilio</label>
+
+              <label for="CP">Código postal</label>
               <input type="text" class="form-control mb-3" id="CP" name="CP" placeholder="Código postal">
+
+              <label for="estadosInput">Estado</label>
               <input type="text" class="form-control mb-3" id="estadosInput" name="estadosInput" placeholder="Estado">
+
+              <label for="municipio">Municipio</label>
               <input type="text" class="form-control mb-3" id="municipio" name="municipio" placeholder="Municipio">
+
+              <label for="localidad">Localidad</label>
               <input type="text" class="form-control mb-3" name="localidad" id="localidad" placeholder="Localidad">
+
+              <label for="colonia">Colonia</label>
               <select name="colonia" id="colonia" class="form-select mb-3">
                 <option value="" selected>Colonia</option>
               </select>
+
+              <label for="manzana">Manzana</label>
               <input type="text" class="form-control mb-3" name="manzana" id="manzana" placeholder="Manzana">
+
+              <label for="calle">Calle</label>
               <input type="text" class="form-control mb-3" id="calle" name="calle" placeholder="Calle">
+
+              <label for="numeroInt">Número interior</label>
               <input type="text" class="form-control mb-3" id="numeroInt" name="numeroInt"
                 placeholder="Número interior">
+
+              <label for="numeroExt">Número exterior</label>
               <input type="text" class="form-control mb-3" id="numeroExt" name="numeroExt"
                 placeholder="Número exterior">
             </div>
@@ -143,21 +180,32 @@
             <!-- PROFESIONALES -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos profesionales</label>
-              <input type="text" class="form-control mb-3" id="empresa" name="empresa" placeholder="Empresa">
 
+              <label for="empresa">Empresa</label>
+              <select class="form-select mb-3" id="seguros" required>
+                <option value="" disabled selected>Cargando empresas...</option>
+              </select>
+              <label for="numero_empleado">Número de empleado</label>
+              <input type="text" class="form-control mb-3" name="numero_empleado" id="numero_empleado" placeholder="Número de empleado" required>
+              <label for="modalidad">Modalidad</label>
               <select name="modalidad" id="modalidad" class="form-select mb-3">
                 <option value="" disabled selected>Modalidad</option>
                 <option value="linea">En línea</option>
                 <option value="presencial">Presencial</option>
               </select>
 
+              <label for="planta">Planta</label>
               <input type="text" class="form-control mb-3" name="planta" id="planta" placeholder="Planta">
+
+              <label for="area">Área</label>
               <input type="text" class="form-control mb-3" name="area" id="area" placeholder="Área">
 
+              <label for="trabajador">Trabajador asignado</label>
               <select class="form-select mb-3" id="trabajador">
                 <option value="" disabled selected>--- Cargando usuarios... ---</option>
               </select>
 
+              <label for="estadoProfesional">Estado profesional</label>
               <select name="estadoProfesional" id="estadoProfesional" class="form-select mb-3">
                 <option value="" disabled selected>Estado</option>
                 <option value="Activo">Activo</option>
@@ -168,6 +216,8 @@
             <!-- DISCAPACIDAD -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Discapacidad</label>
+
+              <label for="discapacidad">¿Tiene alguna discapacidad?</label>
               <select name="discapacidad" id="discapacidad" class="form-select mb-3">
                 <option value="" disabled selected>¿Tiene alguna discapacidad?</option>
                 <option value="motriz">Motriz</option>
@@ -182,23 +232,35 @@
             <!-- CONTACTO DE EMERGENCIA -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Contacto de emergencia</label>
+
+              <label for="nombreContacto">Nombre del contacto</label>
               <input type="text" class="form-control mb-3" name="nombreContacto" id="nombreContacto"
                 placeholder="Nombre del contacto">
+
+              <label for="numeroEmergencia">Número de emergencia</label>
               <input type="number" class="form-control mb-3" name="numeroEmergencia" id="numeroEmergencia"
                 placeholder="Número de emergencia">
+
+              <label for="parentesco">Parentesco</label>
               <input type="text" class="form-control mb-3" name="parentesco" id="parentesco" placeholder="Parentesco">
             </div>
 
             <!-- CONSULTA -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Consulta</label>
+
+              <label for="motivo">Motivo de la consulta</label>
               <textarea name="motivo" id="motivo" class="form-control mb-3" rows="2"
                 placeholder="Motivo de la consulta"></textarea>
+
+              <label for="detalles">Detalles</label>
               <textarea name="detalles" id="detalles" class="form-control mb-3" rows="2"
                 placeholder="Cuéntanos más detalles"></textarea>
+
               <input type="date" class="form-control mb-3" name="fechaInicio" id="fechaInicio" hidden>
               <input type="date" class="form-control mb-3" name="fechaAlta" id="fechaAlta" hidden>
 
+              <label for="comoSupiste">¿Cómo supiste de nosotros?</label>
               <select name="comoSupiste" id="comoSupiste" class="form-select mb-3">
                 <option value="" disabled selected>¿Cómo supiste de nosotros?</option>
                 <option value="Internet">Internet</option>
@@ -207,6 +269,7 @@
                 <option value="Otro">Otro</option>
               </select>
 
+              <label for="otro" id="labelOtro">Otro (describe)</label>
               <textarea name="otro" id="otro" class="form-control mb-3" rows="2"
                 placeholder="Cuéntanos cómo supiste de nosotros"></textarea>
             </div>
@@ -306,9 +369,11 @@
             <!-- PROFESIONALES -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos profesionales</label>
-              <input type="text" class="form-control mb-3" id="Nuevoempresa" name="Nuevoempresa" placeholder="Empresa">
-
-              <select name="Nuevomodalidad" id="Nuevomodalidad" class="form-select mb-3">
+              <select class="form-select mb-3" id="Nuevoseguro" required>
+                <option value="" disabled selected>Cargando empresas...</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="Nuevonumero_empleado" id="Nuevonumero_empleado" placeholder="Número de empleado">
+              <select name="Nuevomodalidad" id="Nuevomodalidad" class="form-select mb-3" required>
                 <option value="" disabled selected>Modalidad</option>
                 <option value="linea">En línea</option>
                 <option value="presencial">Presencial</option>
