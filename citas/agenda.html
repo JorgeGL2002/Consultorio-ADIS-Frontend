@@ -73,6 +73,13 @@
                     d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
                 </svg>
               </a></li>
+            <li class="nav-item"><a class="nav-link" onclick="abrirNotificaciones()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                  class="bi bi-bell-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+                </svg>
+              </a></li>
             <li class="nav-item"><a class="nav-link" onclick="CerrarSesion()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                   class="bi bi-door-open" viewBox="0 0 16 16">
@@ -124,7 +131,8 @@
       <select class="form-select mb-3" id="trabajador" required>
         <option value="" disabled selected>Cargando usuarios...</option>
       </select>
-      <div id="fechaSeleccionada"></div>
+
+      <div id="fechaSeleccionada" class="desktop-only"></div>
     </div>
   </div>
 
@@ -210,7 +218,8 @@
             <div class="mb-3">
               <label for="Editarpaciente" class="form-label fw-semibold">Nombre del paciente</label>
               <div class="input-group">
-                <input type="text" class="form-control" id="Editarpaciente" placeholder="Nombre del paciente" list="listaPacientes" required>
+                <input type="text" class="form-control" id="Editarpaciente" placeholder="Nombre del paciente"
+                  list="listaPacientes" required>
                 <button class="btn btn-success d-flex align-items-center gap-1" id="recordatorioWhastApp" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-whatsapp" viewBox="0 0 16 16">
@@ -435,6 +444,26 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Notificaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formNotificaciones">
+            <label for="cumpleaños" class="form-label">Cumpleaños de hoy</label>
+            <div class="mb-3 form-control" style="gap: 5px;">
+              <label class="form-label" id="cumpleaños"></label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div id="alertContainer" class=" position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 220px;">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">

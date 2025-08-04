@@ -3,6 +3,13 @@
       /* para que el contenido no se esconda debajo del navbar fijo */
     }
 
+    #fechaSeleccionada {
+      width: 100%;
+      max-width: 350px;
+      margin-bottom: 20px;
+    }
+
+
     .navbar {
       position: fixed;
       top: 0;
@@ -72,19 +79,17 @@
 
     @media (max-width: 768px) {
       .agenda-layout {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
+        flex-direction: column;
+        gap: 10px;
       }
 
       .tools-container {
-        order: -1 !important;
-        width: 100% !important;
+        order: -1;
+        width: 100%;
       }
 
       .tabla-container {
-        order: 0 !important;
-        width: 100% !important;
+        width: 100%;
       }
     }
 

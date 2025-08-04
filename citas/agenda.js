@@ -140,7 +140,7 @@ function construirUrlAusencia(fecha, rol, nombreProfesional, idProfesional) {
 
 async function AgendarUnoMas() {
   const hora = localStorage.getItem("horaCita");
-  const horaFormateada = hora.split(':').slice(0,2).join(':');
+  const horaFormateada = hora.split(':').slice(0, 2).join(':');
   console.log("Hora: ", horaFormateada);
   const fecha = localStorage.getItem("fechaCita");
 
@@ -565,6 +565,21 @@ function abrirModalEditarCita(hora, datosCita) {
 
   // 🟦 Mostrar modal
   const modal = new bootstrap.Modal(document.getElementById("modalEditarCita"));
+  modal.show();
+}
+
+function abrirNotificaciones() {
+  const label = document.getElementById("cumpleaños");
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(s => {
+        label.innerHTML += `${s} <br>`;
+      });
+    }).catch(() => {
+      label.innerHTML = "Error al cargar los cumpleaños";
+    });
+  const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
   modal.show();
 }
 
