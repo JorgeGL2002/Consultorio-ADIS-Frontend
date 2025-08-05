@@ -164,7 +164,7 @@ async function generateReport(reportType) {
             case 'personal':
                 url += '/reportePersonalCitas';
                 if (rol === "ESPECIALISTA") {
-                    params.append('ID', userId);
+                    params.append('ID', id);
                     params.append('profesional', document.getElementById('trabajador').value || "Especialista");
                 } else {
                     const nombreProfesional = document.getElementById('trabajador').value;
