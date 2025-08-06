@@ -142,26 +142,30 @@ async function generateReport(reportType) {
     const urlBase = 'https://api-railway-production-24f1.up.railway.app/api/test';
     let url = urlBase;
     const params = new URLSearchParams();
-
-    const month = document.getElementById('month').value;
-    const year = document.getElementById('year').value;
+    const nombrePaciente = document.getElementById('busqueda').value;
 
     if (!month || !year) {
         mostrarAlerta("warning", "Debes seleccionar mes y año");
         return;
     }
 
-    params.append('mes', month);
-    params.append('anio', year);
-
     try {
         switch (reportType) {
             case 'monthly':
+                const month = document.getElementById('month').value;
+                const year = document.getElementById('year').value;
+                if (!month || !year) {
+                    mostrarAlerta("warning", "Debes seleccionar mes y año");
+                    return;
+                }
+                params.append('mes', month);
+                params.append('anio', year);
                 if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reporteMensualCitas';
                 break;
 
             case 'personal':
+
                 url += '/reportePersonalCitas';
                 if (rol === "ESPECIALISTA") {
                     params.append('ID', id);
@@ -201,6 +205,13 @@ async function generateReport(reportType) {
                 if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reportePacientes';
                 break;
+            case 'citaspatients':
+                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
+                if (nombrePaciente === "") return mostrarAlerta("warning", "Debes buscar y escoger a un paciente primero");
+                url += `/reporteCitasPorPaciente?nombrePaciente=${encodeURIComponent(nombrePaciente)}`;
+                window.location.href = url;
+                return;
+                break;
         }
 
         // Descargar el reporte
@@ -234,4 +245,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Pacientes (datalist)
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+        .then(response => response.json())
+        .then(data => {
+            const lista = document.getElementById("listaPacientes");
+            lista.innerHTML = "";
+
+            data.forEach(paciente => {
+                const option = document.createElement("option");
+                option.value = paciente.nombre;
+                lista.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Error al cargar pacientes:", error);
+        });
 });

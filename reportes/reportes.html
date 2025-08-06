@@ -193,6 +193,38 @@
           </div>
         </div>
       </div>
+
+      <!-- Reporte de Citas por pacientes -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card">
+          <!-- Área clickeable que despliega el contenido -->
+          <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#formBuscarPaciente"
+            aria-expanded="false" aria-controls="formBuscarPaciente" style="cursor: pointer;">
+            <div class="card-icon">
+              <i class="fas fa-procedures"></i>
+            </div>
+            <h5 class="card-title">Reporte de Citas por Pacientes</h5>
+            <p class="card-text">Genera un reporte completo con todas las citas de un determinado paciente.</p>
+          </div>
+
+          <!-- Contenido colapsable dentro del card, pero fuera del trigger -->
+          <div class="collapse mt-3 px-3" id="formBuscarPaciente">
+            <form id="formBuscarPacienteForm">
+              <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
+                <div class="input-group w-100 w-md-50">
+                  <input type="text" id="busqueda" placeholder="Buscar paciente" class="form-control"
+                    list="listaPacientes">
+                  <datalist id="listaPacientes">
+                  </datalist>
+                </div>
+                <button class="btn btn-outline-primary" type="button" onclick="generateReport('citaspatients')">
+                  <i class="fas fa-download me-2"></i>Descargar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
