@@ -172,6 +172,8 @@ async function generateReport(reportType) {
                 if (rol === "ESPECIALISTA") {
                     params.append('ID', id);
                     params.append('profesional', document.getElementById('trabajador').value || "Especialista");
+                    params.append('mes', month);
+                    params.append('anio', year);
                 } else {
                     const nombreProfesional = document.getElementById('trabajador').value;
                     if (!nombreProfesional || nombreProfesional.includes("Selecciona")) {
