@@ -139,57 +139,75 @@ document.querySelectorAll('.report-card').forEach(card => {
 document.getElementById('year').value = new Date().getFullYear();
 
 async function generateReport(reportType) {
-    const urlBase = 'https://api-railway-production-24f1.up.railway.app/api/test';
-    let url = urlBase;
-    const params = new URLSearchParams();
     const nombrePaciente = document.getElementById('busqueda').value;
-
     if (!month || !year) {
         mostrarAlerta("warning", "Debes seleccionar mes y año");
         return;
     }
 
     try {
+        const params = new URLSearchParams();
+        const urlBase = 'https://api-railway-production-24f1.up.railway.app/api/test';
+        let url = urlBase;
+        const month = document.getElementById('month')?.value;
+        const year = document.getElementById('year')?.value;
         switch (reportType) {
             case 'monthly':
-                const month = document.getElementById('month').value;
-                const year = document.getElementById('year').value;
                 if (!month || !year) {
                     mostrarAlerta("warning", "Debes seleccionar mes y año");
                     return;
                 }
+                if (rol === "ESPECIALISTA") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
                 params.append('mes', month);
                 params.append('anio', year);
-                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
                 url += '/reporteMensualCitas';
                 break;
 
             case 'personal':
-
                 url += '/reportePersonalCitas';
+
                 if (rol === "ESPECIALISTA") {
                     params.append('ID', id);
                     params.append('profesional', document.getElementById('trabajador').value || "Especialista");
                 } else {
                     const nombreProfesional = document.getElementById('trabajador').value;
-                    if (!nombreProfesional || nombreProfesional.includes("Selecciona"))
+                    if (!nombreProfesional || nombreProfesional.includes("Selecciona")) {
                         mostrarAlerta("warning", "Debes seleccionar un profesional");
+                        return;
+                    }
 
                     const idProfesional = await obtenerIdTrabajador(nombreProfesional);
-                    if (!idProfesional) return mostrarAlerta("warning", "No se encontró al profesional");
+                    if (!idProfesional) {
+                        mostrarAlerta("warning", "No se encontró al profesional");
+                        return;
+                    }
+
+                    if (!month || !year) {
+                        mostrarAlerta("warning", "Debes seleccionar mes y año");
+                        return;
+                    }
 
                     params.append('ID', idProfesional);
                     params.append('profesional', nombreProfesional);
+                    params.append('mes', month);
+                    params.append('anio', year);
                 }
                 break;
 
             case 'workers':
-                if (rol !== "SUPER USUARIO") return mostrarAlerta("warning", "No tienes permisos para este reporte");
+                if (rol !== "SUPER USUARIO") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
                 url += '/reporteTrabajadores';
                 break;
 
             case 'records':
                 url += '/reporteHistoriasClinicas';
+
                 if (rol === "ESPECIALISTA") {
                     params.append('rol', rol);
                     params.append('usuario', nombre);
@@ -202,21 +220,32 @@ async function generateReport(reportType) {
                 break;
 
             case 'patients':
-                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
+                if (rol === "ESPECIALISTA") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
                 url += '/reportePacientes';
                 break;
+
             case 'citaspatients':
-                if (rol === "ESPECIALISTA") return mostrarAlerta("warning", "No tienes permisos para este reporte");
-                if (nombrePaciente === "") return mostrarAlerta("warning", "Debes buscar y escoger a un paciente primero");
+                if (rol === "ESPECIALISTA") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
+                if (!nombrePaciente || nombrePaciente === "") {
+                    mostrarAlerta("warning", "Debes buscar y escoger a un paciente primero");
+                    return;
+                }
                 url += `/reporteCitasPorPaciente?nombrePaciente=${encodeURIComponent(nombrePaciente)}`;
                 window.location.href = url;
                 return;
-                break;
         }
-
         // Descargar el reporte
-        window.location.href = `${url}?${params.toString()}`;
+        const finalURL = params.toString().length > 0
+            ? `${url}?${params.toString()}`
+            : url;
 
+        window.location.href = finalURL;
     } catch (err) {
         console.error("Error generando el reporte:", err);
         mostrarAlerta("danger", "Error al generar el reporte");
