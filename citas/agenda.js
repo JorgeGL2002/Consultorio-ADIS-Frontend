@@ -814,11 +814,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (fechaInput) {
     fechaInput.addEventListener("change", async () => {
       const fechaValor = fechaInput.value;
-      const contenedor = document.getElementById("contenedorNotas");
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        contenedor.innerHTML = "";
         cargarNotas(fechaValor, id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
@@ -830,7 +828,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        contenedor.innerHTML = "";
         cargarNotas(fechaValor, localStorage.getItem("idSelectPrincipal") || id);
       }
     });
