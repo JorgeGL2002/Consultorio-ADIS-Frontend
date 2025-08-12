@@ -466,7 +466,6 @@ async function cargarNotas(fecha, rol, id) {
         <div class="card-icon">
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
-        <h5 class="card-title">Notas para hoy</h5>
         <label class="fw-bold">Titulo: ${n.titulo}</label>
         <textarea class="form-control" rows="3" readonly>${n.detalle || ""}</textarea>
         <label>Hora de inicio: ${n.horaInicio || "-"}</label><br>
