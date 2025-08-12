@@ -14,27 +14,62 @@
     <header class="header">
         <h1></h1>
     </header>
-    <div class="container-recuperar">
-        <div style="text-align: center; padding-bottom: 10px;">
-            <img src="assets/logocorto.png" width="48px" height="48px" alt="Logo de la fundacion ADIS" />
-        </div>
-        <div class="heading">
-            <h1>Recuperar contraseña</h1>
-            <p>Selecciona tu usuario e ingresa una nueva contraseña</p>
-        </div>
-        <form class="form-recuperar">
-            <select id="trabajador" required>
-                <option value="" disabled selected>--- Cargando usuarios... ---</option>
-            </select>
-
-            <input type="password" required name="password" id="password" placeholder="Nueva contraseña">
-            <input type="password" required name="Confirmarpassword" id="Confirmarpassword"
-                placeholder="Confirma contraseña">
-            <div class="recuperar_contraseña">
-                <button type="button" class="btn-recuperar" id="click">Cambiar contraseña</button>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg p-4" style="max-width: 420px; width: 100%;">
+            <!-- Logo -->
+            <div class="text-center mb-3">
+                <img src="assets/logocorto.png" width="60" height="60" alt="Logo de la fundación ADIS" />
             </div>
-        </form>
+
+            <!-- Encabezado -->
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">Recuperar contraseña</h4>
+                <p class="text-muted small mb-0">
+                    Selecciona tu usuario e ingresa una nueva contraseña
+                </p>
+            </div>
+
+            <!-- Formulario -->
+            <form>
+                <!-- Selección de usuario -->
+                <div class="mb-3">
+                    <label for="trabajador" class="form-label">Usuario</label>
+                    <select id="trabajador" class="form-select" required>
+                        <option value="" disabled selected>--- Cargando usuarios... ---</option>
+                    </select>
+                </div>
+
+                <!-- Botón para enviar OTP -->
+                <div class="d-grid mb-3">
+                    <button type="button" class="btn btn-primary" onclick="solicitarOTP()">
+                        Enviar código
+                    </button>
+                </div>
+
+                <!-- Formulario OTP (oculto inicialmente) -->
+                <div id="formOtp" style="display:none;">
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código OTP</label>
+                        <input type="text" id="codigo" class="form-control" placeholder="Ingresa el código recibido">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nuevaClave" class="form-label">Nueva contraseña</label>
+                        <input type="password" id="nuevaClave" class="form-control"
+                            placeholder="Ingresa tu nueva contraseña">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-success" onclick="validarOTP()">
+                            Cambiar contraseña
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+
+
 
     <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 220px;">
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -51,6 +86,34 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 <script>
+    function solicitarOTP() {
+        const usuario = document.getElementById("trabajador").value;
+        fetch("https://api-railway-production-24f1.up.railway.app/api/test/solicitarOtp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario })
+        }).then(r => r.json())
+            .then(data => {
+                mostrarAlerta("success", data.message || "Código enviado");
+                if (data.message) document.getElementById("formOtp").style.display = "block";
+            });
+    }
+
+    function validarOTP() {
+        const usuario = document.getElementById("trabajador").value;
+        const codigo = document.getElementById("codigo").value;
+        const nuevaClave = document.getElementById("nuevaClave").value;
+
+        fetch("https://api-railway-production-24f1.up.railway.app/api/test/validar-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario, codigo, nuevaClave })
+        }).then(r => r.json())
+            .then(data => mostrarAlerta("success", data.message || "Contraseña cambiada correctamente", true));
+            document.getElementById("formOtp").style.display = "none";
+            document.getElementById("formOtp").reset();
+    }
+
     function mostrarAlerta(tipo, mensaje, recargar = false) {
         const iconos = {
             success: "check-circle-fill",
@@ -90,7 +153,6 @@
         }, 3000);
     }
 
-
     function abrirVentanaInicio() {
         window.location.href = 'index.html';
     }
@@ -100,7 +162,7 @@
             .then(response => response.json())
             .then(data => {
                 const select = document.getElementById("trabajador");
-                select.innerHTML = "<option value='' disabled selected>--- Selecciona tu usuario ---</option>";
+                select.innerHTML = "<option value='' disabled selected>Selecciona tu usuario</option>";
 
                 data.forEach(trabajador => {
                     const option = document.createElement("option");
@@ -114,57 +176,6 @@
                 document.getElementById("trabajador").innerHTML =
                     "<option value=''>Error al cargar trabajadores</option>";
             });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const boton = document.querySelector(".recuperar_contraseña");
-
-        if (boton) {
-            boton.addEventListener("click", async () => {
-                const usuario = document.getElementById("trabajador").value.trim();
-                const nueva = document.getElementById("password").value;
-                const confirmar = document.getElementById("Confirmarpassword").value;
-
-                if (!usuario || !nueva || !confirmar) {
-                    mostrarAlerta("warning", "Todos los campos son obligatorios.");
-                    return;
-                }
-
-                if (nueva !== confirmar) {
-                    mostrarAlerta("warning", "Las contraseñas no coinciden.");
-                    return;
-                }
-
-                if (nueva.length < 8) {
-                    mostrarAlerta("warning", "La contraseña debe tener al menos 8 caracteres.");
-                    return;
-                }
-
-                try {
-                    const res = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/reset-password", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            usuario: usuario,
-                            nuevoPassword: nueva
-                        }),
-                    });
-
-                    if (res.ok) {
-                        mostrarAlerta("success", "Contraseña actualizada correctamente.", true);
-                        window.location.href = "index.html"; // Redirige al login
-                    } else {
-                        const mensaje = await res.text();
-                        mostrarAlerta("danger", mensaje);
-                    }
-                } catch (err) {
-                    console.error("Error al conectar con la API", err);
-                    mostrarAlerta("danger", "Error al conectar con la API");
-                }
-            });
-        } else {
-            console.error("No se encontró el botón .recuperar_contraseña");
-        }
     });
 </script>
 
