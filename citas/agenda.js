@@ -793,6 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
         cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
+        cargarNotas(fechaInput.value, selectedIdProfesional);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -813,10 +814,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (fechaInput) {
     fechaInput.addEventListener("change", async () => {
       const fechaValor = fechaInput.value;
-
+      const contenedor = document.getElementById("contenedorNotas");
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
+        contenedor.innerHTML = "";
+        cargarNotas(fechaValor, id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -827,9 +830,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        const contenedor = document.getElementById("contenedorNotas");
         contenedor.innerHTML = "";
-        cargarNotas(fechaValor, id);
+        cargarNotas(fechaValor, localStorage.getItem("idSelectPrincipal") || id);
       }
     });
   }
