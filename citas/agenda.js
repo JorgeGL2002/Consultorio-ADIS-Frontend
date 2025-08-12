@@ -445,11 +445,11 @@ function cargarTrabajadores(idSelect) {
     });
 }
 
-async function cargarNotas(fecha, id) {
+async function cargarNotas(fecha, rol, id) {
   const contenedor = document.getElementById("contenedorNotas");
   contenedor.innerHTML = "";
   try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/notasAgenda?fecha=${fecha}&idProfesional=${id}`);
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/notasAgenda?fecha=${fecha}&rol=${rol}&idProfesional=${id}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
     if (!data || data.length === 0) {
@@ -759,7 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarSeguros("Editarseguro");
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
-  cargarNotas(fechaHoy, id);
+  cargarNotas(fechaHoy, rol ,id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
@@ -793,7 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
         cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
-        cargarNotas(fechaInput.value, selectedIdProfesional);
+        cargarNotas(fechaInput.value, rol ,selectedIdProfesional);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -817,7 +817,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, id);
+        cargarNotas(fechaValor, rol,id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -828,7 +828,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, localStorage.getItem("idSelectPrincipal") || id);
+        cargarNotas(fechaValor, rol,localStorage.getItem("idSelectPrincipal") || id);
       }
     });
   }
