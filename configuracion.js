@@ -84,10 +84,45 @@ function mostrarAlerta(tipo, mensaje) {
     }, 3000);
 }
 
+function cargarTrabajadores(idSelect) {
+    const select = document.getElementById(idSelect);
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivosId")
+        .then(r => r.json())
+        .then(data => {
+            select.innerHTML = "<option value='' disabled selected>Selecciona un trabajador</option>";
+            data.forEach(t => {
+                const option = new Option(t.nombre, t.id); // value = id, texto = nombre
+                select.appendChild(option);
+            });
+        })
+        .catch(() => {
+            select.innerHTML = "<option>Error al cargar</option>";
+        });
+}
+
+function cargarNotas(idSelect) {
+    const select = document.getElementById(idSelect);
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/notas")
+        .then(r => r.json())
+        .then(data => {
+            select.innerHTML = "<option value='' disabled selected>Selecciona una nota</option>";
+            data.forEach(nota => {
+                const option = new Option(nota.titulo, nota.id); // mostrar titulo, pero guardar el id
+                select.appendChild(option);
+            });
+            console.log("Notas encontradas: ", data);
+            console.log("Select notas: ", option);
+        })
+        .catch(() => {
+            select.innerHTML = "<option>Error al cargar</option>";
+        });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarSeguros("seguros");
     cargarServicios("servicios");
+    cargarTrabajadores("trabajador");
+    cargarNotas("notas");
 
     document.getElementById("formServicio").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -133,6 +168,51 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    document.getElementById("formNotas").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById("titulo").value.trim();
+        const detalles = document.getElementById("detalles").value.trim(); // cambiar a detalle
+        const fecha = document.getElementById("fecha").value.trim();
+        const horaInicio = document.getElementById("horaInicio").value.trim();
+        const horaFin = document.getElementById("horaFin").value.trim();
+        const tipo = document.getElementById("tipo").value.trim();
+        const trabajador = document.getElementById("trabajador");
+        if (trabajador.selectedOptions.length === 0) {
+            mostrarAlerta("warning", "Selecciona un trabajador");
+            return;
+        }
+        const trabajadoresSeleccionados = Array.from(trabajador.selectedOptions).map(opt => parseInt(opt.value));
+        const id = localStorage.getItem("id");
+        const body = {
+            titulo,
+            detalle: detalles,
+            fecha,
+            horaInicio,
+            horaFin,
+            tipo,
+            idProfesionales: trabajadoresSeleccionados,
+            creadoPor: id
+        };
+        try {
+            const response = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/nuevaNota", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            console.log(JSON.stringify(body));
+            if (!response.ok) throw new Error("Error al crear la nota");
+
+            mostrarAlerta("success", "Nota agregada");
+            document.getElementById("formNotas").reset();
+            cargarNotas("notas");
+        } catch (error) {
+            console.error("Error al crear la nota:", error);
+            mostrarAlerta("danger", "Error al crear la nota");
+        }
+    });
+
     document.getElementById("formBorrarEmpresa").addEventListener("submit", async (e) => {
         e.preventDefault();
         const seguroSeleccionado = document.getElementById("seguros").value.trim();
@@ -172,6 +252,27 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error al borrar el servicio:", error);
             mostrarAlerta("danger", "Error al borrar el servicio");
+        }
+    });
+
+    document.getElementById("formEliminarNota").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const notaSeleccionado = document.getElementById("notas").value.trim();
+        if (!notaSeleccionado) {
+            mostrarAlerta("warning", "Selecciona una nota");
+            return;
+        }
+        try {
+            const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eliminarNota?id=${encodeURIComponent(notaSeleccionado)}`, {
+                method: "PUT"
+            });
+            if (!response.ok) throw new Error("Error al borrar la nota");
+            mostrarAlerta("success", "Nota borrada correctamente");
+            cargarNotas("notas");
+            document.getElementById("formEliminarNota").reset(); // Limpiar el formulario
+        } catch (error) {
+            console.error("Error al borrar la nota:", error);
+            mostrarAlerta("danger", "Error al borrar la nota");
         }
     });
 

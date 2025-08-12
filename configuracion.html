@@ -153,6 +153,87 @@
             </div>
         </div>
 
+        <div class="card mb-3 shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                Opciones para notas
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Notas</h5>
+                <p class="card-text">Agregue o elimine notas.</p>
+                <div class="mb-2 d-flex flex-column flex-md-row justify-content-md gap-2">
+                    <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formNotasDiv">Nueva nota</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formEliminarNotaDiv">Eliminar nota</a>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="formNotasDiv">
+                <form id="formNotas" class="p-3 bg-light rounded shadow-sm">
+                    <!-- Título y Detalles -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-2">
+                            <input type="text" id="titulo" class="form-control form-control-sm"
+                                placeholder="Título de la nota" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <input type="text" id="detalles" class="form-control form-control-sm"
+                                placeholder="Detalles de la nota" required>
+                        </div>
+                    </div>
+
+                    <!-- Fecha y Horarios -->
+                    <div class="row mb-3 align-items-end">
+                        <div class="col-md-4 mb-2">
+                            <label for="fecha" class="form-label mb-1">Fecha</label>
+                            <input type="date" id="fecha" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="horaInicio" class="form-label mb-1">Hora inicio</label>
+                            <input type="time" id="horaInicio" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="horaFin" class="form-label mb-1">Hora fin</label>
+                            <input type="time" id="horaFin" class="form-control form-control-sm">
+                        </div>
+                    </div>
+
+                    <!-- Tipo y Trabajador -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-2">
+                            <label for="tipo" class="form-label mb-1">Tipo de nota</label>
+                            <select name="tipo" id="tipo" class="form-select form-select-sm" required>
+                                <option value="" selected disabled>Selecciona el tipo</option>
+                                <option value="GENERAL">General</option>
+                                <option value="ESPECIALISTA">Especialista</option>
+                                <option value="INDIVIDUAL">Individual</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="trabajador" class="form-label mb-1">Trabajador (si aplica)</label>
+                            <select class="form-select form-select-sm" id="trabajador" multiple required>
+                                <option value="" disabled selected>Cargando usuarios...</option>
+                            </select>
+                            <small>Puedes seleccionar varios con CTRL + clic (o en móvil, tocar varias veces)</small>
+                        </div>
+                    </div>
+
+                    <!-- Botón -->
+                    <div class="text-end">
+                        <button class="btn btn-success btn-sm" type="submit">Guardar nota</button>
+                    </div>
+                </form>
+            </div>
+            <div class="collapse mt-3" id="formEliminarNotaDiv">
+                <form id="formEliminarNota">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <select class="form-select mb-3" id="notas" required>
+                        </select>
+                        <button class="btn btn-danger btn-sm" type="submit">Eliminar nota</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5; max-width: 220px;">
             <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
                 <symbol id="check-circle-fill" viewBox="0 0 16 16" style="width: 20px; margin-right: 8px;">
