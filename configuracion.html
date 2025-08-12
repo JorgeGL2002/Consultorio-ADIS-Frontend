@@ -200,20 +200,20 @@
                     <!-- Tipo y Trabajador -->
                     <div class="row mb-3">
                         <div class="col-md-6 mb-2">
-                            <label for="tipo" class="form-label mb-1">Tipo de nota</label>
-                            <select name="tipo" id="tipo" class="form-select form-select-sm" required>
-                                <option value="" selected disabled>Selecciona el tipo</option>
-                                <option value="GENERAL">General</option>
-                                <option value="ESPECIALISTA">Especialista</option>
-                                <option value="INDIVIDUAL">Individual</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-2">
                             <label for="trabajador" class="form-label mb-1">Trabajador (si aplica)</label>
                             <select class="form-select form-select-sm" id="trabajador" multiple required>
                                 <option value="" disabled selected>Cargando usuarios...</option>
                             </select>
                             <small>Puedes seleccionar varios con CTRL + clic (o en móvil, tocar varias veces)</small>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="tipo" class="form-label mb-1" hidden>Tipo de nota</label>
+                            <select name="tipo" id="tipo" class="form-select form-select-sm" hidden>
+                                <option value="" selected disabled>Selecciona el tipo</option>
+                                <option value="GENERAL">General</option>
+                                <option value="ESPECIALISTA">Especialista</option>
+                                <option value="INDIVIDUAL">Individual</option>
+                            </select>
                         </div>
                     </div>
 
