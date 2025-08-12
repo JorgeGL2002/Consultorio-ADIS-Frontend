@@ -445,6 +445,46 @@ function cargarTrabajadores(idSelect) {
     });
 }
 
+async function cargarNotas(fecha, id) {
+  const contenedor = document.getElementById("contenedorNotas");
+  contenedor.innerHTML = "";
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/notasAgenda?fecha=${fecha}&idProfesional=${id}`);
+    if (!res.ok) throw new Error("No se encontró al profesional");
+    const data = await res.json();
+    if (!data || data.length === 0) {
+      mostrarAlerta("info", "No hay notas para hoy");
+      return null;
+    }
+    data.forEach(n => {
+      const card = document.createElement("div");
+      card.classList.add("col-12", "mt-3");
+
+      card.innerHTML = `
+    <div class="card notas-card">
+      <div class="card-body text-center">
+        <div class="card-icon">
+          <i class="bi bi-exclamation-diamond-fill"></i>
+        </div>
+        <h5 class="card-title">Notas para hoy</h5>
+        <label class="fw-bold">Titulo: ${n.titulo}</label>
+        <textarea class="form-control" rows="3" readonly>${n.detalle || ""}</textarea>
+        <label>Hora de inicio: ${n.horaInicio || "-"}</label><br>
+        <label>Hora de fin: ${n.horaFin || "-"}</label>
+      </div>
+    </div>
+  `;
+
+      contenedor.appendChild(card);
+    });
+    return data;
+  } catch (e) {
+    mostrarAlerta("error", "No se pudo obtener el ID del trabajador");
+    console.error(e);
+    return null;
+  }
+}
+
 function cargarServicios(idSelect) {
   const select = document.getElementById(idSelect);
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/servicios")
@@ -651,6 +691,30 @@ function enviarRecordatorio(telefono, idCita) {
     });
 }
 
+async function enviarRecordatoriosDelDia(fecha) {
+  try {
+    const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatoriosDia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fecha })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      mostrarAlerta("error", data.error || "Error enviando recordatorios");
+      return;
+    }
+
+    mostrarAlerta("success", `Recordatorios enviados: ${data.enviados}. Fallidos: ${data.fallidos.length}`);
+    console.log("Detalle:", data);
+
+  } catch (e) {
+    mostrarAlerta("error", "Error en la solicitud");
+    console.error(e);
+  }
+}
+
+
 document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
@@ -695,6 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarSeguros("Editarseguro");
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
+  cargarNotas(fechaHoy, id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
@@ -762,6 +827,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
+        const contenedor = document.getElementById("contenedorNotas");
+        contenedor.innerHTML = "";
+        cargarNotas(fechaValor, id);
       }
     });
   }
@@ -806,6 +874,13 @@ document.addEventListener("DOMContentLoaded", () => {
       btnBloqueo.hidden = !seleccionados;
     }
   }
+
+  document.getElementById("recordatorioWhastAppDIA").addEventListener("click", async (e) => {
+    e.preventDefault();
+    console.log("fehca de hoy:", fechaInput.value);
+    enviarRecordatoriosDelDia(fechaInput.value);
+    mostrarAlerta("success", "Recordatorios enviados para el día");
+  });
 
   btnBloqueo.addEventListener("click", async () => {
     seleccionados = Array.from(document.querySelectorAll(".check-horario:checked")).map(chk => chk.value);

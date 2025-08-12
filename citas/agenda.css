@@ -91,7 +91,26 @@
       .tabla-container {
         width: 100%;
       }
+
+      .desktop-only {
+        display: none;
+      }
+
+      .mobile-only {
+        display: block;
+      }
     }
+
+    @media (min-width: 769px) {
+      .desktop-only {
+        display: block;
+      }
+
+      .mobile-only {
+        display: none;
+      }
+    }
+
 
     .calendar {
       width: 100%;
