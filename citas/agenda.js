@@ -713,7 +713,6 @@ async function enviarRecordatoriosDelDia(fecha) {
   }
 }
 
-
 document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
@@ -1306,6 +1305,10 @@ function abrirVentanaP() {
 
 function abrirVentanaR() {
   window.location.href = '../reportes/reportes.html';
+}
+
+function abrirVentanaE() {
+  window.location.href = '../eventos/eventos.html';
 }
 
 function CerrarSesion() {
