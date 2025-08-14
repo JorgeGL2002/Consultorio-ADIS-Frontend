@@ -268,3 +268,7 @@ function abrirVentanaA() {
 function abrirVentanaR() {
   window.location.href = '../reportes/reportes.html';
 }
+
+function abrirVentanaE() {
+  window.location.href = '../eventos/eventos.html';
+}
