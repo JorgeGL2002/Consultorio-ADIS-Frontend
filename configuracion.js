@@ -111,9 +111,10 @@ function cargarNotas(idSelect) {
                 select.appendChild(option);
             });
             console.log("Notas encontradas: ", data);
-            console.log("Select notas: ", option);
+            console.log("Select notas: ", select);
         })
         .catch(() => {
+            mostrarAlerta("danger", "Error al cargar las notas");
             select.innerHTML = "<option>Error al cargar</option>";
         });
 }
