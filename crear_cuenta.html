@@ -24,7 +24,7 @@
                 <input id="nombre" class="input" type="text" placeholder="Nombre">
             </div>
             <div class="input-container ic2">
-                <input id="usuario" class="input" type="text" placeholder="Usuario">
+                <input id="email" class="input" type="email" placeholder="Email">
             </div>
             <div class="input-container ic2">
                 <input id="password" class="input" type="password" placeholder="Contraseña">
@@ -43,7 +43,7 @@
             <div class="mb-3" id="claveContainer">
                 <input type="password" class="input" id="clave" required placeholder="Clave de Administrador" />
             </div>
-            <button type="text" class="singin-button">Crear cuenta</button>
+            <button type="submit" class="singin-button">Crear cuenta</button>
         </form>
         <span class="forgot-password"><a href="#" onclick="abrirVentanaInicio()">¿Ya tienes una cuenta?</a></span>
     </div>
@@ -58,27 +58,27 @@
         e.preventDefault();
 
         const nombre = document.getElementById("nombre");
-        const usuario = document.getElementById("usuario");
+        const email = document.getElementById("email");
         const contraseña = document.getElementById("password");
         const rol = document.getElementById("rol");
         const clave = document.getElementById("clave");
         const claveContainer = document.getElementById("claveContainer");
 
         function mostrarClaveSiTodoLleno() {
-            const lleno = usuario.value.trim() &&
-                nombre.value.trim() &&
+            const lleno = nombre.value.trim() &&
+                email.value.trim() &&
                 contraseña.value &&
                 rol.value;
             claveContainer.classList.toggle("d-none", !lleno);
             clave.required = lleno;
         }
 
-        usuario.addEventListener("input", mostrarClaveSiTodoLleno);
+        email.addEventListener("input", mostrarClaveSiTodoLleno);
         nombre.addEventListener("input", mostrarClaveSiTodoLleno);
         contraseña.addEventListener("input", mostrarClaveSiTodoLleno);
         rol.addEventListener("change", mostrarClaveSiTodoLleno);
 
-        if (!usuario || !nombre || !contraseña || !rol || !clave) {
+        if (!email || !nombre || !contraseña || !rol || !clave) {
             mostrarAlerta("warning", "Completa todos los campos", false);
             return;
         }
@@ -95,8 +95,9 @@
                     "Super-User-Password": clave.value
                 },
                 body: JSON.stringify({
-                    usuario: usuario.value.trim(),
+                    usuario: nombre.value.trim(),
                     nombre: nombre.value.trim(),
+                    email: email.value.trim(),
                     contraseña: contraseña.value,
                     rol: rol.value
                 })
