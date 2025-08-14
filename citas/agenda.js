@@ -265,7 +265,7 @@ function extraerHorariosIntermedios(citas, bloqueos, ausencias) {
 
   return [...horariosSet];
 }
-
+let numeroCitas = 0;
 async function cargarHorarios(fecha) {
   try {
     const { nombre, id } = await obtenerProfesionalContexto();
@@ -315,6 +315,7 @@ async function cargarHorarios(fecha) {
       const [hb, mb] = b.split(':').map(Number);
       return ha * 60 + ma - (hb * 60 + mb);
     });
+    numeroCitas = citas.length;
     console.log("Citas desde API:", citas);
     console.log("Ausencias desde API:", ausencias);
     console.log("Bloqueos desde API:", bloqueos);
@@ -867,7 +868,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (data.enviados === 0) {
+      if (numeroCitas === 0) {
         mostrarAlerta("warning", "No hay citas para enviar recordatorios en esta fecha");
       } else {
         mostrarAlerta("success", `Se enviaron ${data.enviados} recordatorios`);
