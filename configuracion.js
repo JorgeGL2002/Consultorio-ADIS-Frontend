@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const fecha = document.getElementById("fecha").value.trim();
         const horaInicio = document.getElementById("horaInicio").value.trim();
         const horaFin = document.getElementById("horaFin").value.trim();
-        const tipo = document.getElementById("tipo").value.trim();
+        const tipo = "Nota";
         const trabajador = document.getElementById("trabajador");
         if (trabajador.selectedOptions.length === 0) {
             mostrarAlerta("warning", "Selecciona un trabajador");
@@ -297,4 +297,5 @@ document.addEventListener("DOMContentLoaded", () => {
             bsCollapse.toggle();
         });
     });
+
 });
