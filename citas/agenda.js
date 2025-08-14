@@ -690,29 +690,6 @@ function enviarRecordatorio(telefono, idCita) {
     });
 }
 
-async function enviarRecordatoriosDelDia(fecha) {
-  try {
-    const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatoriosDia', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fecha })
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      mostrarAlerta("error", data.error || "Error enviando recordatorios");
-      return;
-    }
-
-    mostrarAlerta("success", `Recordatorios enviados: ${data.enviados}. Fallidos: ${data.fallidos.length}`);
-    console.log("Detalle:", data);
-
-  } catch (e) {
-    mostrarAlerta("error", "Error en la solicitud");
-    console.error(e);
-  }
-}
-
 document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
   e.preventDefault();
   const datos = {
@@ -757,7 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarSeguros("Editarseguro");
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
-  cargarNotas(fechaHoy, rol ,id);
+  cargarNotas(fechaHoy, rol, id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
@@ -791,7 +768,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
         cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
-        cargarNotas(fechaInput.value, rol ,selectedIdProfesional);
+        cargarNotas(fechaInput.value, rol, selectedIdProfesional);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -815,7 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, rol,id);
+        cargarNotas(fechaValor, rol, id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -826,7 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, rol,localStorage.getItem("idSelectPrincipal") || id);
+        cargarNotas(fechaValor, rol, localStorage.getItem("idSelectPrincipal") || id);
       }
     });
   }
@@ -874,10 +851,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("recordatorioWhastAppDIA").addEventListener("click", async (e) => {
     e.preventDefault();
-    console.log("fehca de hoy:", fechaInput.value);
-    enviarRecordatoriosDelDia(fechaInput.value);
-    mostrarAlerta("success", "Recordatorios enviados para el día");
+    const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
+
+    try {
+      const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatoriosDia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        mostrarAlerta("danger", data.error || "Error enviando recordatorios");
+        return;
+      }
+
+      if (data.enviados === 0) {
+        mostrarAlerta("warning", "No hay citas para enviar recordatorios en esta fecha");
+      } else {
+        mostrarAlerta("success", `Se enviaron ${data.enviados} recordatorios`);
+        if (data.fallidos && data.fallidos.length > 0) {
+          console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
+        }
+      }
+
+    } catch (err) {
+      console.error(err);
+      mostrarAlerta("danger", "Error al enviar recordatorios");
+    }
   });
+
 
   btnBloqueo.addEventListener("click", async () => {
     seleccionados = Array.from(document.querySelectorAll(".check-horario:checked")).map(chk => chk.value);
