@@ -43,7 +43,8 @@ async function recuperarDatos(nombre) {
     const paciente = datos[0];
     console.log(paciente);
     // DATOS GENERALES
-    document.getElementById("pacienteNombre").innerText = paciente.nombre || "";
+    document.getElementById("pacienteNombre").value = paciente.nombre || "";
+    document.getElementById("pacienteId").value = paciente.id || "";
     document.getElementById("telefono").value = paciente.telefono || "";
     document.getElementById("sexo").value = cargarSexo(paciente.sexo);
     document.getElementById("fechaNacimiento").value = paciente.fechaNacimiento || "";
@@ -93,10 +94,10 @@ async function recuperarDatos(nombre) {
   }
 }
 
-async function actualizarDatos(nombre) {
+async function actualizarDatos(id) {
   const datos = {
     // DATOS GENERALES
-    nombre: document.getElementById("pacienteNombre").innerText,
+    nombre: document.getElementById("pacienteNombre").value,
     telefono: document.getElementById("telefono").value,
     sexo: document.getElementById("sexo").value,
     fechaNacimiento: document.getElementById("fechaNacimiento").value,
@@ -144,13 +145,12 @@ async function actualizarDatos(nombre) {
   };
   console.log(datos);
   try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/actualizarPaciente?nombrePaciente=${encodeURIComponent(nombre)}`, {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/actualizarPaciente?id=${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(datos)
-
     });
     if (!res.ok) throw new Error("Error al actualizar los datos");
     mostrarAlerta("success", "Datos actualizados correctamente.");
@@ -466,7 +466,6 @@ async function nuevoPaciente() {
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
   cargarTrabajadores("trabajador");
   cargarEstados("lugarNacimiento");
@@ -515,35 +514,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("CP").addEventListener("keypress", async (e) => {
-    if (e.key === "Enter") {
-      const cp = e.target.value.trim();
-      console.log("CP:", cp);
-      if (!cp) return;
-      try {
-        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/domicilio?cp=${cp}`);
-        if (!res.ok) throw new Error("Error de CP");
-        const datos = await res.json();
-        if (datos.length > 0) {
+  const cpInput = document.getElementById("CP");
+  async function cargarDatosCp() {
+    const cp = cpInput.value.trim();
+    console.log("CP:", cp);
+    if (!cp) return;
+    try {
+      const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/domicilio?cp=${cp}`);
+      if (!res.ok) throw new Error("Error de CP");
+      const datos = await res.json();
 
-          document.getElementById("estadosInput").value = datos[0].estado;
-          document.getElementById("municipio").value = datos[0].municipio;
-          document.getElementById("localidad").value = datos[0].localidad;
+      if (datos.length > 0) {
+        document.getElementById("estadosInput").value = datos[0].estado;
+        document.getElementById("municipio").value = datos[0].municipio;
+        document.getElementById("localidad").value = datos[0].localidad;
 
-          const coloniaSelect = document.getElementById("colonia");
-          coloniaSelect.innerHTML = "Colonia";
-          datos.forEach(d => {
-            const opt = document.createElement("option");
-            opt.value = d.colonia;
-            opt.textContent = d.colonia;
-            coloniaSelect.appendChild(opt);
-          });
-        }
-      } catch (error) {
-        mostrarAlerta("danger", "No se pudo encontrar información del código postal.");
-        console.log(error);
+        const coloniaSelect = document.getElementById("colonia");
+        coloniaSelect.innerHTML = "<option disabled selected>Colonia</option>"; // mejor UX
+        datos.forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d.colonia;
+          opt.textContent = d.colonia;
+          coloniaSelect.appendChild(opt);
+        });
       }
+    } catch (error) {
+      mostrarAlerta("danger", "No se pudo encontrar información del código postal.");
+      console.error(error);
     }
+  }
+
+  cpInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      cargarDatosCP();
+    }
+  });
+
+  // Al perder el foco del input
+  cpInput.addEventListener("blur", () => {
+    cargarDatosCP();
   });
 
   document.getElementById("NuevoCP").addEventListener("keypress", async (e) => {
@@ -630,8 +639,8 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   document.getElementById("btnAplicarCambios").addEventListener("click", () => {
-    const nombre = document.getElementById("pacienteNombre").innerText.trim();
-    actualizarDatos(document.getElementById("pacienteNombre").innerText.trim());
+    const id = document.getElementById("pacienteId").value.trim();
+    actualizarDatos(id);
   })
 
   document.getElementById("btnGuardarPaciente").addEventListener("click", () => {
@@ -657,4 +666,8 @@ function abrirVentanaA() {
 }
 function abrirVentanaR() {
   window.location.href = '../reportes/reportes.html';
+}
+
+function abrirVentanaE() {
+  window.location.href = '../eventos/eventos.html';
 }

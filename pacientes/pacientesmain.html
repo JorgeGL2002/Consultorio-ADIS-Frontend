@@ -18,7 +18,7 @@
 
 <body class="bg-light">
 
-  <!-- ✅ Navbar fija --> 
+  <!-- ✅ Navbar fija -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -33,6 +33,7 @@
           <li class="nav-item"><a class="nav-link active" href="#">Pacientes</a></li>
           <li class="nav-item"><a class="nav-link" onclick="abrirVentanaR()">Reportes</a></li>
           <li class="nav-item"><a class="nav-link" onclick="abrirVentanaHC()">Historias clínicas</a></li>
+          <li class="nav-item"><a class="nav-link" onclick="abrirVentanaE()">Eventos</a></li>
         </ul>
       </div>
     </div>
@@ -72,9 +73,12 @@
   <div class="modal fade" id="modalPaciente" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Paciente - <span id="pacienteNombre" class="text-primary fs-6"></span>
-          </h5>
+        <div class="modal-header mb-3 d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <h5 class="modal-title mb-0">Paciente -</h5>
+            <input id="pacienteNombre" class="form-control form-control-sm" style="width: 200px;">
+            <input type="text" id="pacienteId" class="form-control form-control-sm" style="width: 100px; display: none;">
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -186,7 +190,8 @@
                 <option value="" disabled selected>Cargando empresas...</option>
               </select>
               <label for="numero_empleado">Número de empleado</label>
-              <input type="text" class="form-control mb-3" name="numero_empleado" id="numero_empleado" placeholder="Número de empleado" required>
+              <input type="text" class="form-control mb-3" name="numero_empleado" id="numero_empleado"
+                placeholder="Número de empleado" required>
               <label for="modalidad">Modalidad</label>
               <select name="modalidad" id="modalidad" class="form-select mb-3">
                 <option value="" disabled selected>Modalidad</option>
@@ -372,7 +377,8 @@
               <select class="form-select mb-3" id="Nuevoseguro" required>
                 <option value="" disabled selected>Cargando empresas...</option>
               </select>
-              <input type="text" class="form-control mb-3" name="Nuevonumero_empleado" id="Nuevonumero_empleado" placeholder="Número de empleado">
+              <input type="text" class="form-control mb-3" name="Nuevonumero_empleado" id="Nuevonumero_empleado"
+                placeholder="Número de empleado">
               <select name="Nuevomodalidad" id="Nuevomodalidad" class="form-select mb-3" required>
                 <option value="" disabled selected>Modalidad</option>
                 <option value="linea">En línea</option>
