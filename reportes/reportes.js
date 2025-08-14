@@ -11,6 +11,10 @@ function abrirVentanaHC() {
     window.location.href = '../historias_clinicas/hc.html';
 }
 
+function abrirVentanaE() {
+  window.location.href = '../eventos/eventos.html';
+}
+
 function cargarTrabajadores(idSelect) {
     const select = document.getElementById(idSelect);
     if (rol === "ESPECIALISTA") {
