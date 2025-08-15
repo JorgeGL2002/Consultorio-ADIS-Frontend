@@ -208,8 +208,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("tipo").addEventListener("change", (e) => {
     const tipo = e.target.value;
-    document.getElementById("seccionNotas").classList.toggle("d-none", tipo !== "nEvolucion");
-    document.getElementById("seccionHC").classList.toggle("d-none", tipo !== "HC");
+    const seccionNotas = document.getElementById("seccionNotas");
+    const seccionHC = document.getElementById("seccionHC");
+
+    // Mostrar/ocultar secciones
+    seccionNotas.classList.toggle("d-none", tipo !== "nEvolucion");
+    seccionHC.classList.toggle("d-none", tipo !== "HC");
+
+    document.getElementById("notas").required = (tipo === "nEvolucion");
+    document.getElementById("diagnostico").required = (tipo === "HC");
+    document.getElementById("motivo").required = (tipo === "HC");
+    document.getElementById("problemas").required = (tipo === "HC");
+    document.getElementById("evaluacion_fisica").required = (tipo === "HC");
   });
 
   document.getElementById('modalHC').addEventListener('show.bs.modal', () => {
@@ -271,4 +281,5 @@ function abrirVentanaR() {
 
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
+
 }
