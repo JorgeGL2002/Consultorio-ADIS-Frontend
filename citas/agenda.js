@@ -642,6 +642,17 @@ async function obtenerTelefonoPaciente(nombre) {
   }
 }
 
+function formatearNumero(numero) {
+  const limpio = numero.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
+  if(limpio.length === 10) {
+    return '521'+limpio;
+  } else if(limpio.startsWith('521')){
+    return limpio;
+  } else {
+    return '521' + limpio;
+  }
+}
+
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
 function verificarCambiosEnCitas() {
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadosCita')
@@ -669,13 +680,14 @@ function verificarCambiosEnCitas() {
 }
 
 function enviarRecordatorio(telefono, idCita) {
+  const telefonoFormateado = formatearNumero(telefono);
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatorio', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      telefono: telefono,
+      telefono: telefonoFormateado,
       idCita: idCita,
       plantilla: 'recordatorio_de_cita'
     })
