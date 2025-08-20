@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="eventos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body class="bg-light">
@@ -42,9 +43,7 @@
                 <h1 class="text-center mb-4">
                     <i class="bi bi-calendar2-event"></i> Crear evento
                 </h1>
-
                 <input type="date" id="fecha" class="form-control mb-4" style="max-width: 300px;">
-
                 <div class="card shadow-sm border-0 new-event-card w-100">
                     <div class="card-body text-center d-flex flex-column align-items-center">
                         <div class="card-icon mb-3 text-primary fs-1">
@@ -112,7 +111,11 @@
                             <textarea class="form-control" id="detalles" placeholder=" " style="height: 120px"
                                 required></textarea>
                             <label for="detalles">Detalles del evento</label>
-                        </div>
+                        </div>  
+
+                        <!-- Fecha -->
+                         <label for="fechaCalendar" class="form-label">Fecha del evento</label>
+                        <input type="text" id="fechaCalendar">
 
                         <!-- Hora de inicio -->
                         <label for="horaInicio" class="form-label">Hora de inicio</label>
@@ -180,7 +183,23 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="eventos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script>
+        flatpickr("#fechaCalendar", {
+            mode: "range",
+            inline: true,
+            locale: "es",
+            dateFormat: "Y-m-d",
+            defaultDate: "today",
+            disable: [
 
+            ],
+            onChange: function (selectedDates, dateStr, instance) {
+                console.log("Fecha seleccionada:", dateStr);
+            }
+        });
+    </script>
 </body>
 
 </html>

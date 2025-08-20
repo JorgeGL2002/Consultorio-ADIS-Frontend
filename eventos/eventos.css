@@ -1,16 +1,17 @@
 #preview {
-    border: 2px solid #ddd;
-    padding: 4px;
-    background: #f8f9fa;
+  border: 2px solid #ddd;
+  padding: 4px;
+  background: #f8f9fa;
 }
 
 .new-event-card {
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
 }
+
 .new-event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .swiper {
@@ -24,7 +25,7 @@
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .mySwiper .swiper-slide {
@@ -36,7 +37,7 @@
   border-radius: 8px;
   overflow: hidden;
   background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .evento-card img {
@@ -48,4 +49,41 @@
 .evento-card h6 {
   margin: 10px 0 5px;
   font-weight: bold;
+}
+
+.calendar {
+  width: 100%;
+  max-width: 350px;
+  margin: auto;
+  border: 10px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.flatpickr-months {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+/* Día de la semana (Lun, Mar, etc.) */
+.flatpickr-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#fechaCalendar {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 20px;
 }

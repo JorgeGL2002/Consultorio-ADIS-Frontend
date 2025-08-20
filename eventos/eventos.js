@@ -98,7 +98,7 @@ async function cargarEventos(fecha) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}`);
     if (!res.ok) return mostrarAlerta("danger", "Error al cargar eventos: " + res.statusText);
     const eventos = await res.json();
-
+    console.log("Eventos cargados:", eventos);
     swiper.removeAllSlides();
     swiper.update();
 
@@ -123,7 +123,9 @@ async function cargarEventos(fecha) {
 document.addEventListener("DOMContentLoaded", () => {
   const carrusel = document.getElementById("eventosCarrusel");
   const fechaInput = document.getElementById("fecha");
-  cargarEventos(fechaInput.value || new Date().toISOString().split('T')[0]);
+  const fechaNuevoCalendar = document.getElementById("fechaCalendar");
+
+  cargarEventos(fechaInput.value);
   console.log("Eventos cargados para la fecha:", fechaInput.value || new Date().toISOString().split('T')[0]);
   let imagenBase64 = "";
   // Convertir imagen a Base64
@@ -156,17 +158,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (imagenFile) {
       imagenBase64 = await toBase64(imagenFile);
     }
-
-    if (!fechaInput.value) {
+     const [inicio, fin] = fechaNuevoCalendar.value.split(" a ");
+    if (!fechaNuevoCalendar.value) {
       mostrarAlerta("warning", "Por favor, selecciona una fecha.");
       return;
     }
+    function setFechaCalendario(start, end) {
+      let arr = [];
+      let current = new Date(start);
+      let last = new Date(end);
 
+      while (current <= last) {
+        arr.push(current.toISOString().split('T')[0]); // Formato YYYY-MM-DD
+        current.setDate(current.getDate() + 1);
+      }
+      return arr;
+    }
+    const fechasCalendario = setFechaCalendario(inicio, fin);
     // Construir objeto del evento
     const nuevoEvento = {
       nombre: nombre,
       detalles: detalles,
-      fecha: fechaInput.value,
+      fecha: fechasCalendario, // Usar fecha del calendario
       horaInicio: horaInicio,
       horaFin: horaFin,
       responsable: responsables, // arreglo de IDs
@@ -217,12 +230,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   fechaInput.addEventListener("change", async () => {
-    const fecha = fechaInput.value || new Date().toISOString().split('T')[0];
+    const fecha = fechaInput.value;
     console.log("Fecha seleccionada:", fecha);
-    if (!fecha) {
-      mostrarAlerta("warning", "Por favor, selecciona una fecha.");
-      return;
-    }
     cargarEventos(fecha);
   });
   let eventoActual = null;
@@ -260,12 +269,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function mostrarEvento(e) {
     eventoActual = e;
-    const nombre = await nombreTrabajador(e.responsable);
     document.getElementById("eventoTitulo").textContent = e.nombre;
     document.getElementById("eventoDetalles").textContent = e.detalles;
     document.getElementById("eventoHoraInicio").textContent = e.horaInicio;
     document.getElementById("eventoHoraFin").textContent = e.horaFin;
-    document.getElementById("eventoResponsable").textContent = nombre || "No asignado";
+    document.getElementById("eventoResponsable").textContent = e.responsable || "No asignado";
     const modal = new bootstrap.Modal(document.getElementById('modalInfoEvento'));
     modal.show();
   }
