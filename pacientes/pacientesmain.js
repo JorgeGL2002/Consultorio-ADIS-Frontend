@@ -469,6 +469,7 @@ async function nuevoPaciente() {
 document.addEventListener("DOMContentLoaded", () => {
   cargarTrabajadores("trabajador");
   cargarEstados("lugarNacimiento");
+  cargarPacientes();
   //cargarTrabajadores("NuevoTrabajador");
   //cargarEstados("NuevoLugarNacimiento");
   let otro = document.getElementById("otro");
@@ -481,48 +482,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { selectId: "seguros", inputId: "numero_empleado" },
     { selectId: "Nuevoseguro", inputId: "Nuevonumero_empleado" }
   ];
-
-  let pagina = 0;
-  let tamanoPagina = 20;     // evita usar ñ en variables
-  let cargando = false;
-  let finDeLista = false;
-
-  async function cargarMasPacientes() {
-    if (cargando || finDeLista) return;
-    cargando = true;
-
-    try {
-      const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/pacientes?page=${pagina}&size=${tamanoPagina}`);
-      if (!res.ok) throw new Error("Error al cargar pacientes");
-      const data = await res.json();
-
-      const tbody = document.getElementById("tabla-pacientes");
-
-      if (Array.isArray(data) && data.length > 0) {
-        const rows = data.map(p => `<tr><td>${p.nombre}</td></tr>`).join("");
-        tbody.insertAdjacentHTML("beforeend", rows);
-        pagina++;                 // avanza a la siguiente página
-        cargando = false;
-      } else {
-        // No hay más registros
-        finDeLista = true;
-        cargando = false;
-      }
-    } catch (e) {
-      console.error(e);
-      cargando = false;
-    }
-  }
-
-  // Escuchar el scroll del contenedor (no el window)
-  const contenedor = document.getElementById("tablaContenedor");
-  contenedor.addEventListener("scroll", () => {
-    const cercaDelFinal = contenedor.scrollTop + contenedor.clientHeight >= contenedor.scrollHeight - 50;
-    if (cercaDelFinal) cargarMasPacientes();
-  });
-
-  // Cargar la primera página al iniciar
-  cargarMasPacientes();
 
   empresaSelects.forEach(({ selectId, inputId }) => {
     const select = document.getElementById(selectId);
@@ -697,5 +656,6 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
