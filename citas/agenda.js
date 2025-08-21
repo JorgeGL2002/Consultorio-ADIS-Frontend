@@ -880,7 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (data.enviados === 0) {
+      if (numeroCitas === 0) {
         mostrarAlerta("warning", "No hay citas para enviar recordatorios en esta fecha");
       } else {
         mostrarAlerta("success", `Se enviaron ${data.enviados} recordatorios`);
