@@ -738,7 +738,7 @@ document.getElementById("modalEditarCita").addEventListener("submit", async (e) 
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
   fechaInput.valueAsDate = new Date();
-  const fechaHoy = fechaInput.value;
+  const fechaHoy = fechaInput?.value  || new Date().toISOString().split("T")[0];
   document.getElementById("fechaTabla").textContent = fechaHoy;
   cargarTrabajadores("trabajador");
   cargarTrabajadores("trabajadorModal");
@@ -747,12 +747,12 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarSeguros("Editarseguro");
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
-  cargarNotas(fechaHoy, id);
+  cargarNotas(fechaHoy  || new Date().toISOString().split("T")[0], id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
   console.log("Usuario", nombre, "ID", id, "Rol", rol);
-  cargarHorarios(fechaHoy);
+  cargarHorarios(fechaHoy  || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
   setInterval(verificarCambiosEnCitas(), 30000);
   inputHora.disabled = true;
@@ -780,8 +780,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
-        cargarHorarios(fechaInput.value); // ahora solo pasamos la fecha
-        cargarNotas(fechaInput.value, selectedIdProfesional);
+        cargarHorarios(fechaInput?.value  || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
+        cargarNotas(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -804,8 +804,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const fechaValor = fechaInput.value;
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
-        cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, id);
+        cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
+        cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -815,8 +815,8 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
-        cargarHorarios(fechaValor);
-        cargarNotas(fechaValor, localStorage.getItem("idSelectPrincipal") || id);
+        cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
+        cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
       }
     });
   }
