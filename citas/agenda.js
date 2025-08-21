@@ -880,11 +880,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (numeroCitas === 0) {
-        mostrarAlerta("warning", "No hay citas para enviar recordatorios en esta fecha");
+     if (data.total === 0) {
+        mostrarAlerta("warning", data.mensaje);
       } else {
-        mostrarAlerta("success", `Se enviaron ${data.enviados} recordatorios`);
-        if (data.fallidos && data.fallidos.length > 0) {
+        mostrarAlerta("success", `Se enviaron ${data.enviados} de ${data.total} recordatorios`);
+        if (data.fallidos.length > 0) {
           console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
         }
       }
