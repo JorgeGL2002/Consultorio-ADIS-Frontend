@@ -504,18 +504,50 @@
   <script src="agenda.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-  <script>
-    flatpickr("#fechaSeleccionada", {
-      inline: true,
-      locale: "es",
-      dateFormat: "Y-m-d",
-      defaultDate: "today",
-      disable: [
+ <script>
+    let eventos = []; // aquí guardamos las fechas que vienen del backend
 
-      ],
-      onChange: function (selectedDates, dateStr, instance) {
-        console.log("Fecha seleccionada:", dateStr);
+    async function diasconEventos() {
+      const fecha = new Date().toISOString().split("T")[0]; // hoy por defecto
+      try {
+        const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/diasConEventos?fecha=${fecha}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        if (!res.ok) {
+          throw new Error("Error al obtener los días con eventos");
+        }
+        const data = await res.json();
+        return data; // array de fechas: ["2025-08-22", "2025-08-27", ...]
+      } catch (error) {
+        console.error("Error al obtener días con eventos:", error);
+        return [];
       }
+    }
+
+    // 🔹 Cargar los eventos y luego inicializar el calendario
+    diasconEventos().then(data => {
+      eventos = data;
+
+      flatpickr("#fechaSeleccionada", {
+        inline: true,
+        locale: "es",
+        dateFormat: "Y-m-d",
+        defaultDate: "today",
+        onDayCreate: function (dObj, dStr, fp, dayElem) {
+          let fecha = dayElem.dateObj.toISOString().split("T")[0];
+          if (eventos.includes(fecha)) {
+            dayElem.style.backgroundColor = "orange";
+            dayElem.style.color = "white";
+            dayElem.style.borderRadius = "50%";
+          }
+        },
+        onChange: function (selectedDates, dateStr, instance) {
+          console.log("📅 Fecha seleccionada:", dateStr);
+        }
+      });
     });
   </script>
 </body>
