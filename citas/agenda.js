@@ -770,6 +770,14 @@ document.addEventListener("DOMContentLoaded", () => {
     chk.addEventListener("change", actualizarBotonBloqueo);
   });
 
+  document.getElementById("modalEditarCita").addEventListener("shown.bs.modal", () => {
+    document.getElementById("EditartrabajadorModal").required = true;
+  });
+
+  document.getElementById("modalEditarCita").addEventListener("hidden.bs.modal", () => {
+    document.getElementById("EditartrabajadorModal").required = false;
+  });
+
   if (selectPrincipal) {
     selectPrincipal.addEventListener("change", async () => {
       const nombreSelect = selectPrincipal.value.trim();
