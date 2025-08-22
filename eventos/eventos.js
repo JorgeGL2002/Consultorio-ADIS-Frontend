@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let arr = [];
       let current = new Date(start);
       let last = new Date(end);
-
+      if (isNaN(new Date(end)) || end === null || !end) return [current.toISOString().split('T')[0]]; // Si solo es una fecha
       while (current <= last) {
         arr.push(current.toISOString().split('T')[0]); // Formato YYYY-MM-DD
         current.setDate(current.getDate() + 1);
@@ -277,4 +277,5 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = new bootstrap.Modal(document.getElementById('modalInfoEvento'));
     modal.show();
   }
+
 });
