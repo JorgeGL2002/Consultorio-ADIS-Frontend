@@ -363,7 +363,6 @@ async function cargarHorarios(fecha) {
         Servicio: ${cita.nombreServicio}<br>
         Seguro: ${cita.seguro}<br>
         ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
-         ${cita.estado_cita ? `<b>Estado: Ausente</b>` : ""}
       </span>
     `).join("");
         celdaDetalle.classList.add("celda-cita");
