@@ -64,9 +64,9 @@
                 console.log(data);
                 document.getElementById("fechaCita").textContent = data.fecha;
                 document.getElementById("horaCita").textContent = data.hora;
-                document.getElementById("servicioCita").textContent = data.servicio;
-                document.getElementById("costoCita").textContent = data.costo;
-                document.getElementById("profesionalCita").textContent = data.profesional;
+                document.getElementById("servicioCita").textContent = data.nombreServicio;
+                document.getElementById("costoCita").textContent = data.cuota;
+                document.getElementById("profesionalCita").textContent = data.nombreProfesional;
             } catch (error) {
                 console.error('Error al obtener los detalles de la cita:', error);
                 mostrarAlerta('danger', 'Error al obtener los detalles de la cita');
