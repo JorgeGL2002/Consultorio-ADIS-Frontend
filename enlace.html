@@ -115,25 +115,23 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            if (token) {
-                detallesCita(token);
+            const idCita = urlParams.get('idCita');
+            if (idCita) {
+                detallesCita(idCita);
             } else {
                 mostrarAlerta('danger', 'Token no proporcionado.');
             }
 
             document.getElementById('confirmar').addEventListener('click', function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                const token = urlParams.get('token');
-                if (token) {
-                    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/confirmarCitaEnlace?idCita=${token}`, {
+                if (idCita) {
+                    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/confirmarCitaEnlace?idCita=${idCita}`, {
                         method: 'POST'
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
                                 mostrarAlerta('success', 'Cita confirmada exitosamente.');
-                                window.location.href = '/';
+                                setTimeout(() => window.location.href = '/', 2000);
                             } else {
                                 mostrarAlerta('warning', 'Error al confirmar la cita');
                             }
@@ -143,22 +141,20 @@
                             mostrarAlerta('danger', 'Error al confirmar la cita');
                         });
                 } else {
-                    mostrarAlerta('danger', 'Token no proporcionado.');
+                    mostrarAlerta('danger', 'ID no proporcionado.');
                 }
             });
 
             document.getElementById('cancelar').addEventListener('click', function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                const token = urlParams.get('token');
-                if (token) {
-                    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCitaEnlace?idCita=${token}`, {
+                if (idCita) {
+                    fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCitaEnlace?idCita=${idCita}`, {
                         method: 'POST'
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
                                 mostrarAlerta('success', 'Cita cancelada.');
-                                window.location.href = '/';
+                                setTimeout(() => window.location.href = '/', 2000);
                             } else {
                                 mostrarAlerta('warning', 'Error al cancelar la cita');
                             }
@@ -168,7 +164,7 @@
                             mostrarAlerta('danger', 'Error al cancelar la cita');
                         });
                 } else {
-                    mostrarAlerta('danger', 'Token no proporcionado.');
+                    mostrarAlerta('danger', 'ID no proporcionado.');
                 }
             });
         });
