@@ -125,7 +125,7 @@
             document.getElementById('confirmar').addEventListener('click', function () {
                 if (idCita) {
                     fetch(`https://api-railway-production-24f1.up.railway.app/api/test/confirmarCitaEnlace?idCita=${idCita}`, {
-                        method: 'POST'
+                        method: 'PUT'
                     })
                         .then(response => response.json())
                         .then(data => {
@@ -148,7 +148,7 @@
             document.getElementById('cancelar').addEventListener('click', function () {
                 if (idCita) {
                     fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCitaEnlace?idCita=${idCita}`, {
-                        method: 'POST'
+                        method: 'PUT'
                     })
                         .then(response => response.json())
                         .then(data => {
