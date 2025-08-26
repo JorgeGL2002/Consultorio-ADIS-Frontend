@@ -144,23 +144,6 @@
             }, 3000);
         }
 
-        function mostrarMensaje(mensaje, tipo) {
-            // Limpia el contenido de la página
-            container.innerHTML = `
-            <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 70vh;">
-                <div class="alert alert-${tipo} text-center p-4 shadow rounded" style="max-width: 400px;">
-                    <h4 class="fw-bold">${mensaje}</h4>
-                    <p class="mt-3">Gracias por tu respuesta 🙌</p>
-                </div>
-            </div>`;
-
-            // Bloquear el botón atrás (historial vacío)
-            history.pushState(null, null, location.href);
-            window.onpopstate = () => {
-                history.go(1);
-            };
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             const idCita = urlParams.get('idCita');
@@ -178,7 +161,11 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarMensaje('Tu cita a sido confirmada, te vemos pronto.', 'success');
+                                mostrarPantallaFinal(
+                                    "✅ Cita confirmada",
+                                    "Tu cita ha sido confirmada exitosamente. Te esperamos 🙌",
+                                    "success"
+                                );
                             } else {
                                 mostrarAlerta('warning', 'Error al confirmar la cita');
                             }
@@ -200,7 +187,11 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarMensaje('Tu cita a sido cancelada, que tengas un lindo dia.', 'danger');
+                                mostrarPantallaFinal(
+                                    "❌ Cita cancelada",
+                                    "Has cancelado tu cita. Si fue un error, por favor comunícate con el consultorio 📞",
+                                    "danger"
+                                );
                             } else {
                                 mostrarAlerta('warning', 'Error al cancelar la cita');
                             }
@@ -213,6 +204,28 @@
                     mostrarAlerta('danger', 'ID no proporcionado.');
                 }
             });
+
+            function mostrarPantallaFinal(titulo, mensaje, tipo) {
+                container.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 100vh;">
+                <div class="shadow-lg p-5 rounded bg-white" style="max-width: 450px;">
+                    <div class="mb-4">
+                        <i class="bi ${tipo === "success" ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger"}" 
+                           style="font-size: 5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold">${titulo}</h2>
+                    <p class="mt-3">${mensaje}</p>
+                    <hr>
+                    <p class="text-muted mb-0">Gracias por usar nuestro servicio 💙</p>
+                </div>
+            </div>`;
+
+                // Bloquea el botón "atrás"
+                history.pushState(null, null, location.href);
+                window.onpopstate = () => {
+                    history.go(1);
+                };
+            }
         });
     </script>
 </body>
