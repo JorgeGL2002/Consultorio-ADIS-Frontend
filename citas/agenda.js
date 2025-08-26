@@ -362,6 +362,7 @@ async function cargarHorarios(fecha) {
         Paciente: ${cita.nombrePaciente}<br>
         Servicio: ${cita.nombreServicio}<br>
         Seguro: ${cita.seguro}<br>
+        Estado: ${cita.estado_cita}<br>
         ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
       </span>
     `).join("");
