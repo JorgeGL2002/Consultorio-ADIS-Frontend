@@ -161,13 +161,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarAlerta('success', 'Su cita fue confirmada, ya puede cerrar esta ventana.');
-                                setTimeout(() => {
-                                    history.pushState(null, null, location.href);
-                                    window.onpopstate = () => {
-                                        history.go(1);
-                                    }; 
-                                });
+                                window.location.href = '/enlaceConfirmado.html'
                             } else {
                                 mostrarAlerta('warning', 'Error al confirmar la cita');
                             }
@@ -189,13 +183,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarAlerta('success', 'Su cita fue cancelada, ya puede cerrar esta ventana.');
-                                setTimeout(() => {
-                                    history.pushState(null, null, location.href);
-                                    window.onpopstate = () => {
-                                        history.go(1);
-                                    }; 
-                                });
+                                window.location.href = '/enlaceCancelado.html'
                             } else {
                                 mostrarAlerta('warning', 'Error al cancelar la cita');
                             }
