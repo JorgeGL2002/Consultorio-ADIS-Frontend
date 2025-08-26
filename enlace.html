@@ -152,8 +152,7 @@
                     <h4 class="fw-bold">${mensaje}</h4>
                     <p class="mt-3">Gracias por tu respuesta 🙌</p>
                 </div>
-            </div>
-        `;
+            </div>`;
 
             // Bloquear el botón atrás (historial vacío)
             history.pushState(null, null, location.href);
@@ -168,7 +167,7 @@
             if (idCita) {
                 detallesCita(idCita);
             } else {
-                mostrarAlerta('danger', 'Token no proporcionado.');
+                mostrarAlerta('danger', 'ID no proporcionado.');
             }
 
             document.getElementById('confirmar').addEventListener('click', function () {
