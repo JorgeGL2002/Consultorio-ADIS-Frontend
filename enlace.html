@@ -153,6 +153,28 @@
                 mostrarAlerta('danger', 'ID no proporcionado.');
             }
 
+            function mostrarPantallaFinal(titulo, mensaje, tipo) {
+                container.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 100vh;">
+                <div class="shadow-lg p-5 rounded bg-white" style="max-width: 450px;">
+                    <div class="mb-4">
+                        <i class="bi ${tipo === "success" ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger"}" 
+                           style="font-size: 5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold">${titulo}</h2>
+                    <p class="mt-3">${mensaje}</p>
+                    <hr>
+                    <p class="text-muted mb-0">Gracias por usar nuestro servicio 💙</p>
+                </div>
+            </div>`;
+
+                // Bloquea el botón "atrás"
+                history.pushState(null, null, location.href);
+                window.onpopstate = () => {
+                    history.go(1);
+                };
+            }
+
             document.getElementById('confirmar').addEventListener('click', function () {
                 if (idCita) {
                     fetch(`https://api-railway-production-24f1.up.railway.app/api/test/confirmarCitaEnlace?idCita=${idCita}`, {
@@ -204,28 +226,6 @@
                     mostrarAlerta('danger', 'ID no proporcionado.');
                 }
             });
-
-            function mostrarPantallaFinal(titulo, mensaje, tipo) {
-                container.innerHTML = `
-            <div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 100vh;">
-                <div class="shadow-lg p-5 rounded bg-white" style="max-width: 450px;">
-                    <div class="mb-4">
-                        <i class="bi ${tipo === "success" ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger"}" 
-                           style="font-size: 5rem;"></i>
-                    </div>
-                    <h2 class="fw-bold">${titulo}</h2>
-                    <p class="mt-3">${mensaje}</p>
-                    <hr>
-                    <p class="text-muted mb-0">Gracias por usar nuestro servicio 💙</p>
-                </div>
-            </div>`;
-
-                // Bloquea el botón "atrás"
-                history.pushState(null, null, location.href);
-                window.onpopstate = () => {
-                    history.go(1);
-                };
-            }
         });
     </script>
 </body>
