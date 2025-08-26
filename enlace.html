@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="assets/logocorto.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Confirma tu cita | Fundación ADIS</title>
 </head>
 
@@ -17,31 +18,61 @@
             </a>
         </div>
     </nav>
-    <div class="container mt-4">
-        <div class="container mt-5">
-            <div class="card shadow-lg p-4 rounded-4" style="max-width: 600px; margin: auto;">
-                <div class="text-center mb-4">
-                    <img src="assets/logocorto.png" width="48px" height="48px" alt="Logo de la fundación ADIS" />
+
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">Gestión de tu cita</h2>
+            <p class="text-muted">Confirma o cancela tu asistencia fácilmente.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Confirmar -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3 text-success">
+                            <i class="bi bi-check-circle-fill" style="font-size: 64px;"></i>
+                        </div>
+                        <h5 class="card-title mb-3">Confirmar cita</h5>
+                        <button type="button" id="confirmar" class="btn btn-success w-100 btn-lg">
+                            Confirmar
+                        </button>
+                    </div>
                 </div>
-                <h3 class="text-center text-primary fw-bold mb-4">Confirma tu cita</h3>
-                <div class="mb-3 d-flex justify-content-center align-items-center">
-                    <button type="button" id="confirmar" class="btn btn-success w-100">Confirmar</button>
-                    <button type="button" id="cancelar" class="btn btn-danger w-100 ms-2">Cancelar</button>
+            </div>
+
+            <!-- Cancelar -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3 text-danger">
+                            <i class="bi bi-x-circle-fill" style="font-size: 64px;"></i>
+                        </div>
+                        <h5 class="card-title mb-3">Cancelar cita</h5>
+                        <button type="button" id="cancelar" class="btn btn-danger w-100 btn-lg">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <h5 class="fw-bold">Detalles de la cita</h5>
-            <p><b>Fecha:</b><span id="fechaCita"></span></p>
-            <p><b>Hora:</b> <span id="horaCita"></span></p>
-            <p><b>Servicio :</b> <span id="servicioCita"></span></p>
-            <p><b>Costo:</b> <span id="costoCita"></span></p>
-            <p><b>Profesional:</b> <span id="profesionalCita"></span></p>
+        <!-- Detalles -->
+        <div class="mt-5 p-4 bg-light rounded shadow-sm">
+            <h5 class="fw-bold mb-3 text-secondary">Detalles de la cita</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><b>📅 Fecha:</b> <span id="fechaCita"></span></li>
+                <li class="list-group-item"><b>⏰ Hora:</b> <span id="horaCita"></span></li>
+                <li class="list-group-item"><b>💼 Servicio:</b> <span id="servicioCita"></span></li>
+                <li class="list-group-item"><b>💲 Costo:</b> <span id="costoCita"></span></li>
+                <li class="list-group-item"><b>👩‍⚕️ Profesional:</b> <span id="profesionalCita"></span></li>
+            </ul>
         </div>
     </div>
 
-    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5; max-width: 220px;">
+
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3"
+        style="z-index: 5; max-width: auto; max-height: fit-content;">
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="check-circle-fill" viewBox="0 0 16 16" style="width: 20px; margin-right: 8px;">
                 <path
@@ -113,6 +144,24 @@
             }, 3000);
         }
 
+        function mostrarMensaje(mensaje, tipo) {
+            // Limpia el contenido de la página
+            container.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 70vh;">
+                <div class="alert alert-${tipo} text-center p-4 shadow rounded" style="max-width: 400px;">
+                    <h4 class="fw-bold">${mensaje}</h4>
+                    <p class="mt-3">Gracias por tu respuesta 🙌</p>
+                </div>
+            </div>
+        `;
+
+            // Bloquear el botón atrás (historial vacío)
+            history.pushState(null, null, location.href);
+            window.onpopstate = () => {
+                history.go(1);
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             const idCita = urlParams.get('idCita');
@@ -130,8 +179,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarAlerta('success', 'Cita confirmada exitosamente.');
-                                setTimeout(() => window.location.href = '/', 2000);
+                                mostrarMensaje('Tu cita a sido confirmada, te vemos pronto.', 'success');
                             } else {
                                 mostrarAlerta('warning', 'Error al confirmar la cita');
                             }
@@ -153,8 +201,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                mostrarAlerta('success', 'Cita cancelada.');
-                                setTimeout(() => window.location.href = '/', 2000);
+                                mostrarMensaje('Tu cita a sido cancelada, que tengas un lindo dia.', 'danger');
                             } else {
                                 mostrarAlerta('warning', 'Error al cancelar la cita');
                             }
