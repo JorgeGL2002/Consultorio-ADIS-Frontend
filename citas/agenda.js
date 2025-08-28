@@ -610,6 +610,7 @@ function abrirModalEditarCita(hora, datosCita) {
 
 function abrirNotificaciones() {
   const label = document.getElementById("cumpleaños");
+  label.innerHTML = ""; 
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
     .then(r => r.json())
     .then(data => {
@@ -1261,6 +1262,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalCancelar = document.getElementById("modalCancelar");
   const modalRepetirCita = document.getElementById("modalRepetirCita");
   const modalCambiarHorario = document.getElementById("modalCambiarHorario");
+  const modalNotificaciones = document.getElementById("modalNotificaciones");
   let empresaPacienteOriginal = ""; // Para comparar si el usuario regresa a la empresa original
   let numeroEmpleadoOriginal = "";
 
@@ -1296,6 +1298,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   modalCambiarHorario.addEventListener("hidden.bs.modal", async (event) => {
     const form = document.getElementById("formCambiarHorario");
+    form.reset();
+  });
+
+   modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formNotificaciones");
     form.reset();
   });
 
