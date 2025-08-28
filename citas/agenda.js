@@ -1001,11 +1001,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       inputEmpleado.value = numeroEmpleadoOriginal;
     }
-      // Mantener el valor original si corresponde
-      if (seleccionada === empresaPacienteOriginal) {
-        inputEmpleado.value = numeroEmpleadoOriginal;
-      }
-    }
   });
 
   document.getElementById("formCita").addEventListener("submit", async (e) => {
