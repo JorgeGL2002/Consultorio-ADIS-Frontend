@@ -338,6 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             mostrarAlerta("danger", "Error del servidor", false);
+            console.log(error);
         }
     });
 
@@ -361,4 +362,5 @@ document.addEventListener("DOMContentLoaded", () => {
             bsCollapse.toggle();
         });
     });
+
 });
