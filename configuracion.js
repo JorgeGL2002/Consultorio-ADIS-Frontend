@@ -330,6 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarAlerta("success", "Cuenta registrada", true);
                 // Cerrar modal con JS
                 const modal = bootstrap.Modal.getInstance(document.getElementById("modalUsuario"));
+                modal.reset();
                 modal.hide();
             } else {
                 mostrarAlerta("warning", "Error al registrar: ", false);
