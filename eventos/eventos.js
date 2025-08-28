@@ -12,6 +12,20 @@ function abrirVentanaH() {
   window.location.href = '../historias_clinicas/hc.html';
 }
 
+function abrirVentanaConfiguracion() {
+  if (rol !== "SUPER USUARIO") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    return;
+  } else {
+    window.location.href = '/configuracion.html';
+  }
+}
+
+function CerrarSesion() {
+  window.location.href = '/index.html';
+  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+}
+
 function cargarTrabajadores(idSelect) {
   const select = document.getElementById(idSelect);
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivosId")
@@ -279,3 +293,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
