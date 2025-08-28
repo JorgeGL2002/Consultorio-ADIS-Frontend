@@ -119,6 +119,11 @@ function cargarNotas(idSelect) {
         });
 }
 
+function abrirModalNuevoUsuario() {
+    const modal = new bootstrap.Modal(document.getElementById("modalUsuario"));
+    modal.show();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarSeguros("seguros");
     cargarServicios("servicios");
@@ -277,6 +282,64 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    document.getElementById("nuevoUsuariobtn").addEventListener("click", () => {
+        abrirModalNuevoUsuario();
+    });
+
+    document.getElementById("formCrearCuenta").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre");
+        const email = document.getElementById("email");
+        const contraseña = document.getElementById("password");
+        const confirmar = document.getElementById("confirmar");
+        const rol = document.getElementById("rol");
+        const clave = document.getElementById("clave");
+       
+        if (!email.value.trim() || !nombre.value.trim() || !contraseña.value.trim() || !confirmar.value.trim() || !rol.value.trim() || !clave.value.trim()) {
+            mostrarAlerta("warning", "Completa todos los campos", false);
+            return;
+        }
+
+        if (contraseña.value.length < 8) {
+            mostrarAlerta("warning", "La contraseña debe tener minimo 8 caracteres", false);
+        }
+
+        if (contraseña.value !== confirmar.value) {
+            mostrarAlerta("warning", "Las contraseñas no coinciden", false);
+            return;
+        }
+
+        try {
+            const res = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/registrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Super-User-Password": clave.value
+                },
+                body: JSON.stringify({
+                    usuario: nombre.value.trim(),
+                    nombre: nombre.value.trim(),
+                    email: email.value.trim(),
+                    contraseña: contraseña.value,
+                    rol: rol.value
+                })
+            });
+
+            const texto = await res.text();
+            if (res.ok) {
+                mostrarAlerta("success", "Cuenta registrada", true);
+                // Cerrar modal con JS
+                const modal = bootstrap.Modal.getInstance(document.getElementById("modalUsuario"));
+                modal.hide();
+            } else {
+                mostrarAlerta("warning", "Error al registrar: ", false);
+            }
+        } catch (error) {
+            mostrarAlerta("danger", "Error del servidor", false);
+        }
+    });
+
     const botonesCollapse = document.querySelectorAll('[data-bs-toggle="collapse"]');
     botonesCollapse.forEach(boton => {
         boton.addEventListener("click", e => {
@@ -297,6 +360,4 @@ document.addEventListener("DOMContentLoaded", () => {
             bsCollapse.toggle();
         });
     });
-
 });
-

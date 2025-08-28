@@ -1,7 +1,3 @@
-function abrirVentana() {
-    window.location.href = '/crear_cuenta.html';
-}
-
 function abrirVentanaRC() {
     window.location.href = '/recuperar_contraseña.html';
 }
