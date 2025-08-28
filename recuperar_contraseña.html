@@ -88,6 +88,10 @@
 <script>
     function solicitarOTP() {
         const usuario = document.getElementById("trabajador").value;
+         if (!usuario) {
+            mostrarAlerta("danger", "Por favor, seleccione un usuario");
+            return;
+        }
         fetch("https://api-railway-production-24f1.up.railway.app/api/test/solicitarOtp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -201,3 +205,4 @@
 
 
 </html>
+
