@@ -88,18 +88,27 @@
 <script>
     function solicitarOTP() {
         const usuario = document.getElementById("trabajador").value;
-         if (!usuario) {
+        if (!usuario) {
             mostrarAlerta("danger", "Por favor, seleccione un usuario");
             return;
         }
+
         fetch("https://api-railway-production-24f1.up.railway.app/api/test/solicitarOtp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ usuario })
         }).then(r => r.json())
             .then(data => {
-                mostrarAlerta("success", data.message || "Código enviado");
-                if (data.message) document.getElementById("formOtp").style.display = "block";
+                if (data.success) {
+                    mostrarAlerta("success", data.message || "Código enviado");
+                    document.getElementById("formOtp").style.display = "block";
+                } else {
+                    mostrarAlerta("danger", data.error || "No se pudo enviar el código");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarAlerta("danger", "Hubo un error al conectar con el servidor");
             });
     }
 
@@ -205,4 +214,5 @@
 
 
 </html>
+
 
