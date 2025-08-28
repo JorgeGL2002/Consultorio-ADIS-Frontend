@@ -125,6 +125,8 @@ function abrirModalNuevoUsuario() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("ID del usuario: " + localStorage.getItem("id"));
+    const idUsuario = localStorage.getItem("id");
     cargarSeguros("seguros");
     cargarServicios("servicios");
     cargarTrabajadores("trabajador");
@@ -294,9 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const contraseña = document.getElementById("password");
         const confirmar = document.getElementById("confirmar");
         const rol = document.getElementById("rol");
-        const clave = document.getElementById("clave");
        
-        if (!email.value.trim() || !nombre.value.trim() || !contraseña.value.trim() || !confirmar.value.trim() || !rol.value.trim() || !clave.value.trim()) {
+        if (!email.value.trim() || !nombre.value.trim() || !contraseña.value.trim() || !confirmar.value.trim() || !rol.value.trim()) {
             mostrarAlerta("warning", "Completa todos los campos", false);
             return;
         }
@@ -315,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Super-User-Password": clave.value
+                    "Admin-Id": idUsuario
                 },
                 body: JSON.stringify({
                     usuario: nombre.value.trim(),
@@ -325,8 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     rol: rol.value
                 })
             });
-
-            const texto = await res.text();
             if (res.ok) {
                 mostrarAlerta("success", "Cuenta registrada", true);
                 // Cerrar modal con JS
