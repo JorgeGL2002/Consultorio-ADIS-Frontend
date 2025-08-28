@@ -642,7 +642,7 @@ async function obtenerTelefonoPaciente(nombre) {
     console.error(e);
   }
 }
-
+ 
 function formatearNumero(numero) {
   const limpio = numero.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
   if(limpio.length === 10) {
@@ -951,23 +951,6 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarBotonBloqueo();
   });
 
-  document.getElementById("Editarseguro").addEventListener("change", () => {
-    const seguro = document.getElementById("Editarseguro").value.toLowerCase();
-    const valorInput = document.getElementById("Editarvalor");
-    const noSeguroInput = document.getElementById("Editarnseguro");
-
-    if (seguro === "ninguno" || seguro.includes("cita")) {
-      valorInput.disabled = false;
-      valorInput.value = "";
-      noSeguroInput.disabled = true;
-      noSeguroInput.value = "";
-    } else {
-      valorInput.disabled = true;
-      valorInput.value = "0";
-      noSeguroInput.disabled = false;
-    }
-  });
-
   document.getElementById("formDesbloquearHorario").addEventListener("submit", async (e) => {
     e.preventDefault();
     const hora = document.getElementById("horaD").value;
@@ -1018,18 +1001,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       inputEmpleado.value = numeroEmpleadoOriginal;
     }
-
-    // Segunda parte: Habilitar/deshabilitar campos según tipo de seguro
-    if (segurosValue.includes("cita") || segurosValue.includes("ninguno")) {
-      valorInput.disabled = false;
-      valorInput.value = "";
-      inputEmpleado.disabled = true;
-      inputEmpleado.value = "";
-    } else {
-      valorInput.disabled = true;
-      valorInput.value = "0";
-      inputEmpleado.disabled = false;
-
       // Mantener el valor original si corresponde
       if (seleccionada === empresaPacienteOriginal) {
         inputEmpleado.value = numeroEmpleadoOriginal;
