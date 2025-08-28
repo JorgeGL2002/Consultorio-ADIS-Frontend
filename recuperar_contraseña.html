@@ -99,19 +99,39 @@
             });
     }
 
-    function validarOTP() {
+   function validarOTP() {
         const usuario = document.getElementById("trabajador").value;
         const codigo = document.getElementById("codigo").value;
         const nuevaClave = document.getElementById("nuevaClave").value;
+
+        if (!usuario || !codigo || !nuevaClave) {
+            mostrarAlerta("danger", "Por favor, complete todos los campos");
+            return;
+        }
+
+        if (nuevaClave.length < 8) {
+            mostrarAlerta("danger", "La nueva contraseña debe tener al menos 8 caracteres");
+            return;
+        }
 
         fetch("https://api-railway-production-24f1.up.railway.app/api/test/validar-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ usuario, codigo, nuevaClave })
         }).then(r => r.json())
-            .then(data => mostrarAlerta("success", data.message || "Contraseña cambiada correctamente", true));
-            document.getElementById("formOtp").style.display = "none";
-            document.getElementById("formOtp").reset();
+            .then(data => {
+                if (data.success) {
+                    mostrarAlerta("success", data.message || "Contraseña cambiada correctamente", true);
+                    document.getElementById("formOtp").reset();
+                    document.getElementById("formOtp").style.display = "none";
+                } else {
+                    mostrarAlerta("danger", data.error || "Error al cambiar la contraseña");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarAlerta("danger", "Hubo un error al conectar con el servidor");
+            });
     }
 
     function mostrarAlerta(tipo, mensaje, recargar = false) {
@@ -178,5 +198,6 @@
             });
     });
 </script>
+
 
 </html>
