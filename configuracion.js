@@ -331,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarAlerta("success", "Cuenta registrada", true);
                 // Cerrar modal con JS
                 const modal = bootstrap.Modal.getInstance(document.getElementById("modalUsuario"));
-                modal.reset();
+                document.getElementById("formCrearCuenta").reset();
                 modal.hide();
             } else {
                 mostrarAlerta("warning", "Error al registrar: ", false);
@@ -364,3 +364,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
