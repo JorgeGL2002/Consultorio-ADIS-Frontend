@@ -115,7 +115,7 @@ async function nombreTrabajador(id) {
 
 async function cargarEventos(fecha) {
   try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}`);
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cargarEventos?fecha=${fecha}`);
     if (!res.ok) return mostrarAlerta("danger", "Error al cargar eventos: " + res.statusText);
     const eventos = await res.json();
     console.log("Eventos cargados:", eventos);
@@ -323,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
