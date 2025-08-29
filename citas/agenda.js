@@ -464,6 +464,7 @@ async function cargarNotas(fecha, id) {
       card.innerHTML = `
     <div class="card notas-card">
       <div class="card-body text-center">
+      <h5 class="card-subtitle fw-bold">Notas</h5>
         <div class="card-icon">
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
@@ -503,6 +504,7 @@ async function cargarEventos(fecha, idProfesional) {
       card.innerHTML = `
     <div class="card notas-card">
       <div class="card-body text-center">
+      <h5 class="card-subtitle fw-bold">Eventos</h5>
         <div class="card-icon">
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
