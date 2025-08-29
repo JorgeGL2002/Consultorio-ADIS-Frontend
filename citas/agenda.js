@@ -268,11 +268,13 @@ function extraerHorariosIntermedios(citas, bloqueos, ausencias) {
 let numeroCitas = 0;
 async function cargarHorarios(fecha) {
   try {
-    let { nombre, id } = await obtenerProfesionalContexto();
+    const { nombre, id } = await obtenerProfesionalContexto();
     const rol = localStorage.getItem("rol");
 
      if (!id) {
-      id = localStorage.getItem("id");
+      tabla.innerHTML = "<tr><td colspan='2'>Selecciona un trabajador</td></tr>";
+      console.warn("⚠ No se pudo determinar un ID de profesional.");
+      return;
     }
 
     console.log(`Usuario ${nombre} ID ${id} Rol ${rol}`);
