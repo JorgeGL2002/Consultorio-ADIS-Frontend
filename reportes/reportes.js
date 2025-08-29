@@ -15,6 +15,20 @@ function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
 
+function abrirVentanaConfiguracion() {
+  if (rol !== "SUPER USUARIO") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    return;
+  } else {
+    window.location.href = '/configuracion.html';
+  }
+}
+
+function CerrarSesion() {
+  window.location.href = '/index.html';
+  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+}
+
 function cargarTrabajadores(idSelect) {
     const select = document.getElementById(idSelect);
     if (rol === "ESPECIALISTA") {
@@ -297,4 +311,5 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error("Error al cargar pacientes:", error);
         });
+
 });
