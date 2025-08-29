@@ -11,6 +11,20 @@ function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
   });
 }
 
+function abrirVentanaConfiguracion() {
+  if (rol !== "SUPER USUARIO") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    return;
+  } else {
+    window.location.href = '/configuracion.html';
+  }
+}
+
+function CerrarSesion() {
+  window.location.href = '/index.html';
+  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+}
+
 const opcionesSelect = {
   nivelEstudio: [
     { valor: "primaria", texto: "Primaria" },
@@ -656,6 +670,7 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
 
