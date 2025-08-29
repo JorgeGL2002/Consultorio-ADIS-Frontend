@@ -3,6 +3,20 @@ const id = localStorage.getItem("id");
 const rol = localStorage.getItem("rol");
 console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
 
+function abrirVentanaConfiguracion() {
+  if (rol !== "SUPER USUARIO") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    return;
+  } else {
+    window.location.href = '/configuracion.html';
+  }
+}
+
+function CerrarSesion() {
+  window.location.href = '/index.html';
+  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+}
+
 function cargarPacientes(filtro = "") {
   const tbody = document.getElementById("tabla-pacientes");
   tbody.innerHTML = "";
@@ -283,3 +297,4 @@ function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 
 }
+
