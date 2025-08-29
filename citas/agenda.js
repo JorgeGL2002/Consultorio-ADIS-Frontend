@@ -485,6 +485,43 @@ async function cargarNotas(fecha, id) {
   }
 }
 
+async function cargarEventos(fecha, idProfesional) {
+  const contenedor = document.getElementById("contenedorEventos");
+  contenedor.innerHTML = "";
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}&idProfesional=${idProfesional}`);
+    if (!res.ok) throw new Error("No se encontró al profesional");
+    const data = await res.json();
+    if (!data || data.length === 0) {
+      mostrarAlerta("info", "No hay eventos para hoy");
+      return null;
+    }
+    data.forEach(n => {
+      const card = document.createElement("div");
+      card.classList.add("col-12", "mt-3");
+      console.log(n);
+      card.innerHTML = `
+    <div class="card notas-card">
+      <div class="card-body text-center">
+        <div class="card-icon">
+          <i class="bi bi-exclamation-diamond-fill"></i>
+        </div>
+        <label class="fw-bold">Titulo: ${n.nombre}</label>
+        <textarea class="form-control" rows="3" readonly>${n.detalle || ""}</textarea>
+      </div>
+    </div>
+  `;
+
+      contenedor.appendChild(card);
+    });
+    return data;
+  } catch (e) {
+    mostrarAlerta("error", "No se pudo obtener el ID del trabajador para eventos");
+    console.error(e);
+    return null;
+  }
+}
+
 function cargarServicios(idSelect) {
   const select = document.getElementById(idSelect);
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/servicios")
@@ -749,6 +786,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
   cargarNotas(fechaHoy  || new Date().toISOString().split("T")[0], id);
+  cargarEventos(fechaHoy  || new Date().toISOString().split("T")[0], id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
@@ -791,6 +829,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
         cargarHorarios(fechaInput?.value  || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
         cargarNotas(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
+        cargarEventos(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -815,6 +854,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], id);
+        cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], id);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -826,6 +866,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
+        cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
       }
     });
   }
