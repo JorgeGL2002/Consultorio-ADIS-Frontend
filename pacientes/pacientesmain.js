@@ -1,3 +1,5 @@
+const rol = localStorage.getItem("rol");
+
 function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
   const select = document.getElementById(idSelect);
   select.innerHTML = '<option value="" disabled selected>Selecciona una opción</option>';
@@ -692,6 +694,7 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
 
