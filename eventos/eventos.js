@@ -91,6 +91,10 @@ let swiper = new Swiper('.mySwiper', {
 });
 
 function abrirModalNuevoEvento() {
+  if(rol !== "SUPER USUARIO" && rol !== "RECEPCIÓN") {
+    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    return;
+  }
   const modal = new bootstrap.Modal(document.getElementById('modalNuevoEvento'));
   modal.show();
   cargarTrabajadores("trabajador");
@@ -237,6 +241,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         mostrarAlerta("success", "Evento creado");
         document.getElementById("formNuevoEvento").reset();
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalNuevoEvento'));
+        modal.hide();
         document.getElementById("preview").style.display = "none";
         imagenBase64 = ""; // Limpiar Base64
         await cargarEventos(fechaInput.value);
@@ -317,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
