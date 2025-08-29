@@ -480,6 +480,22 @@ async function nuevoPaciente() {
   }
 }
 
+function abrirNotificaciones() {
+  const label = document.getElementById("cumpleaños");
+  label.innerHTML = "";
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(s => {
+        label.innerHTML += `${s} <br>`;
+      });
+    }).catch(() => {
+      label.innerHTML = "Error al cargar los cumpleaños";
+    });
+  const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
+  modal.show();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   cargarTrabajadores("trabajador");
   cargarEstados("lugarNacimiento");
@@ -514,6 +530,12 @@ document.addEventListener("DOMContentLoaded", () => {
         input.style.display = "block";
       }
     });
+  });
+
+     const modalNotificaciones = document.getElementById("modalNotificaciones");
+  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formNotificaciones");
+    form.reset();
   });
 
   document.getElementById("comoSupiste").addEventListener("change", (e) => {
@@ -670,6 +692,7 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
 
