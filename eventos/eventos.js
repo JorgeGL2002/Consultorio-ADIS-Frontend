@@ -1,3 +1,5 @@
+const rol = localStorage.getItem("rol");
+
 function abrirVentanaP() {
   window.location.href = '../pacientes/pacientesmain.html';
 }
@@ -315,5 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
