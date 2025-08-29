@@ -14,6 +14,10 @@ function abrirVentanaR() {
     window.location.href = 'reportes/reportes.html';
 }
 
+function CerrarSesion() {
+  window.location.href = '/index.html';
+  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+}
 
 function cargarServicios(idSelect) {
     const select = document.getElementById(idSelect);
@@ -125,6 +129,22 @@ function abrirModalNuevoUsuario() {
     modal.show();
 }
 
+function abrirNotificaciones() {
+  const label = document.getElementById("cumpleaños");
+  label.innerHTML = "";
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(s => {
+        label.innerHTML += `${s} <br>`;
+      });
+    }).catch(() => {
+      label.innerHTML = "Error al cargar los cumpleaños";
+    });
+  const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
+  modal.show();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("ID del usuario: " + localStorage.getItem("id"));
     const idUsuario = localStorage.getItem("id");
@@ -154,6 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
             mostrarAlerta("danger", "Error al crear el servicio");
         }
     });
+
+     const modalNotificaciones = document.getElementById("modalNotificaciones");
+  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+    const form = document.getElementById("formNotificaciones");
+    form.reset();
+  });
 
     document.getElementById("formEmpresa").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -364,4 +390,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
 
