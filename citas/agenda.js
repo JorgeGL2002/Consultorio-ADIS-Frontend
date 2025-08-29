@@ -507,7 +507,7 @@ async function cargarEventos(fecha, idProfesional) {
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
         <label class="fw-bold">Titulo: ${n.nombre}</label>
-        <textarea class="form-control" rows="3" readonly>${n.detalle || ""}</textarea>
+        <textarea class="form-control" rows="3" readonly>${n.detalles || ""}</textarea>
       </div>
     </div>
   `;
