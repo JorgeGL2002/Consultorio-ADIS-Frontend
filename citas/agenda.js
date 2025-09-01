@@ -238,33 +238,6 @@ function normalizarHora(hora) {
 
   return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
 }
-
-function extraerHorariosIntermedios(citas, bloqueos, ausencias) {
-  const horariosSet = new Set();
-
-  const procesar = (array) => {
-    array.forEach(item => {
-      const h = item.hora?.slice(0, 5);
-      if (h && !horarios.includes(h)) {
-        const [hh, mm] = h.split(':').map(Number);
-        // Solo agregar si no está dentro de un bloque estándar
-        const minutosTotales = hh * 60 + mm;
-        const bloqueInicio = Math.floor(minutosTotales / 30) * 30;
-        const diff = minutosTotales - bloqueInicio;
-
-        if (diff > 0 && diff < 30) {
-          horariosSet.add(h);
-        }
-      }
-    });
-  };
-
-  procesar(citas);
-  procesar(bloqueos);
-  procesar(ausencias);
-
-  return [...horariosSet];
-}
 let numeroCitas = 0;
 
 async function cargarHorarios(fecha) {
@@ -365,7 +338,6 @@ async function cargarHorarios(fecha) {
             onclick='abrirModalEditarCitaPorID(${cita.idCita})'>
         Paciente: ${cita.nombrePaciente}<br>
         Servicio: ${cita.nombreServicio}<br>
-        Seguro: ${cita.seguro}<br>
         Estado: ${cita.estado_cita}<br>
         ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
       </span>
