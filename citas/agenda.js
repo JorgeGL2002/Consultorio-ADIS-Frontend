@@ -688,10 +688,10 @@ function formatearNumero(numero) {
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
 let notificaciones = JSON.parse(localStorage.getItem("notificacionesCitas")) || [];
 
-function verificarCambiosEnCitas() {
+function verificarCambiosEnCitas(fecha, idProfesional) {
   const label = document.getElementById("estadoCita");
 
-  fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadoCita')
+  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/estadoCita?fecha=${fecha}&idEspecialista=${idProfesional}`)
     .then(res => res.json())
     .then(citas => {
       citas.forEach(cita => {
@@ -705,14 +705,12 @@ function verificarCambiosEnCitas() {
         if (estadoAnterior && estadoAnterior !== nuevoEstado) {
           const mensaje = `[${fecha} ${hora}] ${nombrePaciente} ha ${nuevoEstado.toLowerCase()} su cita`;
 
-          // Guardar en historial
-          notificaciones.push(mensaje);
-
-          // Mostrar en pantalla
-          mostrarAlerta("info", mensaje);
-          label.innerHTML += `<br>${mensaje}`;
+          if (!notificaciones.includes(mensaje)) {
+            notificaciones.push(mensaje);
+            mostrarAlerta("info", mensaje);
+            label.innerHTML += `<br>${mensaje}`;
+          }
         }
-
         // Actualizar estado guardado
         estadosAnteriores[id] = nuevoEstado;
       });
