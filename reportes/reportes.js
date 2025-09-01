@@ -226,6 +226,10 @@ async function generateReport(reportType) {
                 break;
 
             case 'records':
+                 if (rol === "ESPECIALISTA") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
                 url += '/reporteHistoriasClinicas';
 
                 if (rol === "ESPECIALISTA") {
@@ -335,4 +339,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
