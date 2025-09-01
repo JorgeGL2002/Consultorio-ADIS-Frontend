@@ -686,6 +686,7 @@ function formatearNumero(numero) {
 
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
 function verificarCambiosEnCitas() {
+  const label = document.getElementById("estadoCita");
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadosCita')
     .then(res => res.json())
     .then(citas => {
@@ -693,9 +694,10 @@ function verificarCambiosEnCitas() {
         const id = cita.idCita;
         const nuevoEstado = cita.estado;
         const estadoAnterior = estadosAnteriores[id];
-
+        const nombrePaciente = cita.nombrePaciente;
         if (estadoAnterior && estadoAnterior !== nuevoEstado) {
-          mostrarAlerta('info', `La cita ${id} ha cambiado de estado a ${nuevoEstado}`);
+          mostrarAlerta('info', `${nombrePaciente} a ${nuevoEstado} su cita`);
+          label.innerHTML = `${nombrePaciente} a ${nuevoEstado} su cita`;
         }
 
         // Actualizar el estado almacenado
