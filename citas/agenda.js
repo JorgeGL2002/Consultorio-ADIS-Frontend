@@ -687,7 +687,7 @@ function formatearNumero(numero) {
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
 function verificarCambiosEnCitas() {
   const label = document.getElementById("estadoCita");
-  fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadosCita')
+  fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadoCita')
     .then(res => res.json())
     .then(citas => {
       citas.forEach(cita => {
