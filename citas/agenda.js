@@ -806,7 +806,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Usuario", nombre, "ID", id, "Rol", rol);
   cargarHorarios(fechaHoy  || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
-  setInterval(verificarCambiosEnCitas(), 30000);
+  setInterval(verificarCambiosEnCitas(fechaHoy || new Date().toISOString().split("T")[0], id), 30000);
   inputHora.disabled = true;
   selectPrincipal.addEventListener("change", () => {
     const nombre = selectPrincipal.value;
@@ -843,6 +843,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarHorarios(fechaInput?.value  || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
         cargarNotas(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
         cargarEventos(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
+        setInterval(verificarCambiosEnCitas(fechaInput?.value || new Date().toISOString().split("T")[0], id), 30000);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -868,6 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], id);
         cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], id);
+        setInterval(verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id), 30000);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -880,6 +882,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
         cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
+        setInterval(verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id), 30000);
       }
     });
   }
