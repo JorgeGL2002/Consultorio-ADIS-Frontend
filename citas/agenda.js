@@ -652,6 +652,7 @@ function abrirNotificaciones() {
     });
   const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
   modal.show();
+  abrirNotificaciones();
 }
 
 async function obtenerTelefonoPaciente(nombre) {
@@ -685,8 +686,11 @@ function formatearNumero(numero) {
 }
 
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
+let notificaciones = JSON.parse(localStorage.getItem("notificacionesCitas")) || [];
+
 function verificarCambiosEnCitas() {
   const label = document.getElementById("estadoCita");
+
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/estadoCita')
     .then(res => res.json())
     .then(citas => {
@@ -695,22 +699,38 @@ function verificarCambiosEnCitas() {
         const nuevoEstado = cita.estado;
         const estadoAnterior = estadosAnteriores[id];
         const nombrePaciente = cita.nombrePaciente;
+        const fecha = cita.fecha;
+        const hora = cita.hora;
+
         if (estadoAnterior && estadoAnterior !== nuevoEstado) {
-          mostrarAlerta('info', `${nombrePaciente} marco su cita como ${nuevoEstado}`);
-          label.innerHTML = `${nombrePaciente} marco su cita como ${nuevoEstado}`;
+          const mensaje = `[${fecha} ${hora}] ${nombrePaciente} ha ${nuevoEstado.toLowerCase()} su cita`;
+
+          // Guardar en historial
+          notificaciones.push(mensaje);
+
+          // Mostrar en pantalla
+          mostrarAlerta("info", mensaje);
+          label.innerHTML += `<br>${mensaje}`;
         }
 
-        // Actualizar el estado almacenado
+        // Actualizar estado guardado
         estadosAnteriores[id] = nuevoEstado;
       });
 
-      // Guardar en localStorage para futuras comparaciones
+      // Guardar en localStorage
       localStorage.setItem("estadosCitas", JSON.stringify(estadosAnteriores));
+      localStorage.setItem("notificacionesCitas", JSON.stringify(notificaciones));
     })
     .catch(err => {
       console.error("Error al verificar los estados de las citas", err);
     });
 }
+
+function abrirNotificaciones() {
+  const label = document.getElementById("estadoCita");
+  label.innerHTML = notificaciones.join("<br>");
+}
+
 
 function enviarRecordatorio(telefono, idCita) {
   const telefonoFormateado = formatearNumero(telefono);
