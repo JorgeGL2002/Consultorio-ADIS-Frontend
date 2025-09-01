@@ -696,8 +696,8 @@ function verificarCambiosEnCitas() {
         const estadoAnterior = estadosAnteriores[id];
         const nombrePaciente = cita.nombrePaciente;
         if (estadoAnterior && estadoAnterior !== nuevoEstado) {
-          mostrarAlerta('info', `${nombrePaciente} a ${nuevoEstado} su cita`);
-          label.innerHTML = `${nombrePaciente} a ${nuevoEstado} su cita`;
+          mostrarAlerta('info', `${nombrePaciente} marco su cita como ${nuevoEstado}`);
+          label.innerHTML = `${nombrePaciente} marco su cita como ${nuevoEstado}`;
         }
 
         // Actualizar el estado almacenado
