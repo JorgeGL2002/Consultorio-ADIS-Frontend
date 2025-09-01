@@ -266,12 +266,13 @@ function extraerHorariosIntermedios(citas, bloqueos, ausencias) {
   return [...horariosSet];
 }
 let numeroCitas = 0;
+
 async function cargarHorarios(fecha) {
   try {
     const { nombre, id } = await obtenerProfesionalContexto();
     const rol = localStorage.getItem("rol");
 
-     if (!id) {
+    if (!id) {
       tabla.innerHTML = "<tr><td colspan='2'>Selecciona un trabajador</td></tr>";
       console.warn("⚠ No se pudo determinar un ID de profesional.");
       return;
@@ -307,19 +308,26 @@ async function cargarHorarios(fecha) {
       tabla.innerHTML = "<tr><td colspan='2'>Datos no disponibles</td></tr>";
       return;
     }
-    const horariosIntermedios = extraerHorariosIntermedios(citas, bloqueos, ausencias);
-
     // Combinar, evitar duplicados y ordenar
-    const horariosTotales = [...new Set([...horarios])].sort((a, b) => {
-      const [ha, ma] = a.split(':').map(Number);
-      const [hb, mb] = b.split(':').map(Number);
-      return ha * 60 + ma - (hb * 60 + mb);
-    });
+    const horariosBase = generarHorariosBase("08:00", "20:00", 30);
     numeroCitas = citas.length;
     console.log("Citas desde API:", citas);
     console.log("Ausencias desde API:", ausencias);
     console.log("Bloqueos desde API:", bloqueos);
     tabla.innerHTML = "";
+
+    const horariosExtras = [
+      ...citas.map(c => c.hora?.slice(0, 5)),
+      ...bloqueos.map(b => b.hora?.slice(0, 5)),
+      ...ausencias.map(a => a.hora?.slice(0, 5))
+    ];
+
+    const horariosTotales = [...new Set([...horariosBase, ...horariosExtras])]
+      .sort((a, b) => {
+        const [ha, ma] = a.split(':').map(Number);
+        const [hb, mb] = b.split(':').map(Number);
+        return ha * 60 + ma - (hb * 60 + mb);
+      });
 
     for (const hora of horariosTotales) {
       const fila = document.createElement("tr");
@@ -338,11 +346,7 @@ async function cargarHorarios(fecha) {
       const horaInicioMinutos = horaInicioH * 60 + horaInicioM;
       const horaFinMinutos = horaInicioMinutos + 30;
 
-      const citasHora = citas.filter(c => {
-        const [ch, cm] = c.hora?.split(':').map(Number);
-        const citaMinutos = ch * 60 + cm;
-        return citaMinutos >= horaInicioMinutos && citaMinutos < horaFinMinutos;
-      });
+      const citasHora = citas.filter(c => c.hora?.slice(0,5) === hora);
       const bloqueo = bloqueos.find(b => b.hora?.slice(0, 5) === hora.padStart(5, '0'));
       const ausencia = ausencias.find(a => a.hora?.slice(0, 5) === hora.padStart(5, '0'));
 
@@ -390,6 +394,21 @@ async function cargarHorarios(fecha) {
     console.error("Error cargando horarios:", error);
     tabla.innerHTML = "<tr><td colspan='2'>Error inesperado</td></tr>";
   }
+}
+
+function generarHorariosBase(inicio, fin, intervalo) {
+  const [hInicio, mInicio] = inicio.split(':').map(Number);
+  const [hFin, mFin] = fin.split(':').map(Number);
+  const start = hInicio * 60 + mInicio;
+  const end = hFin * 60 + mFin;
+
+  const horarios = [];
+  for (let i = start; i <= end; i += intervalo) {
+    const h = String(Math.floor(i / 60)).padStart(2, '0');
+    const m = String(i % 60).padStart(2, '0');
+    horarios.push(`${h}:${m}`);
+  }
+  return horarios;
 }
 
 async function obtenerIdTrabajador(nombre) {
