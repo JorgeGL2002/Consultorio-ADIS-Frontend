@@ -244,7 +244,7 @@ async function generateReport(reportType) {
                 break;
 
             case 'patients':
-                if (rol === "ESPECIALISTA" || rol === "RECEPCIÓN) {
+                if (rol === "ESPECIALISTA" || rol === "RECEPCIÓN") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
                     return;
                 }
@@ -339,6 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
