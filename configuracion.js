@@ -389,6 +389,37 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    document.getElementById("formRestablecerContraseña").addEventListener("submit", async () => {
+        const usuario = document.getElementById("trabajadorReset").value;
+        const contraseña = document.getElementById("password").value;
+        try {
+            const response = await fetch(
+                `https://api-railway-production-24f1.up.railway.app/api/test/restablecerContraseña`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Admin-Id": idUsuario // debe venir del localStorage o contexto
+                    },
+                    body: JSON.stringify({
+                        usuario: usuario,
+                        nuevaContraseña: contraseña
+                    })
+                }
+            );
+
+            if (response.ok) {
+                mostrarAlerta("success", "Contraseña restablecida");
+            } else {
+                const errorMsg = await response.text();
+                mostrarAlerta("danger", "Error: " + errorMsg);
+            }
+        } catch (error) {
+            console.error("Error al restablecer contraseña:", error);
+            mostrarAlerta("danger", "Error al restablecer contraseña");
+        }
+    });
 });
+
 
 
