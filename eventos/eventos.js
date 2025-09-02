@@ -118,10 +118,15 @@ async function cargarEventos(fecha) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cargarEventos?fecha=${fecha}`);
     if (!res.ok) return mostrarAlerta("danger", "Error al cargar eventos: " + res.statusText);
     const eventos = await res.json();
-    console.log("Eventos cargados:", eventos);
     swiper.removeAllSlides();
     swiper.update();
-
+    if(!Array.isArray(eventos) || eventos.length === 0){
+      const vacio = `
+              <h1 class="text-center position-absolute top-50 start-50 translate-middle">Sin eventos</h1>
+        `;
+      swiper.appendSlide(vacio);
+      return;
+    }
     eventos.forEach((evento) => {
       const slide = `
           <div class="swiper-slide">
@@ -323,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
