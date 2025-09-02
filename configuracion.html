@@ -318,6 +318,30 @@
             </div>
         </div>
 
+        <div class="card mb-3 shadow-sm border-10">
+            <div class="card-header bg-primary text-white">
+                Usuarios
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Restablecer contraseña</h5>
+                <p class="card-text">Restablezca la contraseña de un usuario</p>
+                <div class="mb-2 d-flex flex-column flex-md-row justify-content-md gap-2">
+                    <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse"
+                        data-bs-target="#formRestablecerContraseñaDiv">Restablecer contraseña</a>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="formRestablecerContraseñaDiv">
+                <form id="formRestablecerContraseña">
+                    <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2 my-2 px-3">
+                        <select class="form-select mb-3" id="trabajadorReset" required>
+                            <option value="" disabled selected>Cargando usuarios...</option>
+                        </select>
+                        <input type="password" class="form-control mb-3" id="password" placeholder="Contraseña provisional" required>
+                        <button class="btn btn-success btn-sm" type="submit">Restablecer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5; max-width: 220px;">
             <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -338,3 +362,4 @@
 
 
 </html>
+
