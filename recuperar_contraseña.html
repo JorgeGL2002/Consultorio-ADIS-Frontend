@@ -30,41 +30,26 @@
             </div>
 
             <!-- Formulario -->
-            <form>
+            <form id="formRecuperar">
                 <!-- Selección de usuario -->
                 <div class="mb-3">
                     <label for="trabajador" class="form-label">Usuario</label>
                     <select id="trabajador" class="form-select" required>
                         <option value="" disabled selected>--- Cargando usuarios... ---</option>
                     </select>
+                    <input type="password" class="form-control" id="passwordProvisional" placeholder="Contraseña" required>
+                    <input type="password" class="form-control" id="password" placeholder="Nueva contraseña" required>
+                    <input type="password" class="form-control" id="password2" placeholder="Repetir contraseña"
+                        required>
                 </div>
 
                 <!-- Botón para enviar OTP -->
                 <div class="d-grid mb-3">
-                    <button type="button" class="btn btn-primary" onclick="solicitarOTP()">
-                        Enviar código
+                    <button type="submit" class="btn btn-primary">
+                        Restablecer contraseña
                     </button>
                 </div>
-
                 <!-- Formulario OTP (oculto inicialmente) -->
-                <div id="formOtp" style="display:none;">
-                    <div class="mb-3">
-                        <label for="codigo" class="form-label">Código OTP</label>
-                        <input type="text" id="codigo" class="form-control" placeholder="Ingresa el código recibido">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nuevaClave" class="form-label">Nueva contraseña</label>
-                        <input type="password" id="nuevaClave" class="form-control"
-                            placeholder="Ingresa tu nueva contraseña">
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="button" class="btn btn-success" onclick="validarOTP()">
-                            Cambiar contraseña
-                        </button>
-                    </div>
-                </div>
             </form>
         </div>
     </div>
@@ -86,67 +71,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 <script>
-    function solicitarOTP() {
-        const usuario = document.getElementById("trabajador").value;
-        if (!usuario) {
-            mostrarAlerta("danger", "Por favor, seleccione un usuario");
-            return;
-        }
-
-        fetch("https://api-railway-production-24f1.up.railway.app/api/test/solicitarOtp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario })
-        }).then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    mostrarAlerta("success", data.message || "Código enviado");
-                    document.getElementById("formOtp").style.display = "block";
-                } else {
-                    mostrarAlerta("danger", data.error || "No se pudo enviar el código");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                mostrarAlerta("danger", "Hubo un error al conectar con el servidor");
-            });
-    }
-
-   function validarOTP() {
-        const usuario = document.getElementById("trabajador").value;
-        const codigo = document.getElementById("codigo").value;
-        const nuevaClave = document.getElementById("nuevaClave").value;
-
-        if (!usuario || !codigo || !nuevaClave) {
-            mostrarAlerta("danger", "Por favor, complete todos los campos");
-            return;
-        }
-
-        if (nuevaClave.length < 8) {
-            mostrarAlerta("danger", "La nueva contraseña debe tener al menos 8 caracteres");
-            return;
-        }
-
-        fetch("https://api-railway-production-24f1.up.railway.app/api/test/validar-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario, codigo, nuevaClave })
-        }).then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    mostrarAlerta("success", data.message || "Contraseña cambiada correctamente", true);
-                    document.getElementById("formOtp").reset();
-                    document.getElementById("formOtp").style.display = "none";
-                } else {
-                    mostrarAlerta("danger", data.error || "Error al cambiar la contraseña");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                mostrarAlerta("danger", "Hubo un error al conectar con el servidor");
-            });
-    }
-
     function mostrarAlerta(tipo, mensaje, recargar = false) {
         const iconos = {
             success: "check-circle-fill",
@@ -209,10 +133,51 @@
                 document.getElementById("trabajador").innerHTML =
                     "<option value=''>Error al cargar trabajadores</option>";
             });
+
+        document.getElementById("formRecuperar").addEventListener("submit", function (event) {
+            const usuario = document.getElementById("trabajador").value;
+            const contraseñaProvisional = document.getElementById("contraseñaProvisional").value;
+            const contraseñaNueva = document.getElementById("password").value;
+            const confirmarContraseña = document.getElementById("password2").value;
+
+            if (contraseñaNueva !== confirmarContraseña) {
+                mostrarAlerta("warning", "Las contraseñas no coinciden");
+                return;
+            }
+
+            if (contraseñaNueva.length < 8) {
+                mostrarAlerta("warning", "La contraseña debe tener al menos 8 caracteres");
+                return;
+            }
+            try{
+                fetch("https://api-railway-production-24f1.up.railway.app/api/test/cambiarContraseña", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        usuario: usuario,
+                        contraseñaActual: contraseñaProvisional,
+                        nuevaContraseña: contraseñaNueva
+                    })  
+                })
+                .then(response => {
+                    if (response.ok) {
+                        mostrarAlerta("success", "Contraseña actualizada correctamente");
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 3000);
+                    } else {
+                        mostrarAlerta("danger", "Error al actualizar la contraseña");
+                        event.preventDefault();
+                    }
+                })
+            } catch (error){
+                mostrarAlerta("danger", "Error al enviar la solicitud");
+                event.preventDefault();
+                console.log(error);
+            }
+        });
     });
 </script>
-
-
 </html>
-
-

@@ -15,8 +15,8 @@ function abrirVentanaR() {
 }
 
 function CerrarSesion() {
-  window.location.href = '/index.html';
-  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+    window.location.href = '/index.html';
+    localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
 }
 
 function cargarServicios(idSelect) {
@@ -130,19 +130,19 @@ function abrirModalNuevoUsuario() {
 }
 
 function abrirNotificaciones() {
-  const label = document.getElementById("cumpleaños");
-  label.innerHTML = "";
-  fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
-    .then(r => r.json())
-    .then(data => {
-      data.forEach(s => {
-        label.innerHTML += `${s} <br>`;
-      });
-    }).catch(() => {
-      label.innerHTML = "Error al cargar los cumpleaños";
-    });
-  const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
-  modal.show();
+    const label = document.getElementById("cumpleaños");
+    label.innerHTML = "";
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
+        .then(r => r.json())
+        .then(data => {
+            data.forEach(s => {
+                label.innerHTML += `${s} <br>`;
+            });
+        }).catch(() => {
+            label.innerHTML = "Error al cargar los cumpleaños";
+        });
+    const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
+    modal.show();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarSeguros("seguros");
     cargarServicios("servicios");
     cargarTrabajadores("trabajador");
+    cargarTrabajadores("trabajadorReset")
     cargarNotas("notas");
 
     document.getElementById("formServicio").addEventListener("submit", async (e) => {
@@ -175,11 +176,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-     const modalNotificaciones = document.getElementById("modalNotificaciones");
-  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
-    const form = document.getElementById("formNotificaciones");
-    form.reset();
-  });
+    const modalNotificaciones = document.getElementById("modalNotificaciones");
+    modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+        const form = document.getElementById("formNotificaciones");
+        form.reset();
+    });
 
     document.getElementById("formEmpresa").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -323,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const contraseña = document.getElementById("password");
         const confirmar = document.getElementById("confirmar");
         const rol = document.getElementById("rol");
-       
+
         if (!email.value.trim() || !nombre.value.trim() || !contraseña.value.trim() || !confirmar.value.trim() || !rol.value.trim()) {
             mostrarAlerta("warning", "Completa todos los campos", false);
             return;
@@ -420,6 +421,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
 
 
