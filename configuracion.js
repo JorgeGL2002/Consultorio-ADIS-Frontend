@@ -409,7 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("formRestablecerContraseña").addEventListener("submit", async (e) => {
         e.preventDefault();
         const usuario = document.getElementById("trabajadorReset").value;
-        const contraseña = document.getElementById("password").value;
+        const contraseña = document.getElementById("passwordReset").value;
+        console.log("usuario:"+usuario, "Contraseña:"+contraseña);
         try {
             console.log(usuario, contraseña);
             const response = await fetch(
@@ -439,6 +440,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
 
 

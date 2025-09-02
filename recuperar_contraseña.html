@@ -146,11 +146,13 @@
 
             if (contraseñaNueva !== confirmarContraseña) {
                 mostrarAlerta("warning", "Las contraseñas no coinciden");
+                console.log("Contraseña nueva:"+contraseñaNueva, "Confirmar contraseña:"+confirmarContraseña);
                 return;
             }
 
             if (contraseñaNueva.length < 8) {
                 mostrarAlerta("warning", "La contraseña debe tener al menos 8 caracteres");
+                console.log("Contraseña nueva:"+contraseñaNueva);
                 return;
             }
             try {
@@ -166,6 +168,8 @@
                     })
                 })
                     .then(response => {
+                        console.log(contraseñaProvisional);
+                        console.log(contraseñaNueva);
                         if (response.ok) {
                             mostrarAlerta("success", "Contraseña actualizada correctamente");
                             setTimeout(() => {
