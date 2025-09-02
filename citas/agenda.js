@@ -247,7 +247,6 @@ async function cargarHorarios(fecha) {
 
     if (!id) {
       tabla.innerHTML = "<tr><td colspan='2'>Selecciona un trabajador</td></tr>";
-      console.warn("⚠ No se pudo determinar un ID de profesional.");
       return;
     }
 
@@ -267,7 +266,6 @@ async function cargarHorarios(fecha) {
     ]);
 
     if (!citasResp.ok || !bloqueosResp.ok || !ausenciaResp.ok) {
-      console.error("Error en la respuesta del servidor");
       tabla.innerHTML = "<tr><td colspan='2'>Error al cargar datos</td></tr>";
       return;
     }
@@ -277,16 +275,12 @@ async function cargarHorarios(fecha) {
     const ausencias = await ausenciaResp.json();
 
     if (!Array.isArray(citas) || !Array.isArray(bloqueos)) {
-      console.error("Datos inválidos recibidos");
       tabla.innerHTML = "<tr><td colspan='2'>Datos no disponibles</td></tr>";
       return;
     }
     // Combinar, evitar duplicados y ordenar
     const horariosBase = generarHorariosBase("08:00", "20:00", 30);
     numeroCitas = citas.length;
-    console.log("Citas desde API:", citas);
-    console.log("Ausencias desde API:", ausencias);
-    console.log("Bloqueos desde API:", bloqueos);
     tabla.innerHTML = "";
 
     const horariosExtras = [
@@ -384,8 +378,6 @@ function generarHorariosBase(inicio, fin, intervalo) {
 }
 
 async function obtenerIdTrabajador(nombre) {
-  console.log("Nombre del trabajador seleccionado:", nombre);
-
   if (!nombre || nombre === "Selecciona un trabajador") {
     mostrarAlerta("error", "Selecciona un trabajador");
     return null;
@@ -408,7 +400,6 @@ async function abrirModalEditarCitaPorID(idCita) {
     const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/CitasPorId?idCita=${idCita}`);
     if (!response.ok) throw new Error("No se pudo obtener la cita");
     const datosCita = await response.json();
-    console.log("Datos de la cita:", datosCita);
     abrirModalEditarCita(datosCita.hora, datosCita);
   } catch (error) {
     console.error("Error al obtener la cita:", error);
@@ -444,8 +435,8 @@ async function cargarNotas(fecha, id) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/notasAgenda?fecha=${fecha}&idProfesional=${id}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
-    if (!data || data.length === 0) {
-      mostrarAlerta("info", "No hay notas para hoy");
+    if (data && data.length !== 0) {
+      mostrarAlerta("info", "Hay notas para hoy");
       return null;
     }
     data.forEach(n => {
@@ -484,8 +475,8 @@ async function cargarEventos(fecha, idProfesional) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}&idProfesional=${idProfesional}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
-    if (!data || data.length === 0) {
-      mostrarAlerta("info", "No hay eventos para hoy");
+    if (data && data.length !== 0) {
+      mostrarAlerta("info", "Hay eventos para hoy");
       return null;
     }
     data.forEach(n => {
@@ -609,9 +600,6 @@ function abrirModalEditarCita(hora, datosCita) {
   // ID de la cita
   document.getElementById("modalEditarCita").dataset.idCita = datosCita.idCita;
   localStorage.setItem("idCita", datosCita.idCita);
-  // 🔍 Muestra los datos que vienen de la API
-  console.log("Cita recibida para editar:", datosCita);
-
   // 📅 Actualiza encabezado con hora y fecha
   document.getElementById("CitaHoraFecha").textContent = `${hora} - ${fechaSeleccionada}`;
   document.getElementById("hora").value = hora;
@@ -656,8 +644,6 @@ function abrirNotificaciones() {
 }
 
 async function obtenerTelefonoPaciente(nombre) {
-  console.log("Nombre del paciente:", nombre);
-
   if (!nombre) {
     mostrarAlerta("error", "No hay paciente");
     return null;
@@ -750,7 +736,6 @@ function enviarRecordatorio(telefono, idCita) {
     .then(res => res.json())
     .then(data => {
       mostrarAlerta("success", "Recordatorio enviado");
-      console.log(data);
     })
     .catch(err => {
       mostrarAlerta("error", "Error al enviar recordatorio");
@@ -771,7 +756,6 @@ document.getElementById("modalEditarCita").addEventListener("submit", async (e) 
     fecha: fechaInput.value,
     hora: document.getElementById("hora").value
   };
-  console.log("Editando cita, datos enviados:", datos);
   const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/editarcita?rol=${rol}&SessionId=${id}`, {
     method: "PUT",
     headers: {
@@ -807,7 +791,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
-  console.log("Usuario", nombre, "ID", id, "Rol", rol);
   cargarHorarios(fechaHoy  || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
   setInterval(() => {
@@ -841,10 +824,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectPrincipal.addEventListener("change", async () => {
       const nombreSelect = selectPrincipal.value.trim();
       if (!nombreSelect || nombreSelect.includes("Selecciona")) return;
-
       const selectedIdProfesional = await obtenerIdTrabajador(nombreSelect);
-      console.log("ID del profesional seleccionado:", selectedIdProfesional);
-
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
         cargarHorarios(fechaInput?.value  || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
@@ -865,7 +845,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!nombreModal || nombreModal.includes("Selecciona")) return;
 
       const modalIdProfesional = await obtenerIdTrabajador(nombreModal);
-      console.log("Profesional modal:", nombreModal, "ID:", modalIdProfesional);
       localStorage.setItem("idTrabajadorSeleccionado", modalIdProfesional);
     });
   }
@@ -912,7 +891,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${nombre}`);
         if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
         const data = await res.json();
-        console.log("ID del trabajador guardado:", data);
         localStorage.setItem("idTrabajadorSeleccionado", data);
       } catch (e) {
         console.error("Error al obtener el ID del trabajador:", e);
@@ -993,13 +971,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       const telefono = await obtenerTelefonoPaciente(nombrePacienteRecordatorio);
-      console.log("Teléfono del paciente:", telefono);
       if (!telefono || telefono.length === 0) {
         mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
         return;
       }
-      console.log("ID de la cita:", idCita);
-      console.log("Teléfono a enviar:", telefono[0]);
       enviarRecordatorio(telefono[0], idCita);
     } catch (error) {
       console.log("Error al enviar el recordatorio:", error);
@@ -1138,7 +1113,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let idProfesional = id;
     if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
       idProfesional = await obtenerIdTrabajador(document.getElementById("trabajador").value);
-      console.log("El id por parte del select es:", idProfesional);
     }
 
     if (!idProfesional) return mostrarAlerta("warning", "No hay un ID válido para el profesional.");
@@ -1233,9 +1207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const nuevaFecha = document.getElementById("fechaRC").value;
     const nuevaHora = document.getElementById("horaRC").value;
-    console.log(nuevaHora);
     const horaNormalizada = normalizarHora(nuevaHora);
-    console.log(horaNormalizada);
     if (!nuevaFecha || !horaNormalizada) return mostrarAlerta("warning", "Por favor, ingrese una fecha y hora válidas.");
 
     try {
