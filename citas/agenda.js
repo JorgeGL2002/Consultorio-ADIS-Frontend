@@ -650,9 +650,9 @@ function abrirNotificaciones() {
     }).catch(() => {
       label.innerHTML = "Error al cargar los cumpleaños";
     });
+  abrirNotificacionesEstadoCita();
   const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
   modal.show();
-  abrirNotificaciones();
 }
 
 async function obtenerTelefonoPaciente(nombre) {
@@ -688,10 +688,10 @@ function formatearNumero(numero) {
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
 let notificaciones = JSON.parse(localStorage.getItem("notificacionesCitas")) || [];
 
-function verificarCambiosEnCitas(fecha, idProfesional) {
+function verificarCambiosEnCitas(fechaA, idProfesional) {
   const label = document.getElementById("estadoCita");
 
-  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/estadoCita?fecha=${fecha}&idEspecialista=${idProfesional}`)
+  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/estadoCita?fecha=${fechaA}&idEspecialista=${idProfesional}`)
     .then(res => res.json())
     .then(citas => {
       citas.forEach(cita => {
@@ -724,9 +724,13 @@ function verificarCambiosEnCitas(fecha, idProfesional) {
     });
 }
 
-function abrirNotificaciones() {
+function abrirNotificacionesEstadoCita() {
   const label = document.getElementById("estadoCita");
-  label.innerHTML = notificaciones.join("<br>");
+  if (notificaciones.length > 0) {
+    label.innerHTML = notificaciones.join("<br>");
+  } else {
+    label.innerHTML = "Sin notificaciones de estado de citas";
+  }
 }
 
 
