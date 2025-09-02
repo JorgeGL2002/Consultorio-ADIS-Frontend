@@ -428,6 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 mostrarAlerta("success", "Contraseña restablecida");
+                document.getElementById("formRestablecerContraseña").reset();
             } else {
                 const errorMsg = await response.text();
                 mostrarAlerta("danger", "Error: " + errorMsg);
@@ -438,5 +439,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 
 
