@@ -390,7 +390,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.getElementById("formRestablecerContraseña").addEventListener("submit", async () => {
+    document.getElementById("formRestablecerContraseña").addEventListener("submit", async (e) => {
+        e.preventDefault();
         const usuario = document.getElementById("trabajadorReset").value;
         const contraseña = document.getElementById("password").value;
         try {
@@ -421,5 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 
 
