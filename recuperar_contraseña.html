@@ -137,8 +137,8 @@
                     "<option value=''>Error al cargar trabajadores</option>";
             });
 
-        document.getElementById("formRecuperar").addEventListener("submit", function (event) {
-            event.preventDefault();
+        document.getElementById("formRecuperar").addEventListener("submit", async (e) => {
+            e.preventDefault();
             const usuario = document.getElementById("trabajador").value;
             const contraseñaProvisional = document.getElementById("contraseñaProvisional").value;
             const contraseñaNueva = document.getElementById("password").value;
@@ -156,7 +156,7 @@
                 return;
             }
             try {
-                fetch("https://api-railway-production-24f1.up.railway.app/api/test/cambiarContraseña", {
+                await fetch("https://api-railway-production-24f1.up.railway.app/api/test/cambiarContraseña", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -188,5 +188,6 @@
         });
     });
 </script>
+
 
 </html>
