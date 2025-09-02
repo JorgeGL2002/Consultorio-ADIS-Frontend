@@ -401,7 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
-                        "Admin-Id": idUsuario // debe venir del localStorage o contexto
                     },
                     body: JSON.stringify({
                         usuario: usuario,
@@ -422,6 +421,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
 
 
