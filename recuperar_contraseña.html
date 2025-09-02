@@ -39,7 +39,7 @@
                     <select id="trabajador" class="form-select mb-3" required>
                         <option value="" disabled selected>--- Cargando usuarios... ---</option>
                     </select>
-                    <input type="password" class="form-control mb-3" id="passwordProvisional" placeholder="Contraseña"
+                    <input type="password" class="form-control mb-3" id="passwordProvisional" placeholder="Contraseña provisional"
                         required>
                     <input type="password" class="form-control mb-3" id="password" placeholder="Nueva contraseña"
                         required>
@@ -138,6 +138,7 @@
             });
 
         document.getElementById("formRecuperar").addEventListener("submit", function (event) {
+            event.preventDefault();
             const usuario = document.getElementById("trabajador").value;
             const contraseñaProvisional = document.getElementById("contraseñaProvisional").value;
             const contraseñaNueva = document.getElementById("password").value;
@@ -168,7 +169,7 @@
                         if (response.ok) {
                             mostrarAlerta("success", "Contraseña actualizada correctamente");
                             setTimeout(() => {
-                                window.location.href = 'index.html';
+                                abrirVentanaInicio();
                             }, 3000);
                         } else {
                             mostrarAlerta("danger", "Error al actualizar la contraseña");
