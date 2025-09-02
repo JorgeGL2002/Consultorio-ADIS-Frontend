@@ -140,7 +140,7 @@
         document.getElementById("formRecuperar").addEventListener("submit", async (e) => {
             e.preventDefault();
             const usuario = document.getElementById("trabajador").value;
-            const contraseñaProvisional = document.getElementById("contraseñaProvisional").value;
+            const contraseñaProvisional = document.getElementById("passwordProvisional").value;
             const contraseñaNueva = document.getElementById("password").value;
             const confirmarContraseña = document.getElementById("password2").value;
 
@@ -156,6 +156,7 @@
                 return;
             }
             try {
+                console.log("Contraseña nueva:"+contraseñaNueva, "Confirmar contraseña:"+confirmarContraseña);
                 await fetch("https://api-railway-production-24f1.up.railway.app/api/test/cambiarContraseña", {
                     method: "PUT",
                     headers: {
@@ -188,6 +189,5 @@
         });
     });
 </script>
-
 
 </html>
