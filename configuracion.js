@@ -105,6 +105,22 @@ function cargarTrabajadores(idSelect) {
         });
 }
 
+function cargarTrabajadoresPorNombre(idSelect) {
+  const select = document.getElementById(idSelect);
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/trabajadoresActivos")
+    .then(r => r.json())
+    .then(data => {
+      select.innerHTML = "<option value='' disabled selected>Selecciona un trabajador</option>";
+      data.forEach(t => {
+        const option = new Option(t, t);
+        select.appendChild(option);
+      });
+    })
+    .catch(() => {
+      select.innerHTML = "<option>Error al cargar</option>";
+    });
+}
+
 function cargarNotas(idSelect) {
     const select = document.getElementById(idSelect);
     fetch("https://api-railway-production-24f1.up.railway.app/api/test/notas")
@@ -151,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarSeguros("seguros");
     cargarServicios("servicios");
     cargarTrabajadores("trabajador");
-    cargarTrabajadores("trabajadorReset")
+    cargarTrabajadoresPorNombre("trabajadorReset")
     cargarNotas("notas");
 
     document.getElementById("formServicio").addEventListener("submit", async (e) => {
@@ -395,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const usuario = document.getElementById("trabajadorReset").value;
         const contraseña = document.getElementById("password").value;
         try {
+            console.log(usuario, contraseña);
             const response = await fetch(
                 `https://api-railway-production-24f1.up.railway.app/api/test/restablecerContraseña`,
                 {
