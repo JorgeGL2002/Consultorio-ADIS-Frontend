@@ -244,6 +244,24 @@ async function generateReport(reportType) {
                 url += `/reporteCitasPorPaciente?nombrePaciente=${encodeURIComponent(nombrePaciente)}`;
                 window.location.href = url;
                 return;
+                case 'notasEvolucion':
+                permitidos = empiezaCon(nombre, ['LTFR', 'Psic', 'LN']);
+                if (rol === "ESPECIALISTA" || !permitidos) {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
+                }
+                url += `/reportesNE?nombrePaciente=${encodeURIComponent(nombrePacienteNE)}`;
+                window.location.href = url;
+                return;
+            case 'historiasClinicas':
+                permitidos = empiezaCon(nombre, ['LTFR']);
+                if (rol === "ESPECIALISTA" || !permitidos) {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;   
+                }
+                url += `/reportesHC?nombrePaciente=${encodeURIComponent(nombrePacienteHC)}`;
+                window.location.href = url;
+                return;
         }
         // Descargar el reporte
         const finalURL = params.toString().length > 0
@@ -324,6 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
