@@ -148,8 +148,10 @@ function mostrarAlerta(tipo, mensaje) {
 // Asignar eventos a las cards
 document.querySelectorAll('.report-card').forEach(card => {
     card.addEventListener('click', function () {
-        const type = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-        showFilters(type);
+        const type = this.dataset.type; // más limpio que buscar onclick
+        if (type) {
+            showFilters(type);
+        }
     });
 });
 
@@ -346,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
