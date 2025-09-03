@@ -265,6 +265,10 @@ async function generateReport(reportType) {
     }
 }
 
+function empiezaCon(n, prefijos = []) {
+  return prefijos.some(p => n.startsWith(p.toUpperCase()));
+}
+
 function abrirNotificaciones() {
     const label = document.getElementById("cumpleaños");
     label.innerHTML = "";
@@ -328,5 +332,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
