@@ -240,6 +240,7 @@ async function generateReport(reportType) {
                     const usuario = document.getElementById('trabajador').value;
                     if(!usuario || usuario === ""){
                         mostrarAlerta("warning", "Debes seleccionar un usuario");
+                        return;
                     }
                     params.append('rol', rolUsuario);
                     params.append('usuario', usuario);
@@ -342,6 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
