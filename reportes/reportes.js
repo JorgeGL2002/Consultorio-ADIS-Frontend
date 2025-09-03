@@ -158,7 +158,6 @@ document.getElementById('year').value = new Date().getFullYear();
 
 async function generateReport(reportType) {
     const nombrePaciente = document.getElementById('busqueda').value;
-     const nombrePaciente = document.getElementById('busqueda').value;
     const nombrePacienteNE = document.getElementById('busquedaNE').value;
     const nombrePacienteHC = document.getElementById('busquedaHC').value;
     let permitidos;
@@ -347,6 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
