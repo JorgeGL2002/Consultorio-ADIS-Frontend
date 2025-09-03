@@ -226,7 +226,7 @@ async function generateReport(reportType) {
                 break;
 
             case 'records':
-                 if (!empiezaCon(nombre, ['LTFR']) || rol !== "SUPER USUARIO") {
+                 if (!empiezaCon(nombre, ['LTFR']) && rol !== "SUPER USUARIO") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
                     return;
                 }
@@ -332,6 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
