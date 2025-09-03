@@ -158,9 +158,6 @@ document.getElementById('year').value = new Date().getFullYear();
 
 async function generateReport(reportType) {
     const nombrePaciente = document.getElementById('busqueda').value;
-    const nombrePacienteNE = document.getElementById('busquedaNE').value;
-    const nombrePacienteHC = document.getElementById('busquedaHC').value;
-    let permitidos;
     if (!month || !year) {
         mostrarAlerta("warning", "Debes seleccionar mes y año");
         return;
@@ -229,7 +226,7 @@ async function generateReport(reportType) {
                 break;
 
             case 'records':
-                if (rol === "ESPECIALISTA") {
+                 if (rol === "ESPECIALISTA") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
                     return;
                 }
@@ -266,24 +263,6 @@ async function generateReport(reportType) {
                 url += `/reporteCitasPorPaciente?nombrePaciente=${encodeURIComponent(nombrePaciente)}`;
                 window.location.href = url;
                 return;
-            case 'notasEvolucion':
-                permitidos = empiezaCon(nombre, ['LTFR','Psic', 'LN']);
-                if (rol === "ESPECIALISTA" || !permitidos) {
-                    mostrarAlerta("warning", "No tienes permisos para este reporte");
-                    return;
-                }
-                url += `/reportesNE?nombrePaciente=${encodeURIComponent(nombrePacienteNE)}`;
-                window.location.href = url;
-                return;
-            case 'historiasClinicas':
-                permitidos = empiezaCon(nombre, ['LTFR']);
-                if (rol === "ESPECIALISTA" || !permitidos) {
-                    mostrarAlerta("warning", "No tienes permisos para este reporte");
-                    return;   
-                }
-                url += `/reportesHC?nombrePaciente=${encodeURIComponent(nombrePacienteHC)}`;
-                window.location.href = url;
-                return;
         }
         // Descargar el reporte
         const finalURL = params.toString().length > 0
@@ -295,10 +274,6 @@ async function generateReport(reportType) {
         console.error("Error generando el reporte:", err);
         mostrarAlerta("danger", "Error al generar el reporte");
     }
-}
-
-function empiezaCon(n, prefijos = []) {
-  return prefijos.some(p => n.startsWith(p.toUpperCase()));
 }
 
 function abrirNotificaciones() {
@@ -364,6 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
