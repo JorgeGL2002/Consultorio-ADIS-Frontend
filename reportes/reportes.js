@@ -236,8 +236,8 @@ async function generateReport(reportType) {
                     params.append('rol', rol);
                     params.append('usuario', nombre);
                 } else if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
-                    const rolUsuario = document.getElementById('rolInput').value || userRole;
-                    const usuario = document.getElementById('trabajador').value || userName;
+                    const rolUsuario = document.getElementById('rolInput').value;
+                    const usuario = document.getElementById('trabajador').value;
                     params.append('rol', rolUsuario);
                     params.append('usuario', usuario);
                 }
@@ -339,6 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
