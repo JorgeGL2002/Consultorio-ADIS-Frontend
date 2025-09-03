@@ -226,29 +226,21 @@ async function generateReport(reportType) {
                 break;
 
             case 'records':
-                 if (rol === "ESPECIALISTA") {
-                    mostrarAlerta("warning", "No tienes permisos para este reporte");
-                    return;
-                }
                 url += '/reporteHistoriasClinicas';
 
                 if (rol === "ESPECIALISTA") {
                     params.append('rol', rol);
                     params.append('usuario', nombre);
                 } else if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
-                    const rolUsuario = document.getElementById('rolInput').value;
-                    const usuario = document.getElementById('trabajador').value;
-                    if(!usuario || usuario === ""){
-                        mostrarAlerta("warning", "Debes seleccionar un usuario");
-                        return;
-                    }
+                    const rolUsuario = document.getElementById('rolInput').value || userRole;
+                    const usuario = document.getElementById('trabajador').value || userName;
                     params.append('rol', rolUsuario);
                     params.append('usuario', usuario);
                 }
                 break;
 
             case 'patients':
-                if (rol === "ESPECIALISTA" || rol === "RECEPCIÓN") {
+                if (rol === "ESPECIALISTA") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
                     return;
                 }
@@ -343,10 +335,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
-
-
-
-
-
-
 
