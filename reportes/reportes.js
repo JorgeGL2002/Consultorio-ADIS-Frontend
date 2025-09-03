@@ -276,7 +276,7 @@ async function generateReport(reportType) {
                 window.location.href = url;
                 return;
             case 'historiasClinicas':
-                permitidos = empiezaCon(nombre, ['LTFR');
+                permitidos = empiezaCon(nombre, ['LTFR']);
                 if (rol === "ESPECIALISTA" || !permitidos) {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
                     return;   
@@ -364,5 +364,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
