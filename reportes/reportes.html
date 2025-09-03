@@ -204,6 +204,70 @@
         </div>
       </div>
 
+      <!-- Reporte Notas de evolución por paciente -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card">
+          <!-- Área clickeable que despliega el contenido -->
+          <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#formNEPaciente"
+            aria-expanded="false" aria-controls="formNEPaciente" style="cursor: pointer;">
+            <div class="card-icon">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <h5 class="card-title">Reporte notas de evolución por paciente</h5>
+            <p class="card-text">Genera un reporte completo con todas las notas de evolución de un determinado paciente.</p>
+          </div>
+
+          <!-- Contenido colapsable dentro del card, pero fuera del trigger -->
+          <div class="collapse mt-3 px-3" id="formNEPaciente">
+            <form id="formNEPaciente">
+              <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
+                <div class="input-group w-100 w-md-50">
+                  <input type="text" id="busquedaNE" placeholder="Buscar paciente" class="form-control"
+                    list="listaPacientes">
+                  <datalist id="listaPacientes">
+                  </datalist>
+                </div>
+                <button class="btn btn-outline-primary" type="button" onclick="generateReport('notasEvolucion')">
+                  <i class="fas fa-download me-2"></i>Descargar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporte historias de evolución por paciente -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card report-card">
+          <!-- Área clickeable que despliega el contenido -->
+          <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#formHCPaciente"
+            aria-expanded="false" aria-controls="formHCPaciente" style="cursor: pointer;">
+            <div class="card-icon">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <h5 class="card-title">Reporte historias clinicas por paciente</h5>
+            <p class="card-text">Genera un reporte completo con todas las historias clinicas de un determinado paciente.</p>
+          </div>
+
+          <!-- Contenido colapsable dentro del card, pero fuera del trigger -->
+          <div class="collapse mt-3 px-3" id="formHCPaciente">
+            <form id="formHCPaciente">
+              <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
+                <div class="input-group w-100 w-md-50">
+                  <input type="text" id="busquedaHC" placeholder="Buscar paciente" class="form-control"
+                    list="listaPacientes">
+                  <datalist id="listaPacientes">
+                  </datalist>
+                </div>
+                <button class="btn btn-outline-primary" type="button" onclick="generateReport('historiasClinicas')">
+                  <i class="fas fa-download me-2"></i>Descargar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <!-- Reporte de Pacientes -->
       <div class="col-md-6 col-lg-4">
         <div class="card report-card" onclick="generateReport('patients')">
