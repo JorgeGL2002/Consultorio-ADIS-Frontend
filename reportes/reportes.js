@@ -226,19 +226,12 @@ async function generateReport(reportType) {
                 break;
 
             case 'records':
-                url += '/reporteHistoriasClinicas';
-
-                if (rol === "ESPECIALISTA") {
-                    params.append('rol', rol);
-                    params.append('usuario', nombre);
-                } else if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
-                    const rolUsuario = document.getElementById('rolInput').value || userRole;
-                    const usuario = document.getElementById('trabajador').value || userName;
-                    params.append('rol', rolUsuario);
-                    params.append('usuario', usuario);
+                 if (!empiezaCon(nombre, ['LTFR']) || rol !== "SUPER USUARIO") {
+                    mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    return;
                 }
+                url += '/reporteHistoriasClinicas';
                 break;
-
             case 'patients':
                 if (rol === "ESPECIALISTA") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
@@ -335,4 +328,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
