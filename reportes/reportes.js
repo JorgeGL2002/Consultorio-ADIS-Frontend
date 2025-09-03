@@ -224,14 +224,6 @@ async function generateReport(reportType) {
                 }
                 url += '/reporteTrabajadores';
                 break;
-
-            case 'records':
-                 if (!empiezaCon(nombre, ['LTFR']) && rol !== "SUPER USUARIO") {
-                    mostrarAlerta("warning", "No tienes permisos para este reporte");
-                    return;
-                }
-                url += '/reporteHistoriasClinicas';
-                break;
             case 'patients':
                 if (rol === "ESPECIALISTA") {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
@@ -332,6 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
 
 
 
