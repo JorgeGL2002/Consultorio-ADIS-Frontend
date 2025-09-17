@@ -4,7 +4,7 @@ const rol = localStorage.getItem("rol");
 console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
 
 function abrirVentanaConfiguracion() {
-  if (rol !== "SUPER USUARIO" && id !== "6") {
+  if (rol !== "SUPER USUARIO" || id !== "6") {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
@@ -319,6 +319,7 @@ function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 
 }
+
 
 
 
