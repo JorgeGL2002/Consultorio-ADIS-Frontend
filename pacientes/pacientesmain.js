@@ -1,5 +1,5 @@
 const rol = localStorage.getItem("rol");
-
+const id  = localStorage.getItem("id");  
 function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
   const select = document.getElementById(idSelect);
   select.innerHTML = '<option value="" disabled selected>Selecciona una opción</option>';
@@ -14,7 +14,7 @@ function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
 }
 
 function abrirVentanaConfiguracion() {
-  if (rol !== "SUPER USUARIO" && id !== "6") {
+  if (rol !== "SUPER USUARIO" || id !== "6") {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
@@ -694,6 +694,7 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
 
