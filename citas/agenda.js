@@ -1327,7 +1327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function abrirVentanaConfiguracion() {
-  if (rol !== "SUPER USUARIO" && id !== "6") {
+  if (rol !== "SUPER USUARIO" || id !== "6") {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   } else {
