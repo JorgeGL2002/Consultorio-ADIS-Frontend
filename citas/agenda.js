@@ -5,7 +5,7 @@ const rol = localStorage.getItem("rol");
 const fechaInput = document.getElementById("fechaSeleccionada");
 const tabla = document.getElementById("tabla-horarios");
 const filtro = document.getElementById("trabajador").value;
-console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
+
 async function obtenerProfesionalContexto() {
   const rol = localStorage.getItem("rol");
   let nombre = localStorage.getItem("usuario");
@@ -776,6 +776,7 @@ document.getElementById("modalEditarCita").addEventListener("submit", async (e) 
 
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
+  console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
   fechaInput.valueAsDate = new Date();
   const fechaHoy = fechaInput?.value  || new Date().toISOString().split("T")[0];
   document.getElementById("fechaTabla").textContent = fechaHoy;
