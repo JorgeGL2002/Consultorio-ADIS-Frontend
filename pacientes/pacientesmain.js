@@ -502,6 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarTrabajadores("trabajador");
   cargarEstados("lugarNacimiento");
   cargarPacientes();
+  console.log("ID: ", id);
   //cargarTrabajadores("NuevoTrabajador");
   //cargarEstados("NuevoLugarNacimiento");
   let otro = document.getElementById("otro");
@@ -694,6 +695,7 @@ function abrirVentanaR() {
 function abrirVentanaE() {
   window.location.href = '../eventos/eventos.html';
 }
+
 
 
 
