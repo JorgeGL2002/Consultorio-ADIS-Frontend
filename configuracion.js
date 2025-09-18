@@ -19,6 +19,10 @@ function CerrarSesion() {
     localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
 }
 
+function abrirVentanaE() {
+  window.location.href = '../eventos/eventos.html';
+}
+
 function cargarServicios(idSelect) {
     const select = document.getElementById(idSelect);
     fetch("https://api-railway-production-24f1.up.railway.app/api/test/servicios")
@@ -440,5 +444,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 
 
