@@ -5,7 +5,7 @@ const rol = localStorage.getItem("rol");
 const fechaInput = document.getElementById("fechaSeleccionada");
 const tabla = document.getElementById("tabla-horarios");
 const filtro = document.getElementById("trabajador").value;
-
+console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
 async function obtenerProfesionalContexto() {
   const rol = localStorage.getItem("rol");
   let nombre = localStorage.getItem("usuario");
