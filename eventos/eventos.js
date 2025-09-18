@@ -15,7 +15,7 @@ function abrirVentanaH() {
 }
 
 function abrirVentanaConfiguracion() {
-  if (rol === "ADMINISTRADOR" || id === "6") {
+  if (rol === "SUPER USUARIO" || id === "6") {
     window.location.href = '/configuracion.html';
   } else {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
@@ -328,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
