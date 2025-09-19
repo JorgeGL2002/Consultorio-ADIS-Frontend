@@ -130,7 +130,7 @@ async function cargarEventos(fecha) {
     eventos.forEach((evento) => {
       const slide = `
           <div class="swiper-slide">
-            <div class="evento-card shadow-sm border-0 h-100 new-event-card" data-evento='${JSON.stringify(evento).replace(/'/g, "&apos;")}'>
+            <div class="evento-card shadow-sm border-20 h-100 new-event-card" data-evento='${JSON.stringify(evento).replace(/'/g, "&apos;")}'>
               <img src="${evento.imagen || 'https://via.placeholder.com/300x150'}" alt="">
               <h6>${evento.nombre}</h6>
               <p>${evento.horaInicio || ''} - ${evento.horaFin || ''}</p>
