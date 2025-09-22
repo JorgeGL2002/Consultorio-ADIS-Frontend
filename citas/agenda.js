@@ -313,7 +313,7 @@ async function cargarHorarios(fecha) {
       const horaInicioMinutos = horaInicioH * 60 + horaInicioM;
       const horaFinMinutos = horaInicioMinutos + 30;
 
-      const citasHora = citas.filter(c => c.hora?.slice(0,5) === hora);
+      const citasHora = citas.filter(c => c.hora?.slice(0, 5) === hora);
       const bloqueo = bloqueos.find(b => b.hora?.slice(0, 5) === hora.padStart(5, '0'));
       const ausencia = ausencias.find(a => a.hora?.slice(0, 5) === hora.padStart(5, '0'));
 
@@ -628,7 +628,7 @@ function abrirModalEditarCita(hora, datosCita) {
 
 function abrirNotificaciones() {
   const label = document.getElementById("cumpleaños");
-  label.innerHTML = ""; 
+  label.innerHTML = "";
   fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
     .then(r => r.json())
     .then(data => {
@@ -659,12 +659,12 @@ async function obtenerTelefonoPaciente(nombre) {
     console.error(e);
   }
 }
- 
+
 function formatearNumero(numero) {
   const limpio = numero.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
-  if(limpio.length === 10) {
-    return '521'+limpio;
-  } else if(limpio.startsWith('521')){
+  if (limpio.length === 10) {
+    return '521' + limpio;
+  } else if (limpio.startsWith('521')) {
     return limpio;
   } else {
     return '521' + limpio;
@@ -778,7 +778,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
   console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
   fechaInput.valueAsDate = new Date();
-  const fechaHoy = fechaInput?.value  || new Date().toISOString().split("T")[0];
+  const fechaHoy = fechaInput?.value || new Date().toISOString().split("T")[0];
   document.getElementById("fechaTabla").textContent = fechaHoy;
   cargarTrabajadores("trabajador");
   cargarTrabajadores("trabajadorModal");
@@ -787,12 +787,12 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarSeguros("Editarseguro");
   cargarServicios("servicios");
   cargarServicios("Editarservicio");
-  cargarNotas(fechaHoy  || new Date().toISOString().split("T")[0], id);
-  cargarEventos(fechaHoy  || new Date().toISOString().split("T")[0], id);
+  cargarNotas(fechaHoy || new Date().toISOString().split("T")[0], id);
+  cargarEventos(fechaHoy || new Date().toISOString().split("T")[0], id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
   // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
-  cargarHorarios(fechaHoy  || new Date().toISOString().split("T")[0]);
+  cargarHorarios(fechaHoy || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
   setInterval(() => {
     const fechaHoy = new Date().toISOString().split("T")[0];
@@ -828,9 +828,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedIdProfesional = await obtenerIdTrabajador(nombreSelect);
       if (selectedIdProfesional) {
         localStorage.setItem("idSelectPrincipal", selectedIdProfesional);
-        cargarHorarios(fechaInput?.value  || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
-        cargarNotas(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
-        cargarEventos(fechaInput?.value  || new Date().toISOString().split("T")[0], selectedIdProfesional);
+        cargarHorarios(fechaInput?.value || new Date().toISOString().split("T")[0]); // ahora solo pasamos la fecha
+        cargarNotas(fechaInput?.value || new Date().toISOString().split("T")[0], selectedIdProfesional);
+        cargarEventos(fechaInput?.value || new Date().toISOString().split("T")[0], selectedIdProfesional);
         setInterval(() => {
           verificarCambiosEnCitas(fechaInput?.value || new Date().toISOString().split("T")[0], selectedIdProfesional);
         }, 30000);
@@ -855,10 +855,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const fechaValor = fechaInput.value;
       if (rol === "ESPECIALISTA") {
         document.getElementById("fechaTabla").textContent = fechaValor;
-        cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
-        cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], id);
-        cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], id);
-         setInterval(() => {
+        cargarHorarios(fechaValor || new Date().toISOString().split("T")[0]);
+        cargarNotas(fechaValor || new Date().toISOString().split("T")[0], id);
+        cargarEventos(fechaValor || new Date().toISOString().split("T")[0], id);
+        setInterval(() => {
           verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id);
         }, 30000);
       } else {
@@ -870,9 +870,9 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
-        cargarHorarios(fechaValor  || new Date().toISOString().split("T")[0]);
-        cargarNotas(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
-        cargarEventos(fechaValor  || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
+        cargarHorarios(fechaValor || new Date().toISOString().split("T")[0]);
+        cargarNotas(fechaValor || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
+        cargarEventos(fechaValor || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
         setInterval(() => {
           verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id);
         }, 30000);
@@ -938,7 +938,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-     if (data.total === 0) {
+      if (data.total === 0) {
         mostrarAlerta("warning", data.mensaje);
       } else {
         mostrarAlerta("success", `Se enviaron ${data.enviados} de ${data.total} recordatorios`);
@@ -1310,7 +1310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
   });
 
-   modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
     const form = document.getElementById("formNotificaciones");
     form.reset();
   });
