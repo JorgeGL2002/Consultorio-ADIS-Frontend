@@ -88,6 +88,10 @@
   margin-bottom: 20px;
 }
 
+i{
+  color: #0d6efd;
+}
+
 .evento-card {
   border-radius: 10px;
   overflow: hidden;
