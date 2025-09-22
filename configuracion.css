@@ -9,3 +9,25 @@ body {
     width: 100%;
     z-index: 1000;
 }
+
+.dropdown-menu {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+      right: 0;
+      left: auto;
+      transform: translateX(-100%);
+    }
+
+    .dropdown-menu .dropdown-item{
+      color: black;
+    }
+
+    .dropdown-menu .dropdown-item:hover {
+      background-color: #f8f9fa;
+      color: black;
+    }
+
+    .dropdown-menu .dropdown-item .i {
+      font-size: 10px;
+    }

@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="../assets/logocorto.png" />
   <link rel="stylesheet" href="agenda.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <style>
     body {
       padding-top: 70px;
@@ -65,31 +65,21 @@
           <li class="nav-item"><a class="nav-link" onclick="abrirVentanaR()">Reportes</a></li>
           <li class="nav-item"><a class="nav-link" onclick="abrirVentanaHC()">Historias clínicas</a></li>
           <li class="nav-item"><a class="nav-link" onclick="abrirVentanaE()">Eventos</a></li>
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"> <a class="nav-link" onclick="abrirVentanaConfiguracion()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                  <path
-                    d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                  <path
-                    d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
-                </svg>
-              </a></li>
-            <li class="nav-item"><a class="nav-link" onclick="abrirNotificaciones()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell"
-                  viewBox="0 0 16 16">
-                  <path
-                    d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
-                </svg>
-              </a></li>
-            <li class="nav-item"><a class="nav-link" onclick="CerrarSesion()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                  class="bi bi-door-open" viewBox="0 0 16 16">
-                  <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
-                  <path
-                    d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
-                </svg>
-              </a></li>
-          </ul>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-gear" style="font-size: 20px;"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item nav-link" onclick="abrirVentanaConfiguracion()"><i class="bi bi-sliders"></i>
+                  Configuración</a></li>
+              <li><a class="dropdown-item nav-link" onclick="abrirNotificaciones()"><i class="bi bi-bell"></i>
+                  Notificaciones</a></li>
+              <li><a class="dropdown-item nav-link" onclick="CerrarSesion()"><i class="bi bi-door-open"></i> Cerrar
+                  Sesion</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
@@ -101,33 +91,33 @@
     <!-- 📅 Columna izquierda: tabla -->
     <div class="tabla-container flex-grow-1 w-100 w-md-auto mt-3 mt-md-0">
       <div class="table-responsive">
-      <table class="table table-bordered table-striped align-middle text-center">
-        <thead class="table-primary">
-          <tr>
-            <th colspan="3" class="text-center"><label id="fechaTabla" class="fw-bold"></label></th>
-          </tr>
-          <tr>
-            <th>
-              <div class="d-flex align-items-center">
-                <input type="checkbox" id="checkAll" class="form-check-input me-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                  class="bi bi-lock me-1" type="button" id="btnBloquearSeleccion">
-                  <path fill-rule="evenodd"
-                    d="M8 
+        <table class="table table-bordered table-striped align-middle text-center">
+          <thead class="table-primary">
+            <tr>
+              <th colspan="3" class="text-center"><label id="fechaTabla" class="fw-bold"></label></th>
+            </tr>
+            <tr>
+              <th>
+                <div class="d-flex align-items-center">
+                  <input type="checkbox" id="checkAll" class="form-check-input me-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    class="bi bi-lock me-1" type="button" id="btnBloquearSeleccion">
+                    <path fill-rule="evenodd"
+                      d="M8 
                       0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3" />
-                </svg>
-              </div>
-            </th>
-            <th>Hora</th>
-            <th>Detalle</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-horarios">
-          <!-- Llenado con JavaScript -->
-        </tbody>
-      </table>
+                  </svg>
+                </div>
+              </th>
+              <th>Hora</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-horarios">
+            <!-- Llenado con JavaScript -->
+          </tbody>
+        </table>
+      </div>
     </div>
-   </div>
 
     <!-- ✅ Columna derecha: calendario + select -->
     <div class="tools-container p-3 bg-light rounded w-100 w-md-auto mt-3 mt-md-0" style="max-width: 350px;">
@@ -138,7 +128,7 @@
       <button
         class="btn btn-success w-100 py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm hover-scale"
         id="recordatorioWhastAppDIA" type="button" style="margin-top: 20px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp"
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp"
           viewBox="0 0 16 16">
           <path
             d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
@@ -257,7 +247,8 @@
             <label class="form-label" style="width: 100%; background-color: rgb(208, 206, 204); ">Detalles de la
               cita</label>
             <div class="mb-3">
-              <input type="text" class="form-control" placeholder="Cuota de recuperación" name="Editarvalor" id="Editarvalor" required>
+              <input type="text" class="form-control" placeholder="Cuota de recuperación" name="Editarvalor"
+                id="Editarvalor" required>
             </div>
             <div class="mb-3">
               <select class="form-select mb-3" name="Editarservicio" id="Editarservicio" required>
@@ -276,7 +267,8 @@
               </select>
             </div>
             <div class="mb-3">
-              <textarea class="form-control" rows="3" placeholder="detalles de la cita" name="Editardetalles" id="Editardetalles"></textarea>
+              <textarea class="form-control" rows="3" placeholder="detalles de la cita" name="Editardetalles"
+                id="Editardetalles"></textarea>
             </div>
             <div class="dropdown">
               <button type="submit" class="btn btn-primary btn-custom">Aplicar cambios</button>
@@ -507,7 +499,7 @@
   <script src="agenda.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
- <script>
+  <script>
     let eventos = []; // aquí guardamos las fechas que vienen del backend
 
     async function diasconEventos() {
