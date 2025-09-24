@@ -80,6 +80,17 @@
                   Sesion</a></li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-moon-stars" style="font-size: 20px;"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item nav-link"><i class="bi bi-moon-stars"></i>
+                  Oscuro</a></li>
+              <li><a class="dropdown-item nav-link"><i class="bi bi-sun"></i>
+                  Claro</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
@@ -501,19 +512,6 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 
   <script>
-    const toggleBtn = document.getElementById('toggle-theme');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeLabel = document.getElementById('theme-label');
-
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-
-      const isDark = document.body.classList.contains('dark-mode');
-      themeIcon.className = isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
-      themeLabel.textContent = isDark ? 'Tema oscuro' : 'Tema claro';
-      toggleBtn.classList.toggle('btn-light', !isDark);
-      toggleBtn.classList.toggle('btn-dark', isDark);
-    });
     async function diasconEventos() {
       const fecha = new Date().toISOString().split("T")[0]; // hoy por defecto
       try {
