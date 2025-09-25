@@ -400,6 +400,7 @@ async function abrirModalEditarCitaPorID(idCita) {
     const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/CitasPorId?idCita=${idCita}`);
     if (!response.ok) throw new Error("No se pudo obtener la cita");
     const datosCita = await response.json();
+    cargarEmpresayNempleado(datosCita.nombrePaciente);
     abrirModalEditarCita(datosCita.hora, datosCita);
   } catch (error) {
     console.error("Error al obtener la cita:", error);
@@ -608,7 +609,7 @@ function abrirModalEditarCita(hora, datosCita) {
   document.getElementById("Editarpaciente").value = datosCita.nombrePaciente;
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
-  document.getElementById("Editarseguro").value = datosCita.seguro;
+  document.getElementById("Editarseguro").value = cargarEmpresa(datosCita.seguro, "Editarseguro");
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
     document.getElementById("Editarvalor").value = datosCita.cuota;
