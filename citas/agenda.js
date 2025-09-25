@@ -813,12 +813,18 @@ document.addEventListener("DOMContentLoaded", () => {
     chk.addEventListener("change", actualizarBotonBloqueo);
   });
 
-  document.getElementById("modalEditarCita").addEventListener("shown.bs.modal", () => {
-    document.getElementById("EditartrabajadorModal").required = true;
+  const modal = document.getElementById("modalEditarCita");
+  const select = document.getElementById("EditartrabajadorModal");
+
+  modal.addEventListener("shown.bs.modal", () => {
+    if(select.options.length > 1) {
+      select.required = true;
+      select.disabled = false;
+    }
   });
 
-  document.getElementById("modalEditarCita").addEventListener("hidden.bs.modal", () => {
-    document.getElementById("EditartrabajadorModal").required = false;
+  modal.addEventListener("hidden.bs.modal", () => {
+    select.required = false;
   });
 
   if (selectPrincipal) {
