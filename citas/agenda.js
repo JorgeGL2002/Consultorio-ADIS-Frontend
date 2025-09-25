@@ -609,7 +609,6 @@ function abrirModalEditarCita(hora, datosCita) {
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
   document.getElementById("Editarseguro").value = datosCita.seguro;
-  document.getElementById("Editarseguro").dispatchEvent(new Event("change"));
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
     document.getElementById("Editarvalor").value = datosCita.cuota;
