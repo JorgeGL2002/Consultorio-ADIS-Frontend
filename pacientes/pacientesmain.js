@@ -664,6 +664,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnAplicarCambios").addEventListener("click", () => {
     const id = document.getElementById("pacienteId").value.trim();
+    document.getElementById("busqueda").value = "";
+    cargarPacientes();
     actualizarDatos(id);
   })
 
