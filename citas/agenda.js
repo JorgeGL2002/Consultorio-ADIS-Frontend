@@ -813,19 +813,13 @@ document.addEventListener("DOMContentLoaded", () => {
     chk.addEventListener("change", actualizarBotonBloqueo);
   });
 
-  const modal = document.getElementById("modalEditarCita");
-  const select = document.getElementById("EditartrabajadorModal");
-
-  modal.addEventListener("shown.bs.modal", () => {
-    if(select.options.length > 1) {
-      select.required = true;
-      select.disabled = false;
-    }
-  });
-
-  modal.addEventListener("hidden.bs.modal", () => {
-    select.required = false;
-  });
+  if(rol === "ESPECIALISTA") {
+    document.getElementById("EditartrabajadorModal").required = true;
+    document.getElementById("EditartrabajadorModal").disabled = false;
+  } else {
+    document.getElementById("EditartrabajadorModal").required = false;
+    document.getElementById("EditartrabajadorModal").disabled = true;
+  }
 
   if (selectPrincipal) {
     selectPrincipal.addEventListener("change", async () => {
