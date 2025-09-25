@@ -813,7 +813,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chk.addEventListener("change", actualizarBotonBloqueo);
   });
 
-  if(rol === "ESPECIALISTA") {
+  if(rol !== "ESPECIALISTA") {
     document.getElementById("EditartrabajadorModal").required = true;
     document.getElementById("EditartrabajadorModal").disabled = false;
   } else {
