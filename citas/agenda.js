@@ -309,9 +309,6 @@ async function cargarHorarios(fecha) {
       celdaHora.textContent = hora;
       fila.appendChild(celdaHora);
       const celdaDetalle = document.createElement("td");
-      const [horaInicioH, horaInicioM] = hora.split(':').map(Number);
-      const horaInicioMinutos = horaInicioH * 60 + horaInicioM;
-      const horaFinMinutos = horaInicioMinutos + 30;
 
       const citasHora = citas.filter(c => c.hora?.slice(0, 5) === hora);
       const bloqueo = bloqueos.find(b => b.hora?.slice(0, 5) === hora.padStart(5, '0'));
@@ -326,16 +323,20 @@ async function cargarHorarios(fecha) {
       </span>`;
         celdaDetalle.classList.add("celda-ausencia");
       } else if (citasHora.length > 0) {
-        celdaDetalle.innerHTML = citasHora.map(cita => `
-      <span class="badge ${cita.ausente ? 'bg-warning' : 'bg-success'} d-block text-start mb-1" 
-            style="font-size: 16px;" 
-            onclick='abrirModalEditarCitaPorID(${cita.idCita})'>
-        Paciente: ${cita.nombrePaciente}<br>
-        Servicio: ${cita.nombreServicio}<br>
-        Estado: ${cita.estado_cita}<br>
-        ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
-      </span>
-    `).join("");
+        celdaDetalle.innerHTML = citasHora.map(cita => {
+          const esAusencia = cita.estado_cita?.toUpperCase() === "AUSENCIA";
+
+          return `
+    <span class="badge ${esAusencia ? 'bg-warning' : 'bg-success'} d-block text-start mb-1" 
+          style="font-size: 16px; ${esAusencia ? 'color:#000;' : ''}" 
+          onclick='abrirModalEditarCitaPorID(${cita.idCita})'>
+      Paciente: ${cita.nombrePaciente}<br>
+      Servicio: ${cita.nombreServicio}<br>
+      Estado: ${cita.estado_cita}<br>
+      ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
+    </span>
+  `;
+        }).join("");
         celdaDetalle.classList.add("celda-cita");
       } else if (bloqueo) {
         celdaDetalle.innerHTML = `
@@ -813,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chk.addEventListener("change", actualizarBotonBloqueo);
   });
 
-  if(rol !== "ESPECIALISTA") {
+  if (rol !== "ESPECIALISTA") {
     document.getElementById("EditartrabajadorModal").required = true;
     document.getElementById("EditartrabajadorModal").disabled = false;
   } else {
