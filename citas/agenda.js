@@ -1018,23 +1018,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Pacientes (datalist)
-  fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
-    .then(response => response.json())
-    .then(data => {
-      const lista = document.getElementById("listaPacientes");
-      lista.innerHTML = "";
-
-      data.forEach(paciente => {
-        const option = document.createElement("option");
-        option.value = paciente.nombre;
-        lista.appendChild(option);
-      });
-    })
-    .catch(error => {
-      console.error("Error al cargar pacientes:", error);
-    });
-
   const input = document.getElementById("pacientesInput");
   const lista = document.getElementById("sugerencias");
   let pacientes = [];
@@ -1349,7 +1332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
   });
 
-  document.getElementById("pacientes").addEventListener("change", async (e) => {
+  document.getElementById("pacientesInput").addEventListener("change", async (e) => {
     const nombre = e.target.value.trim();
     if (nombre) {
       const data = await cargarEmpresayNempleado(nombre);
