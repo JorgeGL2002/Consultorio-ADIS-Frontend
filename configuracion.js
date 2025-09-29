@@ -352,6 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (contraseña.value.length < 8) {
             mostrarAlerta("warning", "La contraseña debe tener minimo 8 caracteres", false);
+            return;
         }
 
         if (contraseña.value !== confirmar.value) {
