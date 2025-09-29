@@ -1069,7 +1069,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("formCita").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const nombrePaciente = document.getElementById("pacientes").value;
+    const nombrePaciente = document.getElementById("pacientesInput").value;
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
     cargarEmpresayNempleado(nombrePaciente);
