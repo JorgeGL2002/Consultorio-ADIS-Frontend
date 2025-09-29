@@ -1035,6 +1035,39 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al cargar pacientes:", error);
     });
 
+  const input = document.getElementById("pacientesInput");
+  const lista = document.getElementById("sugerencias");
+  let pacientes = [];
+
+  // cargar pacientes
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+    .then(res => res.json())
+    .then(data => pacientes = data);
+
+  input.addEventListener("input", () => {
+    const texto = input.value.toLowerCase();
+    lista.innerHTML = "";
+    if (!texto) {
+      lista.style.display = "none";
+      return;
+    }
+
+    const filtrados = pacientes.filter(p => p.nombre.toLowerCase().includes(texto));
+    filtrados.forEach(p => {
+      const li = document.createElement("li");
+      li.className = "list-group-item list-group-item-action";
+      li.textContent = p.nombre;
+      li.onclick = () => {
+        input.value = p.nombre;
+        lista.style.display = "none";
+      };
+      lista.appendChild(li);
+    });
+
+    lista.style.display = filtrados.length ? "block" : "none";
+  });
+
+
   document.getElementById("seguros").addEventListener("change", (e) => {
     // Variables comunes
     const seleccionada = e.target.value.trim();

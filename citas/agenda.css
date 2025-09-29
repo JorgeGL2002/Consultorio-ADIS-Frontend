@@ -115,6 +115,13 @@
       }
     }
 
+    #sugerencias {
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
     @media (min-width: 769px) {
       .dropdown-menu {
         background-color: white;

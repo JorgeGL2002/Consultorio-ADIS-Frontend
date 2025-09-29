@@ -167,11 +167,10 @@
         </div>
         <div class="modal-body">
           <form id="formCita">
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
               <label class="form-label">Nombre del paciente</label>
-              <input type="text" class="form-control" id="pacientes" list="listaPacientes" autocomplete="on" required>
-              <datalist id="listaPacientes">
-              </datalist>
+              <input type="text" class="form-control" id="pacientesInput" required>
+              <ul id="sugerencias" class="list-group position-absolute w-100"></ul>
             </div>
             <label class="form-label" style="width: 100%; background-color: rgb(208, 206, 204); ">Detalles de la
               cita</label>
