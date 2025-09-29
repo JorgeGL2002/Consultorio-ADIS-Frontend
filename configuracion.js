@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             console.log(usuario, contraseña);
             const response = await fetch(
-                `https://api-railway-production-24f1.up.railway.app/api/test/restablecerContraseña`,
+                `https://api-railway-production-24f1.up.railway.app/api/test/restablecerCont`,
                 {
                     method: "PUT",
                     headers: {
