@@ -159,9 +159,9 @@ document.querySelectorAll('.report-card').forEach(card => {
 document.getElementById('year').value = new Date().getFullYear();
 
 async function generateReport(reportType) {
-    const nombrePaciente = document.getElementById('busqueda').value;
-    const nombrePacienteNE = document.getElementById('busquedaNE').value;
-    const nombrePacienteHC = document.getElementById('busquedaHC').value;
+    const nombrePaciente = document.getElementById('pacientesHEP').value;
+    const nombrePacienteNE = document.getElementById('pacientesNEP').value;
+    const nombrePacienteHC = document.getElementById('pacientesCPP').value;
     let permitidos;
 
     if (!month || !year) {
