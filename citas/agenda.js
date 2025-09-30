@@ -211,7 +211,7 @@ async function cargarEmpresayNempleado(nombre) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${nombre}`);
     if (!res.ok) throw new Error("Paciente no encontrado");
     const data = await res.json();
-    console.log("Datos del paciente:", data);
+    console.log("Datos del paciente:", res);
     const empresaSelect = document.getElementById("seguros");
     empresaSelect.value = cargarEmpresa(data.empresa);
 
