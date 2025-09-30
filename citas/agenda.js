@@ -167,6 +167,7 @@ async function obtenerProfesionalParaHorarios() {
 }
 
 async function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
+  if (!empresaPaciente) return "vacio";
   const select = document.getElementById(idSelect);
   const currentValue = select.value;
   try {
