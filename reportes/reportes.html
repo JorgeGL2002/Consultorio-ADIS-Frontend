@@ -163,12 +163,6 @@
       <!-- Filtros adicionales para reporte personal -->
       <div class="row g-3 mt-3" id="personalFilters" style="display: none;">
         <div class="col-md-6 mb-3">
-          <label for="professionalId" class="form-label">ID del Profesional</label>
-          <select class="form-select mb-3" id="trabajador">
-            <option value="" disabled selected>Cargando usuarios...</option>
-          </select>
-        </div>
-        <div class="col-md-6 mb-3">
           <label for="professionalName" class="form-label" hidden>Rol del Profesional</label>
           <input type="text" class="form-control" id="rolInput" hidden>
         </div>
@@ -200,32 +194,30 @@
 
       <!-- Reporte Personal de Citas -->
       <div class="col-md-6 col-lg-4">
-        <div class="card report-card" onclick="generateReport('personal')">
-          <div class="card-body text-center">
+        <div class="card report-card">
+          <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#formCPaciente"
+            aria-expanded="false" aria-controls="formCPaciente" style="cursor: pointer;">
             <div class="card-icon">
               <i class="fas fa-user-md"></i>
             </div>
             <h5 class="card-title">Reporte Personal de Citas</h5>
             <p class="card-text">Genera un reporte de las citas atendidas por un profesional específico.</p>
-            <button class="btn btn-outline-primary">
-              <i class="fas fa-download me-2"></i>Descargar
-            </button>
           </div>
-        </div>
-      </div>
 
-      <!-- Reporte de Trabajadores -->
-      <div class="col-md-6 col-lg-4">
-        <div class="card report-card" onclick="generateReport('workers')">
-          <div class="card-body text-center">
-            <div class="card-icon">
-              <i class="fas fa-users"></i>
-            </div>
-            <h5 class="card-title">Reporte de Trabajadores</h5>
-            <p class="card-text">Genera un listado completo de todos los trabajadores registrados.</p>
-            <button class="btn btn-outline-primary">
-              <i class="fas fa-download me-2"></i>Descargar
-            </button>
+          <div class="collapse mt-3 px-3" id="formCPaciente">
+            <form id="formCPaciente">
+              <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
+                <div class="mb-3 position-relative">
+                  <label for="professionalId" class="form-label">ID del Profesional</label>
+                  <select class="form-select mb-3" id="trabajador">
+                    <option value="" disabled selected>Cargando usuarios...</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline-primary" type="button"  onclick="generateReport('personal')">
+                  <i class="fas fa-download me-2"></i>Descargar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
