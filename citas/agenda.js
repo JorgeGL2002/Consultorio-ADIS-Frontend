@@ -210,13 +210,13 @@ async function cargarEmpresayNempleado(nombre) {
   try {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${nombre}`);
     if (!res.ok) throw new Error("Paciente no encontrado");
+
     const data = await res.json();
-    console.log("Datos del paciente:", res);
-    const empresaSelect = document.getElementById("seguros");
-    empresaSelect.value = cargarEmpresa(data.empresa);
+    console.log("Datos del paciente:", data);
+    await cargarEmpresa(data.empresa); // ✅ Esperamos que termine antes de seguir
 
     const inputEmpleado = document.getElementById("noseguros");
-    inputEmpleado.value = data.empleado;
+    inputEmpleado.value = data.empleado ?? ""; // Por si viene null
 
     return data;
   } catch (e) {
