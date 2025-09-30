@@ -115,7 +115,21 @@
       }
     }
 
-    #sugerencias {
+    #sugerenciasHEP {
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    #sugerenciasNEP {
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    #sugerenciasCPP {
       max-height: 200px;
       overflow-y: auto;
       z-index: 1000;

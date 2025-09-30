@@ -11,6 +11,13 @@
   <title>Reportes | Fundación ADIS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+    #sugerencias {
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
     .report-card {
       transition: all 0.3s ease;
       cursor: pointer;
@@ -57,7 +64,7 @@
       font-size: 10px;
     }
 
-     @media (max-width: 768px) {
+    @media (max-width: 768px) {
       .dropdown-menu {
         background-color: white;
         color: black;
@@ -241,11 +248,10 @@
           <div class="collapse mt-3 px-3" id="formNEPaciente">
             <form id="formNEPaciente">
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
-                <div class="input-group w-100 w-md-50">
-                  <input type="text" id="busquedaNE" placeholder="Buscar paciente" class="form-control"
-                    list="listaPacientes">
-                  <datalist id="listaPacientes">
-                  </datalist>
+                <div class="mb-3 position-relative">
+                  <label class="form-label">Nombre del paciente</label>
+                  <input type="text" class="form-control" id="pacientesNEP" required>
+                  <ul id="sugerenciasNEP" class="list-group position-absolute w-100"></ul>
                 </div>
                 <button class="btn btn-outline-primary" type="button" onclick="generateReport('notasEvolucion')">
                   <i class="fas fa-download me-2"></i>Descargar
@@ -274,11 +280,10 @@
           <div class="collapse mt-3 px-3" id="formHCPaciente">
             <form id="formHCPaciente">
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
-                <div class="input-group w-100 w-md-50">
-                  <input type="text" id="busquedaHC" placeholder="Buscar paciente" class="form-control"
-                    list="listaPacientes">
-                  <datalist id="listaPacientes">
-                  </datalist>
+                <div class="mb-3 position-relative">
+                  <label class="form-label">Nombre del paciente</label>
+                  <input type="text" class="form-control" id="pacientesHEP" required>
+                  <ul id="sugerenciasHEP" class="list-group position-absolute w-100"></ul>
                 </div>
                 <button class="btn btn-outline-primary" type="button" onclick="generateReport('historiasClinicas')">
                   <i class="fas fa-download me-2"></i>Descargar
@@ -322,11 +327,10 @@
           <div class="collapse mt-3 px-3" id="formBuscarPaciente">
             <form id="formBuscarPacienteForm">
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
-                <div class="input-group w-100 w-md-50">
-                  <input type="text" id="busqueda" placeholder="Buscar paciente" class="form-control"
-                    list="listaPacientes">
-                  <datalist id="listaPacientes">
-                  </datalist>
+                <div class="mb-3 position-relative">
+                  <label class="form-label">Nombre del paciente</label>
+                  <input type="text" class="form-control" id="pacientesCPP" required>
+                  <ul id="sugerenciasCPP" class="list-group position-absolute w-100"></ul>
                 </div>
                 <button class="btn btn-outline-primary" type="button" onclick="generateReport('citaspatients')">
                   <i class="fas fa-download me-2"></i>Descargar

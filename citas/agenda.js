@@ -1056,9 +1056,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Variables comunes
     const seleccionada = e.target.value.trim();
     const inputEmpleado = document.getElementById("noseguros");
-    const valorInput = document.getElementById("valor");
-    const segurosValue = seleccionada.toLowerCase();
-
     // Primera parte: Manejo del número de empleado
     if (seleccionada !== empresaPacienteOriginal) {
       inputEmpleado.value = "";
@@ -1070,7 +1067,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("formCita").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const nombrePaciente = document.getElementById("pacientesInput").value;
+    const nombrePaciente = document.getElementById("pacientesInput").value.trim();
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
     cargarEmpresayNempleado(nombrePaciente);

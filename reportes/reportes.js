@@ -12,21 +12,21 @@ function abrirVentanaHC() {
 }
 
 function abrirVentanaE() {
-  window.location.href = '../eventos/eventos.html';
+    window.location.href = '../eventos/eventos.html';
 }
 
 function abrirVentanaConfiguracion() {
-  if (rol === "SUPER USUARIO" || id === "6") {
-    window.location.href = '/configuracion.html';
-  } else {
-    mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
-  }
+    if (rol === "SUPER USUARIO" || id === "6") {
+        window.location.href = '/configuracion.html';
+    } else {
+        mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
+    }
 }
 
 
 function CerrarSesion() {
-  window.location.href = '/index.html';
-  localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
+    window.location.href = '/index.html';
+    localStorage.clear(); // Limpiar todos los datos almacenados en localStorage a8588c2 (Actualizacion urls):Citas/Agenda.js
 }
 
 function cargarTrabajadores(idSelect) {
@@ -250,7 +250,7 @@ async function generateReport(reportType) {
                 url += `/reporteCitasPorPaciente?nombrePaciente=${encodeURIComponent(nombrePaciente)}`;
                 window.location.href = url;
                 return;
-                case 'notasEvolucion':
+            case 'notasEvolucion':
                 permitidos = empiezaCon(nombre, ['LTFR', 'Psic', 'LN']);
                 if (rol === "ESPECIALISTA" || !permitidos) {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
@@ -263,7 +263,7 @@ async function generateReport(reportType) {
                 permitidos = empiezaCon(nombre, ['LTFR']);
                 if (rol === "ESPECIALISTA" || !permitidos) {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
-                    return;   
+                    return;
                 }
                 url += `/reportesHC?nombrePaciente=${encodeURIComponent(nombrePacienteHC)}`;
                 window.location.href = url;
@@ -282,7 +282,7 @@ async function generateReport(reportType) {
 }
 
 function empiezaCon(n, prefijos = []) {
-  return prefijos.some(p => n.startsWith(p.toUpperCase()));
+    return prefijos.some(p => n.startsWith(p.toUpperCase()));
 }
 
 function abrirNotificaciones() {
@@ -329,23 +329,49 @@ document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("formNotificaciones");
         form.reset();
     });
-    
-    // Pacientes (datalist)
-    fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
-        .then(response => response.json())
-        .then(data => {
-            const lista = document.getElementById("listaPacientes");
-            lista.innerHTML = "";
 
-            data.forEach(paciente => {
-                const option = document.createElement("option");
-                option.value = paciente.nombre;
-                lista.appendChild(option);
+    const inputHEP = document.getElementById("pacientesHEP");
+    const listaHEP = document.getElementById("sugerenciasHEP");
+    const inputNEP = document.getElementById("pacientesNEP");
+    const listaNEP = document.getElementById("sugerenciasNEP");
+    const inputCPP = document.getElementById("pacientesCPP");
+    const listaCPP = document.getElementById("sugerenciasCPP");
+    let pacientes = [];
+
+    // cargar pacientes
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+        .then(res => res.json())
+        .then(data => pacientes = data);
+
+    function configurarInput(input, lista) {
+        input.addEventListener("input", () => {
+            const texto = input.value.toLowerCase();
+            lista.innerHTML = "";
+            if (!texto) {
+                lista.style.display = "none";
+                return;
+            }
+
+            const filtrados = pacientes.filter(p => p.nombre.toLowerCase().includes(texto));
+            filtrados.forEach(p => {
+                const li = document.createElement("li");
+                li.className = "list-group-item list-group-item-action";
+                li.textContent = p.nombre;
+                li.onclick = () => {
+                    input.value = p.nombre;
+                    lista.style.display = "none";
+                };
+                lista.appendChild(li);
             });
-        })
-        .catch(error => {
-            console.error("Error al cargar pacientes:", error);
+
+            lista.style.display = filtrados.length ? "block" : "none";
         });
+    }
+
+    // Aplicación
+    configurarInput(inputHEP, listaHEP);
+    configurarInput(inputNEP, listaNEP);
+    configurarInput(inputCPP, listaCPP);
 
 });
 
