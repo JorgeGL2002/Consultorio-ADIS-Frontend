@@ -304,6 +304,7 @@ function abrirNotificaciones() {
 document.addEventListener("DOMContentLoaded", () => {
     const selectPrincipal = document.getElementById("trabajador");
     cargarTrabajadores("trabajador");
+    console.log("Usuario:", nombre, "ID:", id, "Rol:", rol);
 
     if (selectPrincipal) {
         selectPrincipal.addEventListener("change", async () => {
