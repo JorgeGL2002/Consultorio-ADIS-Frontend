@@ -255,6 +255,7 @@ async function generateReport(reportType) {
                 permitidos = empiezaCon(nombre, ['LTFR']);
                 if (rol === "ESPECIALISTA" || !permitidos) {
                     mostrarAlerta("warning", "No tienes permisos para este reporte");
+                    nombrePacienteHC = "";
                     return;
                 }
                 url += `/reportesHC?nombrePaciente=${encodeURIComponent(nombrePacienteHC)}`;
@@ -265,6 +266,9 @@ async function generateReport(reportType) {
         // Descargar el reporte
         const finalURL = params.toString().length > 0 ? `${url}?${params.toString()}` : url;
         window.location.href = finalURL;
+        inputHEP.value = "";
+        inputNEP.value = "";
+        inputCPP.value = "";
 
     } catch (err) {
         console.error("Error generando el reporte:", err);
