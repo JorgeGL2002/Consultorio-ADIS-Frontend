@@ -204,7 +204,7 @@
             <p class="card-text">Genera un reporte de las citas atendidas por un profesional específico.</p>
           </div>
 
-          <div class="collapse mt-3 px-3" id="formCPaciente">
+          <div class="collapse mt-3 px-3" id="CollapseCPaciente">
             <form id="formCPaciente">
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
                 <div class="mb-3 position-relative">
@@ -242,7 +242,7 @@
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
                 <div class="mb-3 position-relative">
                   <label class="form-label">Nombre del paciente</label>
-                  <input type="text" class="form-control" id="pacientesNEP" required>
+                  <input type="text" class="form-control" id="pacientesNEP">
                   <ul id="sugerenciasNEP" class="list-group position-absolute w-100"></ul>
                 </div>
                 <button class="btn btn-outline-primary" type="button" onclick="generateReport('notasEvolucion')">
@@ -274,7 +274,7 @@
               <div class="mb-2 d-flex flex-column flex-md-row justify-content-md-end gap-2">
                 <div class="mb-3 position-relative">
                   <label class="form-label">Nombre del paciente</label>
-                  <input type="text" class="form-control" id="pacientesHEP" required>
+                  <input type="text" class="form-control" id="pacientesHEP">
                   <ul id="sugerenciasHEP" class="list-group position-absolute w-100"></ul>
                 </div>
                 <button class="btn btn-outline-primary" type="button" onclick="generateReport('historiasClinicas')">
