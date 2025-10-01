@@ -23,6 +23,60 @@ function abrirVentanaConfiguracion() {
     }
 }
 
+function mostrarAlerta(tipo, mensaje) {
+    const iconos = {
+        success: "check-circle-fill",
+        warning: "exclamation-triangle-fill",
+        danger: "exclamation-triangle-fill",
+        info: "info-fill"
+    };
+
+    const colores = {
+        success: "text-success",
+        warning: "text-warning",
+        danger: "text-danger",
+        info: "text-info"
+    };
+
+    const alerta = document.createElement("div");
+    alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
+    alerta.style.maxWidth = "800px";
+    alerta.style.fontSize = "0.9rem";
+    alerta.style.wordWrap = "break-word";
+    alerta.style.paddingTop = "70px";
+
+    alerta.innerHTML = `
+    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+        <use xlink:href="#${iconos[tipo]}"/>
+    </svg>
+    <div>${mensaje}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+    document.getElementById("alertContainer").appendChild(alerta);
+
+    setTimeout(() => {
+        alerta.classList.remove("show");
+        alerta.classList.add("hide");
+        setTimeout(() => alerta.remove(), 500);
+    }, 3000);
+}
+
+function abrirNotificaciones() {
+    const label = document.getElementById("cumpleaños");
+    label.innerHTML = "";
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
+        .then(r => r.json())
+        .then(data => {
+            data.forEach(s => {
+                label.innerHTML += `${s} <br>`;
+            });
+        }).catch(() => {
+            label.innerHTML = "Error al cargar los cumpleaños";
+        });
+    const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
+    modal.show();
+}
 
 function CerrarSesion() {
     window.location.href = '/index.html';
@@ -106,45 +160,6 @@ function showFilters(reportType) {
     }
 }
 
-function mostrarAlerta(tipo, mensaje) {
-    const iconos = {
-        success: "check-circle-fill",
-        warning: "exclamation-triangle-fill",
-        danger: "exclamation-triangle-fill",
-        info: "info-fill"
-    };
-
-    const colores = {
-        success: "text-success",
-        warning: "text-warning",
-        danger: "text-danger",
-        info: "text-info"
-    };
-
-    const alerta = document.createElement("div");
-    alerta.className = `alert alert-${tipo} alert-dismissible fade show d-flex align-items-center mt-2`;
-    alerta.style.maxWidth = "800px";
-    alerta.style.fontSize = "0.9rem";
-    alerta.style.wordWrap = "break-word";
-    alerta.style.paddingTop = "70px";
-
-    alerta.innerHTML = `
-    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
-        <use xlink:href="#${iconos[tipo]}"/>
-    </svg>
-    <div>${mensaje}</div>
-    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-
-    document.getElementById("alertContainer").appendChild(alerta);
-
-    setTimeout(() => {
-        alerta.classList.remove("show");
-        alerta.classList.add("hide");
-        setTimeout(() => alerta.remove(), 500);
-    }, 3000);
-}
-
 // Asignar eventos a las cards
 document.querySelectorAll('.report-card').forEach(card => {
     card.addEventListener('click', function () {
@@ -160,9 +175,9 @@ document.getElementById('year').value = new Date().getFullYear();
 
 async function generateReport(reportType) {
     // Pacientes
-    const nombrePaciente = document.getElementById('pacientesHEP')?.value || "";
+    const nombrePaciente = document.getElementById('pacientesCPP')?.value || "";
     const nombrePacienteNE = document.getElementById('pacientesNEP')?.value || "";
-    const nombrePacienteHC = document.getElementById('pacientesCPP')?.value || "";
+    const nombrePacienteHC = document.getElementById('pacientesHEP')?.value || "";
 
     // Mes y año
     const month = document.getElementById('month')?.value;
@@ -260,22 +275,6 @@ async function generateReport(reportType) {
 
 function empiezaCon(n, prefijos = []) {
     return prefijos.some(p => n.startsWith(p.toUpperCase()));
-}
-
-function abrirNotificaciones() {
-    const label = document.getElementById("cumpleaños");
-    label.innerHTML = "";
-    fetch("https://api-railway-production-24f1.up.railway.app/api/test/notificaciones")
-        .then(r => r.json())
-        .then(data => {
-            data.forEach(s => {
-                label.innerHTML += `${s} <br>`;
-            });
-        }).catch(() => {
-            label.innerHTML = "Error al cargar los cumpleaños";
-        });
-    const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
-    modal.show();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
