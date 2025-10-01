@@ -1,6 +1,5 @@
 body {
   padding-top: 70px;
-  /* para que el contenido no se esconda debajo del navbar fijo */
 }
 
 .navbar {
@@ -11,20 +10,21 @@ body {
 }
 
 .dropdown-menu {
-  background-color: white;
+  background-color: white !important;
   color: black;
   border: 1px solid #ccc;
   right: 0;
   left: auto;
-  transform: translateX(-100%);
+  transform: none;
 }
 
 .dropdown-menu .dropdown-item {
   color: black;
+  background-color: white;
 }
 
 .dropdown-menu .dropdown-item:hover {
-  background-color: #f8f9fa;
+  background-color: #4f96dc;
   color: black;
 }
 
