@@ -51,12 +51,13 @@ function mostrarAlerta(tipo, mensaje) {
   alerta.style.fontSize = "0.9rem";
   alerta.style.wordWrap = "break-word";
   alerta.style.paddingTop = "70px";
+  alerta.style.zIndex = "2000";
 
   alerta.innerHTML = `
-    <svg class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
+    <svg style="z-index: 2000" class="bi flex-shrink-0 me-2 ${colores[tipo]}" width="20" height="20" role="img" aria-label="${tipo}">
         <use xlink:href="#${iconos[tipo]}"/>
     </svg>
-    <div>${mensaje}</div>
+    <div style="z-index: 2000">${mensaje}</div>
     <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
   `;
 
@@ -438,9 +439,6 @@ async function cargarNotas(fecha, id) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/notasAgenda?fecha=${fecha}&idProfesional=${id}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
-    if (data && data.length !== 0) {
-      mostrarAlerta("info", "Hay notas para hoy");
-    }
     data.forEach(n => {
       const card = document.createElement("div");
       card.classList.add("col-12", "mt-3");
@@ -468,10 +466,20 @@ async function cargarEventos(fecha, idProfesional) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}&idProfesional=${idProfesional}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
-    if (data && data.length !== 0) {
-      mostrarAlerta("info", "Hay eventos para hoy");
-      return null;
+    if (!data && data.length === 0) {
+      card.innerHTML = `
+    <div class="card notas-card">
+      <div class="card-body text-center">
+      <h5 class="card-subtitle fw-bold">Eventos</h5>
+        <div class="card-icon">
+          <i class="bi bi-exclamation-diamond-fill"></i>
+        </div>
+        <label class="fw-bold">Sin eventos</label>
+      </div>
+    </div>
+  `;
     }
+
     data.forEach(n => {
       const card = document.createElement("div");
       card.classList.add("col-12", "mt-3");
@@ -487,8 +495,7 @@ async function cargarEventos(fecha, idProfesional) {
         <textarea class="form-control" rows="3" readonly>${n.detalles || ""}</textarea>
       </div>
     </div>
-  `;
-
+  `;  
       contenedor.appendChild(card);
     });
     return data;
