@@ -90,6 +90,7 @@
 
     <!-- 📅 Columna izquierda: tabla -->
     <div class="tabla-container flex-grow-1 w-100 w-md-auto mt-3 mt-md-0">
+      <div id="contenedorNotas" style="max-height: 100px; overflow-y: auto; border-radius: 10px; padding: 5px;"></div>
       <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle text-center">
           <thead class="table-primary">
@@ -138,11 +139,10 @@
       <div class="col-12 mt-3">
         <div class="card notas-card">
           <div class="card-body text-center">
-            <h1 class="card-title fw-bold">Notas y Eventos</h1>
+            <h1 class="card-title fw-bold">Eventos</h1>
             <div class="card-icon">
               <i class="bi bi-exclamation-diamond-fill"></i>
             </div>
-            <div id="contenedorNotas" style="max-height: 300px; overflow-y: auto; padding-right: 5px;"></div>
             <div id="contenedorEventos" style="max-width: 300px; overflow-y: auto; padding-right: 5px;"></div>
           </div>
         </div>

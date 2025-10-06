@@ -213,10 +213,10 @@ async function cargarEmpresayNempleado(nombre) {
 
     const data = await res.json();
     console.log("Datos del paciente:", data);
-    await cargarEmpresa(data.empresa); 
+    await cargarEmpresa(data.empresa);
 
     const inputEmpleado = document.getElementById("noseguros");
-    inputEmpleado.value = data.empleado ?? ""; 
+    inputEmpleado.value = data.empleado ?? "";
 
     return data;
   } catch (e) {
@@ -440,27 +440,17 @@ async function cargarNotas(fecha, id) {
     const data = await res.json();
     if (data && data.length !== 0) {
       mostrarAlerta("info", "Hay notas para hoy");
-      return null;
     }
     data.forEach(n => {
       const card = document.createElement("div");
       card.classList.add("col-12", "mt-3");
 
       card.innerHTML = `
-    <div class="card notas-card">
-      <div class="card-body text-center">
-      <h5 class="card-subtitle fw-bold">Notas</h5>
-        <div class="card-icon">
-          <i class="bi bi-exclamation-diamond-fill"></i>
-        </div>
-        <label class="fw-bold">Titulo: ${n.titulo}</label>
-        <textarea class="form-control" rows="3" readonly>${n.detalle || ""}</textarea>
-        <label>Hora de inicio: ${n.horaInicio || "-"}</label><br>
-        <label>Hora de fin: ${n.horaFin || "-"}</label>
+      <div style="background-color: #4f96dc; color: white; border-radius: 10px; padding: 10px; width: 100%; display: flex; align-items: center; gap: 10px;">
+        <i class="bi bi-exclamation-diamond-fill" style ="font-size = 24px" ></i>
+        <span style="flex: 1;" readonly>${n.detalle || ""}</label>
       </div>
-    </div>
   `;
-
       contenedor.appendChild(card);
     });
     return data;
@@ -799,7 +789,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(() => {
     const fechaHoy = new Date().toISOString().split("T")[0];
     verificarCambiosEnCitas(fechaHoy, id);
-  }, 30000);
+  }, 60000);
   inputHora.disabled = true;
   selectPrincipal.addEventListener("change", () => {
     const nombre = selectPrincipal.value;
@@ -835,7 +825,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarEventos(fechaInput?.value || new Date().toISOString().split("T")[0], selectedIdProfesional);
         setInterval(() => {
           verificarCambiosEnCitas(fechaInput?.value || new Date().toISOString().split("T")[0], selectedIdProfesional);
-        }, 30000);
+        }, 60000);
       } else {
         alert("❌ No se pudo obtener el ID del profesional seleccionado");
       }
@@ -862,7 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarEventos(fechaValor || new Date().toISOString().split("T")[0], id);
         setInterval(() => {
           verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id);
-        }, 30000);
+        }, 60000);
       } else {
         const nombre = selectPrincipal?.value?.trim();
         if (nombre && !nombre.includes("Selecciona")) {
@@ -877,7 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarEventos(fechaValor || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
         setInterval(() => {
           verificarCambiosEnCitas(fechaValor || new Date().toISOString().split("T")[0], id);
-        }, 30000);
+        }, 60000);
       }
     });
   }
