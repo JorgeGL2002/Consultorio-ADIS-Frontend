@@ -1,11 +1,20 @@
-    body {
+* {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+    gap: 4px;
+    min-height: 100vh;
+    overflow: hidden;
+    flex-wrap: wrap;
+}
 
 header {
     position: fixed;
@@ -93,9 +102,9 @@ header {
 }
 
 .input-select option {
-  background-color: white !important;
-  color: black !important;
-  font-size: 16px !important;
+    background-color: white !important;
+    color: black !important;
+    font-size: 16px !important;
 }
 
 .form .input-select::-moz-placeholder {

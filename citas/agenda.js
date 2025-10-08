@@ -221,7 +221,6 @@ async function cargarEmpresayNempleado(nombre) {
 
     return data;
   } catch (e) {
-    mostrarAlerta("error", "No se pudo cargar empresa/empleado");
     console.error(e);
     return null;
   }
@@ -327,7 +326,6 @@ async function cargarHorarios(fecha) {
       } else if (citasHora.length > 0) {
         celdaDetalle.innerHTML = citasHora.map(cita => {
           const esAusencia = cita.estado_cita?.toUpperCase() === "AUSENCIA";
-
           return `
     <span class="badge ${esAusencia ? 'bg-warning' : 'bg-success'} d-block text-start mb-1" 
           style="font-size: 16px; ${esAusencia ? 'color:#000;' : ''}" 
