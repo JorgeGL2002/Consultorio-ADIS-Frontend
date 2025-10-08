@@ -444,7 +444,7 @@ async function cargarNotas(fecha, id) {
       card.innerHTML = `
       <div style="background-color: #4f96dc; color: white; border-radius: 10px; padding: 10px; width: 100%; display: flex; align-items: center; gap: 10px;">
         <i class="bi bi-exclamation-diamond-fill" style ="font-size = 24px" ></i>
-        <span style="flex: 1;" readonly>${n.detalle || ""}</label>
+        <span style="flex: 1;" readonly>${n.titulo || ""}</label>
       </div>
   `;
       contenedor.appendChild(card);
