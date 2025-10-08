@@ -227,11 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("formNotas").addEventListener("submit", async (e) => {
         e.preventDefault();
         const titulo = document.getElementById("titulo").value.trim();
-        const detalles = document.getElementById("detalles").value.trim(); // cambiar a detalle
         const fecha = document.getElementById("fecha").value.trim();
-        const horaInicio = document.getElementById("horaInicio").value.trim();
-        const horaFin = document.getElementById("horaFin").value.trim();
-        const tipo = "ESPECIALISTA";
         const trabajador = document.getElementById("trabajador");
         if (trabajador.selectedOptions.length === 0) {
             mostrarAlerta("warning", "Selecciona un trabajador");
@@ -241,11 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = localStorage.getItem("id");
         const body = {
             titulo,
-            detalle: detalles,
             fecha,
-            horaInicio,
-            horaFin,
-            tipo,
             idProfesionales: trabajadoresSeleccionados,
             creadoPor: id
         };
