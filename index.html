@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-light">
-    <div class="container card shadow-lg p-4 rounded-4" style="max-width: 400px; width: 100%; margin-top: 80px; z-index: 10;">
+    <div class="container card shadow-lg p-4 rounded-4" style="max-width: 400px; width: 100%; margin-top: 80px; z-index: 10; background: transparent;">
         <div style="text-align: center; padding-bottom: 10px;">
             <img src="assets/logocorto.png" width="48px" height="48px" alt="Logo de la fundacion ADIS" />
         </div>
@@ -19,7 +19,7 @@
         <form id="loginForm">
             <div class="mb-3">
                 <label for="trabajador" class="form-label">Selecciona tu usuario</label>
-                <select class="form-select" id="trabajador" required>
+                <select class="form-select" id="trabajador" required style="background: transparent;">
                     <option value="" disabled selected>Usuario</option>
                 </select>
             </div>
@@ -27,7 +27,7 @@
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña"
-                    required />
+                    required style="background: transparent;" />
             </div>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
