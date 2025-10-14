@@ -464,11 +464,12 @@ async function cargarEventos(fecha, idProfesional) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/eventosAgenda?fecha=${fecha}&idProfesional=${idProfesional}`);
     if (!res.ok) throw new Error("No se encontró al profesional");
     const data = await res.json();
-    if (!data && data.length === 0) {
+    if (!data || data.length === 0) {
+      const card = document.createElement("div");
+      card.classList.add("col-12", "mt-3");
       card.innerHTML = `
     <div class="card notas-card">
       <div class="card-body text-center">
-      <h5 class="card-subtitle fw-bold">Eventos</h5>
         <div class="card-icon">
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
@@ -476,16 +477,17 @@ async function cargarEventos(fecha, idProfesional) {
       </div>
     </div>
   `;
+      contenedor.appendChild(card);
     }
 
-    data.forEach(n => {
+    data.forEach((n, index) => {
+      const item = document.createElement("div");
+      item.classList.add("carousel-item");
+      if (index === 0) item.classList.add("active");
       const card = document.createElement("div");
-      card.classList.add("col-12", "mt-3");
-      console.log(n);
       card.innerHTML = `
     <div class="card notas-card">
       <div class="card-body text-center">
-      <h5 class="card-subtitle fw-bold">Eventos</h5>
         <div class="card-icon">
           <i class="bi bi-exclamation-diamond-fill"></i>
         </div>
@@ -493,8 +495,9 @@ async function cargarEventos(fecha, idProfesional) {
         <textarea class="form-control" rows="3" readonly>${n.detalles || ""}</textarea>
       </div>
     </div>
-  `;  
-      contenedor.appendChild(card);
+  `;
+      item.appendChild(card);
+      contenedor.appendChild(item);
     });
     return data;
   } catch (e) {
@@ -580,6 +583,11 @@ function abrirModalCambiarHorario() {
   bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
 
   const modal = new bootstrap.Modal(document.getElementById("modalCambiarHorario"));
+  modal.show();
+}
+
+function abrirModalEventos() {
+  const modal = new bootstrap.Modal(document.getElementById("modalEventos"));
   modal.show();
 }
 

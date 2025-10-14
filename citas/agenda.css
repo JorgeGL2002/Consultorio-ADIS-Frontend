@@ -17,6 +17,22 @@
       z-index: 1000;
     }
 
+    .navbar-tools {
+      border-radius: 5%;
+      border-color: black;
+      border-width: 1px;
+    }
+
+    .navbar-tools:hover {
+      background-color: #4f96dc;
+      color: black;
+    }
+
+    .navbar-tools:focus {
+      background-color: #4f96dc;
+      color: black
+    }
+
     .dropdown-menu .dropdown-item {
       color: black;
     }
