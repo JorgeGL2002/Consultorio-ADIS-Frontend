@@ -928,12 +928,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("recordatorioWhastAppDIA").addEventListener("click", async (e) => {
     e.preventDefault();
     const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
+    let idTrabajador = localStorage.getItem("idSelectPrincipal") || id;
 
+    if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
+      idTrabajador = id;
+      if (selectPrincipal.value && selectPrincipal.value !== "Selecciona un trabajador") {
+        idTrabajador = await obtenerIdTrabajador(selectPrincipal.value);
+      }
+    }
     try {
       const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatoriosDia', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fecha })
+        body: JSON.stringify({ fecha, idTrabajador })
       });
 
       const data = await res.json();
