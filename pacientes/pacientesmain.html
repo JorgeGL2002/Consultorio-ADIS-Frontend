@@ -394,30 +394,35 @@
         </div>
         <div class="modal-body">
           <form id="formPacienteNuevo">
-
-            <!-- DATOS DEL PACIENTE -->
+            <!-- Datos basicos -->
             <div class="mb-3 p-2 border bg-light rounded">
-              <label class="form-label fw-bold">Datos del paciente</label>
+              <label class="form-label fw-bold">Datos obligatorios</label>
               <input type="text" class="form-control mb-3" id="NuevonombrePaciente" name="NuevonombrePaciente"
                 placeholder="Nombre del paciente" required>
               <input type="text" class="form-control mb-3" id="Nuevotelefono" name="Nuevotelefono"
                 placeholder="Teléfono" required>
-
               <select name="Nuevosexo" id="Nuevosexo" class="form-select mb-3" required>
                 <option value="">Sexo</option>
                 <option value="M">M</option>
                 <option value="F">F</option>
               </select>
-
               <input type="date" class="form-control mb-3" id="NuevofechaNacimiento" name="NuevofechaNacimiento"
                 required>
               <input type="number" class="form-control mb-3" id="Nuevoedad" name="Nuevoedad" placeholder="Edad"
                 required>
-
               <select name="NuevolugarNacimiento" id="NuevolugarNacimiento" class="form-select mb-3" required>
                 <option value="" disabled selected>Lugar de nacimiento</option>
               </select>
+              <select class="form-select mb-3" id="Nuevoseguro" required>
+                <option value="" disabled selected>Cargando empresas...</option>
+              </select>
+              <input type="text" class="form-control mb-3" name="Nuevonumero_empleado" id="Nuevonumero_empleado"
+                placeholder="Número de empleado">
+            </div>
 
+            <!-- DATOS DEL PACIENTE -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos extras del paciente</label>             
               <select name="NuevonivelEstudio" id="NuevonivelEstudio" class="form-select mb-3">
                 <option value="" disabled selected>Nivel de estudio</option>
                 <option value="primaria">Primaria</option>
@@ -469,11 +474,6 @@
             <!-- PROFESIONALES -->
             <div class="mb-3 p-2 border bg-light rounded">
               <label class="form-label fw-bold">Datos profesionales</label>
-              <select class="form-select mb-3" id="Nuevoseguro" required>
-                <option value="" disabled selected>Cargando empresas...</option>
-              </select>
-              <input type="text" class="form-control mb-3" name="Nuevonumero_empleado" id="Nuevonumero_empleado"
-                placeholder="Número de empleado">
               <select name="Nuevomodalidad" id="Nuevomodalidad" class="form-select mb-3" required>
                 <option value="" disabled selected>Modalidad</option>
                 <option value="linea">En línea</option>
