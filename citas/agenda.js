@@ -928,10 +928,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("recordatorioWhastAppDIA").addEventListener("click", async (e) => {
     e.preventDefault();
     const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
-    let idTrabajador = localStorage.getItem("idSelectPrincipal") || id;
+    let idTrabajador = id;
 
     if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
-      idTrabajador = id;
       if (selectPrincipal.value && selectPrincipal.value !== "Selecciona un trabajador") {
         idTrabajador = await obtenerIdTrabajador(selectPrincipal.value);
       }
