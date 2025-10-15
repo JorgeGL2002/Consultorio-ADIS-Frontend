@@ -67,7 +67,7 @@ function mostrarAlerta(tipo, mensaje) {
     alerta.classList.remove("show");
     alerta.classList.add("hide");
     setTimeout(() => alerta.remove(), 500);
-  }, 3000);
+  }, 6000);
 }
 
 fechaInput.addEventListener("change", async () => {
@@ -935,6 +935,12 @@ document.addEventListener("DOMContentLoaded", () => {
         idTrabajador = await obtenerIdTrabajador(selectPrincipal.value);
       }
     }
+
+    if (!idTrabajador) {
+      mostrarAlerta("error", "El id del usuario es nulo");
+      return;
+    }
+
     try {
       const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatoriosDia', {
         method: 'POST',
@@ -952,7 +958,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.total === 0) {
         mostrarAlerta("warning", data.mensaje);
       } else {
-        mostrarAlerta("success", `Se enviaron ${data.enviados} de ${data.total} recordatorios`);
+        mostrarAlerta("success", `Recordatorios enviados`);
         if (data.fallidos.length > 0) {
           console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
         }
