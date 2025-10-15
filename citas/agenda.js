@@ -1125,7 +1125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
     } else {
-      mostrarAlerta("warning", "No se pudo agendar la cita.");
+      mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
     }
   });
 

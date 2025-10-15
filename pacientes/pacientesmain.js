@@ -477,7 +477,7 @@ async function nuevoPaciente() {
     document.getElementById("formPacienteNuevo").reset();
     bootstrap.Modal.getInstance(document.getElementById("modalNuevoPaciente")).hide();
   } catch (error) {
-    mostrarAlerta("danger", "No se pudo crear el paciente");
+    mostrarAlerta("danger", "El paciente ya existe o no se puede crear.");
     console.log(error);
   }
 }
