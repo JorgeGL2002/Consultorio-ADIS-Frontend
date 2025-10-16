@@ -270,7 +270,7 @@ function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
     .then(data => {
       data.forEach(nombre => {
         const option = new Option(nombre, nombre);
-        if (sexoPaciente && typeof nombre === 'string' && nombre.toLowerCase() === sexoPaciente.toLowerCase()) {
+        if (empresaPaciente && typeof nombre === 'string' && nombre.toLowerCase() === empresaPaciente.toLowerCase()) {
           option.selected = true;
         }
         select.appendChild(option);
