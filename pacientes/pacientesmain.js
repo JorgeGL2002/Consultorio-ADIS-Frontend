@@ -62,7 +62,7 @@ async function recuperarDatos(nombre) {
     document.getElementById("pacienteNombre").value = paciente.nombre || "";
     document.getElementById("pacienteId").value = paciente.id || "";
     document.getElementById("telefono").value = paciente.telefono || "";
-    document.getElementById("sexo").value = cargarSexo(paciente.sexo);
+    cargarSexo(paciente.sexo);
     document.getElementById("fechaNacimiento").value = paciente.fechaNacimiento || "";
     document.getElementById("edad").value = paciente.edad || "";
 
@@ -76,7 +76,7 @@ async function recuperarDatos(nombre) {
     document.getElementById("RFC").value = paciente.rfc || "";
 
     // DATOS PROFESIONALES
-    document.getElementById("seguros").value = cargarEmpresa(paciente.empresa);
+    cargarEmpresa(paciente.empresa);
     document.getElementById("numero_empleado").value = paciente.numero_empleado || "";
     document.getElementById("modalidad").value = cargarModalidad(paciente.modalidad);
     document.getElementById("planta").value = paciente.planta || "";
@@ -103,7 +103,7 @@ async function recuperarDatos(nombre) {
     document.getElementById("calle").value = paciente.calle || "";
     document.getElementById("numeroInt").value = paciente.nExterior || "";
     document.getElementById("numeroExt").value = paciente.nInterior || "";
-    document.getElementById("colonia").value = cargarColonia(paciente.colonia);
+    cargarColonia(paciente.colonia);
     document.getElementById("comoSupiste").value = paciente.comoSeEntero || "";
   } catch (error) {
     console.error("❌ Error al recuperar datos del paciente:", error);
@@ -252,7 +252,7 @@ function cargarColonia(coloniaPaciente, idSelect = "colonia") {
     .then(data => {
       data.forEach(nombre => {
         const option = new Option(nombre, nombre);
-        if (nombre.toLowerCase() === coloniaPaciente.toLowerCase()) {
+        if (typeof coloniaPaciente === 'string' && nombre.toLowerCase() === coloniaPaciente.toLowerCase()) {
           option.selected = true;
         }
         select.appendChild(option);
@@ -270,7 +270,7 @@ function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
     .then(data => {
       data.forEach(nombre => {
         const option = new Option(nombre, nombre);
-        if (nombre.toLowerCase() === empresaPaciente.toLowerCase()) {
+        if (typeof empresaPaciente === 'string' && nombre.toLowerCase() === empresaPaciente.toLowerCase()) {
           option.selected = true;
         }
         select.appendChild(option);
@@ -325,7 +325,7 @@ function cargarSexo(sexoPaciente, idSelect = "sexo") {
     .then(data => {
       data.forEach(nombre => {
         const option = new Option(nombre, nombre);
-        if (nombre.toLowerCase() === sexoPaciente.toLowerCase()) {
+        if (typeof sexoPaciente === 'string' && nombre.toLowerCase() === sexoPaciente.toLowerCase()) {
           option.selected = true;
         }
         select.appendChild(option);
