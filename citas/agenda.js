@@ -609,6 +609,7 @@ function abrirModalEditarCita(hora, datosCita) {
   // 📅 Actualiza encabezado con hora y fecha
   document.getElementById("CitaHoraFecha").textContent = `${hora} - ${fechaSeleccionada}`;
   document.getElementById("hora").value = hora;
+  localStorage.setItem("horaCita", hora);
 
   // 📝 Llenar campos
   document.getElementById("Editarpaciente").value = datosCita.nombrePaciente;
@@ -736,6 +737,31 @@ function enviarRecordatorio(telefono, idCita) {
       telefono: telefonoFormateado,
       idCita: idCita,
       plantilla: 'recordatorio_de_cita'
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      mostrarAlerta("success", "Recordatorio enviado");
+    })
+    .catch(err => {
+      mostrarAlerta("error", "Error al enviar recordatorio");
+      console.error(err);
+    });
+}
+
+function notificarCancelacion(telefono, fecha, hora, idCita) {
+  const telefonoFormateado = formatearNumero(telefono);
+  fetch('https://api-railway-production-24f1.up.railway.app/api/test/notificarCancelacion', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      telefono: telefonoFormateado,
+      fecha: fecha,
+      hora: hora,
+      idCita: idCita,
+      plantilla: 'notificar_cancelacion'
     })
   })
     .then(res => res.json())
@@ -970,7 +996,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-
   btnBloqueo.addEventListener("click", async () => {
     seleccionados = Array.from(document.querySelectorAll(".check-horario:checked")).map(chk => chk.value);
     if (seleccionados.length === 0) {
@@ -997,6 +1022,73 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.log("Error al enviar el recordatorio:", error);
       mostrarAlerta("error", "No se pudo enviar el recordatorio");
+    }
+  });
+
+  document.getElementById("btnAucensia").addEventListener("click", async () => {
+    try {
+      const nombrePacienteCancelacion = document.getElementById("Editarpaciente").value;
+      if (!nombrePacienteCancelacion) {
+        mostrarAlerta("error", "Por favor, selecciona un paciente");
+        return;
+      }
+      const telefono = await obtenerTelefonoPaciente(nombrePacienteCancelacion);
+      if (!telefono || telefono.length === 0) {
+        mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
+        return;
+      }
+      const idCita = localStorage.getItem("idCita");
+      const fecha = localStorage.getItem("fechaCita");
+      const hora = localStorage.getItem("horaCita");
+      notificarCancelacion(telefono[0], fecha, hora, idCita);
+    } catch (error) {
+      console.log("Error al enviar el recordatorio por SMS:", error);
+      mostrarAlerta("error", "No se pudo enviar la notificación de cancelación");
+    }
+  });
+
+  document.getElementById("cancelarCitasDia").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
+    let idTrabajador = id;
+
+    if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
+      if (selectPrincipal.value && selectPrincipal.value !== "Selecciona un trabajador") {
+        idTrabajador = await obtenerIdTrabajador(selectPrincipal.value);
+      }
+    }
+
+    if (!idTrabajador) {
+      mostrarAlerta("error", "El id del usuario es nulo");
+      return;
+    }
+
+    try {
+      const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/notificarCancelaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha, idTrabajador })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        mostrarAlerta("danger", data.error || "Error enviando recordatorios");
+        return;
+      }
+
+      if (data.total === 0) {
+        mostrarAlerta("warning", data.mensaje);
+      } else {
+        mostrarAlerta("success", `Recordatorios enviados`);
+        if (data.fallidos.length > 0) {
+          console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
+        }
+      }
+
+    } catch (err) {
+      console.error(err);
+      mostrarAlerta("danger", "Error al enviar recordatorios");
     }
   });
 
