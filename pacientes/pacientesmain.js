@@ -504,10 +504,6 @@ async function historial(nombre) {
       mostrarAlerta("info", "No se encontraron más citas para este paciente.");
     }
     const datos = await res.json();
-    if (res.status === 404) {
-      mostrarAlerta("info", "No se encontraron más citas para este paciente");
-      return;
-    }
     if(datos.length === 0){
       mostrarAlerta("info", "No se encontraron citas para este paciente");
       return;
