@@ -216,9 +216,7 @@
               </select>
             </div>
             <div class="mb-3">
-              <select class="form-select mb-3" id="seguros" required>
-                <option value="" disabled selected>Cargando empresas...</option>
-              </select>
+              <input type="text" class="form-control mb-3" id="seguros" placeholder="Empresa" required>
               <input type="text" placeholder="No de nomina" id="noseguros" hidden>
             </div>
             <div class="mb-3">
@@ -291,10 +289,7 @@
               </select>
             </div>
             <div class="mb-3">
-              <select class="form-select mb-3" name="Editarseguro" id="Editarseguro" required>
-                <option value="" disabled selected>Cargando empresas...</option>
-              </select>
-              <input type="text" placeholder="No de nomina" id="Editarnseguro">
+              <input type="text" placeholder="Empresa" class="form-control mb-3" name="Editarseguro" id="Editarseguro" required>
             </div>
             <div class="mb-3">
               <select class="form-select mb-3" name="EditartrabajadorModal" id="EditartrabajadorModal">
@@ -308,9 +303,11 @@
             <div class="dropdown">
               <button type="submit" class="btn btn-primary btn-custom">Aplicar cambios</button>
 
-              <button class="btn btn-secondary dropdown-toggle btn-menu " type="button" id="dropdownMenuEditar"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="../assets/menu.png" alt="Menú desplegable">
+              <button class="btn btn-outline-dark btn-sm rounded-circle p-2 dropdown-toggle" 
+                      type="button" id="dropdownMenuEditar"
+                      data-bs-toggle="dropdown" aria-expanded="false" 
+                      aria-label="Opciones">
+                <i class="bi bi-three-dots-vertical fs-5"></i>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuEditar">
                 <li>
@@ -417,7 +414,7 @@
             <div class="mb-3">
               <label class="form-label">¿Seguro que desea cancelar esta cita?</label>
             </div>
-            <button type="submit" class="btn  btn-danger" id="btnAucensia">
+            <button type="button" class="btn  btn-danger" id="btnAucensia">
               Cancelar cita
             </button>
           </form>

@@ -180,13 +180,11 @@ async function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
       option.value.toLowerCase() === empresaPaciente.toLowerCase()
     );
 
-    // Si encontramos coincidencia en las opciones existentes
     if (coincidencia) {
       select.value = coincidencia.value;
     }
     // Si no hay coincidencia pero existe en la API
     else if (empresasAPI.some(emp => emp.toLowerCase() === empresaPaciente.toLowerCase())) {
-      // Creamos nueva opción solo si no existe
       if (!Array.from(select.options).some(opt => opt.value === empresaPaciente)) {
         const newOption = new Option(empresaPaciente, empresaPaciente);
         select.add(newOption);
@@ -214,10 +212,12 @@ async function cargarEmpresayNempleado(nombre) {
 
     const data = await res.json();
     console.log("Datos del paciente:", data);
-    await cargarEmpresa(data.empresa);
-
-    const inputEmpleado = document.getElementById("noseguros");
-    inputEmpleado.value = data.empleado ?? "";
+    const inputEmpresa = document.getElementById("seguros");
+    const inputEditarEmpresa = document.getElementById("Editarseguro");
+    if (inputEmpresa && inputEditarEmpresa) {
+      inputEmpresa.value = data.empresa ?? "";
+      inputEditarEmpresa.value = data.empresa ?? "";
+    }
 
     return data;
   } catch (e) {
@@ -599,7 +599,7 @@ function abrirModalDesbloquearHorario(hora) {
   modal.show();
 }
 
-function abrirModalEditarCita(hora, datosCita) {
+async function abrirModalEditarCita(hora, datosCita) {
   const fechaSeleccionada = fechaInput.value;
   localStorage.setItem("horaCita", hora);
   localStorage.setItem("fechaCita", datosCita.fecha);
@@ -610,19 +610,17 @@ function abrirModalEditarCita(hora, datosCita) {
   document.getElementById("CitaHoraFecha").textContent = `${hora} - ${fechaSeleccionada}`;
   document.getElementById("hora").value = hora;
   localStorage.setItem("horaCita", hora);
-
   // 📝 Llenar campos
   document.getElementById("Editarpaciente").value = datosCita.nombrePaciente;
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
-  document.getElementById("Editarseguro").value = cargarEmpresa(datosCita.seguro, "Editarseguro");
+  cargarEmpresayNempleado(datosCita.nombrePaciente);
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
     document.getElementById("Editarvalor").value = datosCita.cuota;
   } else {
     document.getElementById("Editarvalor").value = "";
   }
-  document.getElementById("Editarnseguro").value = datosCita.nseguro || "";
   document.getElementById("EditartrabajadorModal").value = datosCita.nombreProfesional;
   document.getElementById("Editardetalles").value = datosCita.detalles || "";
   document.getElementById("Editarpaciente").readOnly = true;
@@ -774,37 +772,6 @@ function notificarCancelacion(telefono, fecha, hora, idCita) {
     });
 }
 
-document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const datos = {
-    nombrePaciente: document.getElementById("Editarpaciente").value,
-    nombreProfesional: document.getElementById("EditartrabajadorModal").value,
-    cuota: parseInt(document.getElementById("Editarvalor").value.trim()) || 0,
-    nombreServicio: document.getElementById("Editarservicio").value,
-    seguro: document.getElementById("Editarseguro").value,
-    nseguro: document.getElementById("Editarnseguro").value,
-    detalles: document.getElementById("Editardetalles").value,
-    fecha: fechaInput.value,
-    hora: document.getElementById("hora").value
-  };
-  const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/editarcita?rol=${rol}&SessionId=${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(datos)
-  });
-
-  const resultado = await response.json();
-  if (response.ok && resultado.success) {
-    mostrarAlerta("success", "Cambios guardados correctamente");
-    bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
-    cargarHorarios(fechaInput.value);
-  } else {
-    mostrarAlerta("error", "No se pudieron aplicar los cambios");
-  }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
   console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
@@ -822,7 +789,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarEventos(fechaHoy || new Date().toISOString().split("T")[0], id);
   const selectModal = document.getElementById("trabajadorModal");
   const selectPrincipal = document.getElementById("trabajador");
-  // Cargar horarios iniciales (ya no pasamos nombre e id manualmente)
+  // Cargar horarios iniciales
   cargarHorarios(fechaHoy || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
   setInterval(() => {
@@ -1040,7 +1007,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const idCita = localStorage.getItem("idCita");
       const fecha = localStorage.getItem("fechaCita");
       const hora = localStorage.getItem("horaCita");
-      notificarCancelacion(telefono[0], fecha, hora, idCita);
+      if (!idCita || !fecha || !hora) {
+        mostrarAlerta("error", "La fecha, hora o el ID de la cita es nulo o no se recupero");
+        return;
+      }
+      await notificarCancelacion(telefono[0], fecha, hora, idCita);
+      mostrarAlerta("success", "Notificación de cancelación enviada");
     } catch (error) {
       console.log("Error al enviar el recordatorio por SMS:", error);
       mostrarAlerta("error", "No se pudo enviar la notificación de cancelación");
@@ -1207,7 +1179,6 @@ document.addEventListener("DOMContentLoaded", () => {
       cuota: parseInt(document.getElementById("valor").value) || 0,
       detalles: document.getElementById("detalles").value,
       seguro: document.getElementById("seguros").value,
-      nseguro: document.getElementById("noseguros").value || "",
       estadoCita: "Agendada"
     };
 
@@ -1224,6 +1195,36 @@ document.addEventListener("DOMContentLoaded", () => {
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
     } else {
       mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
+    }
+  });
+
+  document.getElementById("modalEditarCita").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const datos = {
+      nombrePaciente: document.getElementById("Editarpaciente").value,
+      nombreProfesional: document.getElementById("EditartrabajadorModal").value,
+      cuota: parseInt(document.getElementById("Editarvalor").value.trim()) || 0,
+      nombreServicio: document.getElementById("Editarservicio").value,
+      seguro: document.getElementById("Editarseguro").value,
+      detalles: document.getElementById("Editardetalles").value,
+      fecha: fechaInput.value,
+      hora: document.getElementById("hora").value
+    };
+    const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/editarcita?rol=${rol}&SessionId=${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const resultado = await response.json();
+    if (response.ok && resultado.success) {
+      mostrarAlerta("success", "Cambios guardados correctamente");
+      bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
+      cargarHorarios(fechaInput.value);
+    } else {
+      mostrarAlerta("error", "No se pudieron aplicar los cambios");
     }
   });
 
