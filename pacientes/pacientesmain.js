@@ -500,8 +500,18 @@ function abrirModalNuevoPaciente() {
 async function historial(nombre) {
   try {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/historialPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
-    if (!res.ok) throw new Error("Error al recuperar historial de citas");
+    if (!res.ok){
+      mostrarAlerta("info", "No se encontraron más citas para este paciente.");
+    }
     const datos = await res.json();
+    if (res.status === 404) {
+      mostrarAlerta("info", "No se encontraron más citas para este paciente");
+      return;
+    }
+    if(datos.length === 0){
+      mostrarAlerta("info", "No se encontraron citas para este paciente");
+      return;
+    }
     console.log("Historial recibido: ", datos);
     const tbody = document.getElementById("tabla-historial");
     tbody.innerHTML = "";
@@ -519,7 +529,7 @@ async function historial(nombre) {
       tbody.appendChild(row);
     });
   } catch (error) {
-    console.error("Error al recuperar historial de citas:", error);
+    mostrarAlerta("danger", "Paciente sin citas o mal registrado.");
   }
 }
 
