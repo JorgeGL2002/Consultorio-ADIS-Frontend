@@ -1,5 +1,5 @@
 const rol = localStorage.getItem("rol");
-const id  = localStorage.getItem("id");  
+const id = localStorage.getItem("id");
 function cargarSelect(idSelect, opciones, valorSeleccionado = "") {
   const select = document.getElementById(idSelect);
   select.innerHTML = '<option value="" disabled selected>Selecciona una opción</option>';
@@ -20,7 +20,6 @@ function abrirVentanaConfiguracion() {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
   }
 }
-
 
 function CerrarSesion() {
   window.location.href = '/index.html';
@@ -404,14 +403,6 @@ function cargarPacientes(filtro = "") {
     });
 }
 
-function abrirModalNuevoPaciente() {
-  const modal = new bootstrap.Modal(document.getElementById("modalNuevoPaciente"));
-  modal.show();
-  cargarSeguros("Nuevoseguro");
-  cargarLugarNacimiento("NuevolugarNacimiento");
-  cargarTrabajadores("Nuevotrabajador");
-}
-
 async function nuevoPaciente() {
   const datos = {
     // DATOS GENERALES
@@ -498,6 +489,40 @@ function abrirNotificaciones() {
   modal.show();
 }
 
+function abrirModalNuevoPaciente() {
+  const modal = new bootstrap.Modal(document.getElementById("modalNuevoPaciente"));
+  modal.show();
+  cargarSeguros("Nuevoseguro");
+  cargarLugarNacimiento("NuevolugarNacimiento");
+  cargarTrabajadores("Nuevotrabajador");
+}
+
+async function historial(nombre) {
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/historialPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
+    if (!res.ok) throw new Error("Error al recuperar historial de citas");
+    const datos = await res.json();
+    console.log("Historial recibido: ", datos);
+    const tbody = document.getElementById("tabla-historial");
+    tbody.innerHTML = "";
+    datos.forEach(cita => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+    <td colspan="3">
+    <span class="badge bg-success d-block text-start mb-1" style="font-size: 16px;">
+      Cita: ${cita.fecha} a las ${cita.hora}<br>
+      Profesional: ${cita.nombreProfesional}<br>
+      Tipo: ${cita.nombreServicio}<br>
+    </span>
+  </td>
+  `;
+      tbody.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Error al recuperar historial de citas:", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   cargarTrabajadores("trabajador");
   cargarEstados("lugarNacimiento");
@@ -509,7 +534,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelOtro = document.getElementById("labelOtro");
   otro.hidden = true;
   labelOtro.hidden = true;
-  const modalElement = document.getElementById("modalNuevoPaciente");
   let valorComoSupiste = document.getElementById("comoSupiste").value.toLowerCase();
   const empresaSelects = [
     { selectId: "seguros", inputId: "numero_empleado" },
@@ -535,7 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-     const modalNotificaciones = document.getElementById("modalNotificaciones");
+  const modalNotificaciones = document.getElementById("modalNotificaciones");
   modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
     const form = document.getElementById("formNotificaciones");
     form.reset();
@@ -676,12 +700,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tabla-pacientes").addEventListener("click", function (e) {
     if (e.target.tagName === "TD") {
       const nombre = e.target.textContent.trim();
-      console.log("Nombre seleccionado:", nombre);
+      localStorage.setItem("nombrePaciente", nombre);
       document.getElementById("nombrePaciente").value = nombre;
       abrirModalPacientes();
       recuperarDatos(nombre);
     }
-  })
+  });
+
+  document.getElementById("mostrarHistorial").addEventListener("click", () => {
+    const modal = new bootstrap.Modal(document.getElementById("modalHistorial"));
+    modal.show();
+    console.log("Nombre paciente historial: ", localStorage.getItem("nombrePaciente"));
+    historial(localStorage.getItem("nombrePaciente"));
+  });
 });
 
 function abrirVentanaHC() {
