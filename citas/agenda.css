@@ -229,3 +229,16 @@
       transform: scale(1.1);
       transition: all 0.3s ease;
     }
+
+    .btnDropdown{
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+      outline: none;
+    }
+
+    .btnDropdown:hover{
+      color: #0d6efd;
+      transform: scale(1.1);
+      transition: all 0.3s ease;
+    }
