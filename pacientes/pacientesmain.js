@@ -500,11 +500,11 @@ function abrirModalNuevoPaciente() {
 async function historial(nombre) {
   try {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/historialPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
-    if (!res.ok){
+    if (!res.ok) {
       mostrarAlerta("info", "No se encontraron más citas para este paciente.");
     }
     const datos = await res.json();
-    if(datos.length === 0){
+    if (datos.length === 0) {
       mostrarAlerta("info", "No se encontraron citas para este paciente");
       return;
     }
@@ -515,7 +515,7 @@ async function historial(nombre) {
       const row = document.createElement("tr");
       row.innerHTML = `
     <td colspan="3">
-    <span class="badge bg-success d-block text-start mb-1" style="font-size: 16px;">
+    <span class="badge d-block text-start mb-1" style="font-size: 16px; background-color: #b1fedcff; color: #000; padding: 10px; border-radius: 5px;">
       Cita: ${cita.fecha} a las ${cita.hora}<br>
       Profesional: ${cita.nombreProfesional}<br>
       Tipo: ${cita.nombreServicio}<br>
@@ -713,11 +713,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("mostrarHistorial").addEventListener("click", () => {
+  document.getElementById("historial").addEventListener("click", () => {
     const modal = new bootstrap.Modal(document.getElementById("modalHistorial"));
     modal.show();
     console.log("Nombre paciente historial: ", localStorage.getItem("nombrePaciente"));
     historial(localStorage.getItem("nombrePaciente"));
+  });
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  tooltipTriggerList.forEach(tooltipTriggerEl => {
+    new bootstrap.Tooltip(tooltipTriggerEl);
   });
 });
 

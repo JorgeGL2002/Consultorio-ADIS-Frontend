@@ -327,12 +327,12 @@ async function cargarHorarios(fecha) {
         celdaDetalle.innerHTML = citasHora.map(cita => {
           const esAusencia = cita.estado_cita?.toUpperCase() === "AUSENCIA";
           return `
-    <span class="badge ${esAusencia ? 'bg-warning' : 'bg-success'} d-block text-start mb-1" 
+    <span class="badge ${esAusencia ? 'bg-warning' : 'bg-success-light'} d-block text-start mb-1" 
           style="font-size: 16px; ${esAusencia ? 'color:#000;' : ''}" 
           onclick='abrirModalEditarCitaPorID(${cita.idCita})'>
-      Paciente: ${cita.nombrePaciente}<br>
-      Servicio: ${cita.nombreServicio}<br>
-      Estado: ${cita.estado_cita}<br>
+      <i class="bi bi-file-person icono-animado" style="font-size: 16px;"></i> Paciente: ${cita.nombrePaciente}<br>
+      <i class="bi bi-wrench-adjustable-circle icono-animado" style="font-size: 16px;"></i> Servicio: ${cita.nombreServicio}<br>
+      <i class="bi bi-list-columns-reverse icono-animado" style="font-size: 16px;"></i> Estado: ${cita.estado_cita}<br>
       ${cita.nseguro ? `No. Seguro: ${cita.nseguro}<br>` : ""}
     </span>
   `;
@@ -772,6 +772,16 @@ function notificarCancelacion(telefono, fecha, hora, idCita) {
     });
 }
 
+const iconos = document.querySelectorAll(".icono-animado");
+function animacionSecuencial() {
+  iconos.forEach((icono, index) => {
+    setTimeout(() => {
+      icono.classList.add("icono-iluminado");
+      setTimeout(() => icono.classList.remove("icono-iluminado"), 800);
+    }, index * 500); // 500ms entre cada ícono
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Establecer fecha de hoy al iniciar
   console.log("Usuario: ", nombre, "id: ", id, "rol: ", rol);
@@ -796,6 +806,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const fechaHoy = new Date().toISOString().split("T")[0];
     verificarCambiosEnCitas(fechaHoy, id);
   }, 60000);
+  setInterval(() => {
+    animacionSecuencial();
+  }, 10000);
   inputHora.disabled = true;
   selectPrincipal.addEventListener("change", () => {
     const nombre = selectPrincipal.value;
@@ -966,7 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnBloqueo.addEventListener("click", async () => {
     seleccionados = Array.from(document.querySelectorAll(".check-horario:checked")).map(chk => chk.value);
     if (seleccionados.length === 0) {
-      alert("Por favor, selecciona al menos un horario.");
+      mostrarAlerta("warning", "Por favor, selecciona al menos un horario.");
       return;
     }
     modalMotivo.show();
