@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="assets/logocorto.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <title>Cita cancelada | Fundación ADIS</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <div class="input-group">
+                    <img src="assets/logocorto.png" width="48px" height="48px" alt="Logo pequeño de la fundacion">
+                    <h5 style="font-size: 40px;">Fundación adis</h5>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row g-4 justify-content-center">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3 text-success">
+                            <i class="bi bi-emoji-tear-fill" style="font-size: 64px; "></i>
+                        </div>
+                        <h5 class="card-title mb-3">Tu cita fue cancelada</h5>
+                        <p class="card-text mb-3">Tu cita ha sido cancelada ❌ Lamentamos no poder recibirte en esta
+                            ocasión. Si deseas reagendar puedes mandar un mensaje al 4612523315.</p>
+                        <p><em>Ya puedes cerrar esta pagina</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detalles -->
+    <div class="mt-5 p-4 bg-light rounded shadow-sm justify-content-center" style="max-width: 600px; margin: auto;">
+        <h5 class="fw-bold mb-3 text-secondary">Detalles de la cita</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><b>📅 Fecha:</b> <span id="fechaCita"></span></li>
+            <li class="list-group-item"><b>⏰ Hora:</b> <span id="horaCita"></span></li>
+            <li class="list-group-item"><b>💼 Servicio:</b> <span id="servicioCita"></span></li>
+            <li class="list-group-item"><b>💲 Costo:</b> <span id="costoCita"></span></li>
+            <li class="list-group-item"><b>👩‍⚕️ Profesional:</b> <span id="profesionalCita"></span></li>
+        </ul>
+    </div>
+
+    <script>
+        async function detallesCita(idCita) {
+            try {
+                const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/detallesCitaEnlace?idCita=${idCita}`);
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta de la red');
+                }
+                const data = await response.json();
+                console.log(data);
+                document.getElementById("fechaCita").textContent = data.fecha;
+                document.getElementById("horaCita").textContent = data.hora;
+                document.getElementById("servicioCita").textContent = data.nombreServicio;
+                document.getElementById("costoCita").textContent = data.cuota;
+                document.getElementById("profesionalCita").textContent = data.nombreProfesional;
+            } catch (error) {
+                console.error('Error al obtener los detalles de la cita:', error);
+                mostrarAlerta('danger', 'Error al obtener los detalles de la cita');
+            }
+
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idCita = urlParams.get('idCita');
+            if (idCita) {
+                detallesCita(idCita);
+            } else {
+                mostrarAlerta('danger', 'ID no proporcionado.');
+            }
+            history.pushState(null, null, location.href);
+            window.onpopstate = () => {
+                history.go(1);
+            };
+        });
+    </script>
+</body>
+
+</html>

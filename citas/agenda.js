@@ -211,11 +211,8 @@ async function cargarEmpresayNempleado(nombre) {
     if (!res.ok) throw new Error("Paciente no encontrado");
 
     const data = await res.json();
-    console.log("Datos del paciente:", data);
-    const inputEmpresa = document.getElementById("seguros");
     const inputEditarEmpresa = document.getElementById("Editarseguro");
-    if (inputEmpresa && inputEditarEmpresa) {
-      inputEmpresa.value = data.empresa ?? "";
+    if (inputEditarEmpresa) {
       inputEditarEmpresa.value = data.empresa ?? "";
     }
 
@@ -612,6 +609,7 @@ async function abrirModalEditarCita(hora, datosCita) {
   localStorage.setItem("horaCita", hora);
   // 📝 Llenar campos
   document.getElementById("Editarpaciente").value = datosCita.nombrePaciente;
+  localStorage.setItem("nombrePaciente", datosCita.nombrePaciente);
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
   cargarEmpresayNempleado(datosCita.nombrePaciente);
@@ -645,34 +643,6 @@ function abrirNotificaciones() {
   abrirNotificacionesEstadoCita();
   const modal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
   modal.show();
-}
-
-async function obtenerTelefonoPaciente(nombre) {
-  if (!nombre) {
-    mostrarAlerta("error", "No hay paciente");
-    return null;
-  }
-
-  try {
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/telefonoPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
-    if (!res.ok) throw new Error("No se encontró al paciente");
-    const data = await res.json();
-    return data;
-  } catch (e) {
-    mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
-    console.error(e);
-  }
-}
-
-function formatearNumero(numero) {
-  const limpio = numero.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
-  if (limpio.length === 10) {
-    return '521' + limpio;
-  } else if (limpio.startsWith('521')) {
-    return limpio;
-  } else {
-    return '521' + limpio;
-  }
 }
 
 let estadosAnteriores = JSON.parse(localStorage.getItem("estadosCitas")) || {};
@@ -723,31 +693,66 @@ function abrirNotificacionesEstadoCita() {
   }
 }
 
+async function obtenerTelefonoPaciente(nombre) {
+  if (!nombre) {
+    mostrarAlerta("error", "No hay paciente");
+    return null;
+  }
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/telefonoPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
+    if (!res.ok) throw new Error("No se encontró al paciente");
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
+    console.error(e);
+  }
+}
+function formatearNumero(numero) {
+  const limpio = numero.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito 
+  if (limpio.length === 10) {
+    return '521' + limpio;
+  } else if (limpio.startsWith('521')) {
+    return limpio;
+  } else {
+    return '521' + limpio;
+  }
+}
 
+
+/**
+ * Sends a reminder notification for an appointment via API call
+ * @param {string} telefono - The phone number to send the reminder to
+ * @param {string} idCita - The ID of the appointment to send reminder for
+ */
 function enviarRecordatorio(telefono, idCita) {
+  // Format the phone number before sending
   const telefonoFormateado = formatearNumero(telefono);
+  // Make API request to send reminder
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/enviarRecordatorio', {
-    method: 'POST',
+    method: 'POST', // Using POST method to send data
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json' // Setting content type to JSON
     },
-    body: JSON.stringify({
-      telefono: telefonoFormateado,
-      idCita: idCita,
-      plantilla: 'recordatorio_de_cita'
+    body: JSON.stringify({ // Converting JavaScript object to JSON string
+      telefono: telefonoFormateado, // Formatted phone number
+      idCita: idCita, // Appointment ID
+      plantilla: 'recordatorio_de_cita' // Template for the reminder message
     })
   })
-    .then(res => res.json())
+    .then(res => res.json()) // Parse response as JSON
     .then(data => {
+      // Show success message to user
       mostrarAlerta("success", "Recordatorio enviado");
     })
     .catch(err => {
+      // Show error message to user and log error to console
       mostrarAlerta("error", "Error al enviar recordatorio");
       console.error(err);
     });
 }
 
-function notificarCancelacion(telefono, fecha, hora, idCita) {
+function notificarCancelacion(telefono, fecha) {
   const telefonoFormateado = formatearNumero(telefono);
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/notificarCancelacion', {
     method: 'POST',
@@ -756,15 +761,12 @@ function notificarCancelacion(telefono, fecha, hora, idCita) {
     },
     body: JSON.stringify({
       telefono: telefonoFormateado,
-      fecha: fecha,
-      hora: hora,
-      idCita: idCita,
-      plantilla: 'notificar_cancelacion'
+      fecha: fecha
     })
   })
     .then(res => res.json())
     .then(data => {
-      mostrarAlerta("success", "Recordatorio enviado");
+      
     })
     .catch(err => {
       mostrarAlerta("error", "Error al enviar recordatorio");
@@ -1024,8 +1026,6 @@ document.addEventListener("DOMContentLoaded", () => {
         mostrarAlerta("error", "La fecha, hora o el ID de la cita es nulo o no se recupero");
         return;
       }
-      await notificarCancelacion(telefono[0], fecha, hora, idCita);
-      mostrarAlerta("success", "Notificación de cancelación enviada");
     } catch (error) {
       console.log("Error al enviar el recordatorio por SMS:", error);
       mostrarAlerta("error", "No se pudo enviar la notificación de cancelación");
@@ -1143,26 +1143,13 @@ document.addEventListener("DOMContentLoaded", () => {
     lista.style.display = filtrados.length ? "block" : "none";
   });
 
-
-  document.getElementById("seguros").addEventListener("change", (e) => {
-    // Variables comunes
-    const seleccionada = e.target.value.trim();
-    const inputEmpleado = document.getElementById("noseguros");
-    // Primera parte: Manejo del número de empleado
-    if (seleccionada !== empresaPacienteOriginal) {
-      inputEmpleado.value = "";
-    } else {
-      inputEmpleado.value = numeroEmpleadoOriginal;
-    }
-  });
-
   document.getElementById("formCita").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const nombrePaciente = document.getElementById("pacientesInput").value.trim();
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
-    cargarEmpresayNempleado(nombrePaciente);
+    await cargarEmpresayNempleado(nombrePaciente);
     const [idPaciente, idEspecialista, idServicio] = await Promise.all([
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/pacientesByName?nombrePaciente=${encodeURIComponent(nombrePaciente)}`).then(r => r.json()),
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${encodeURIComponent(nombreProfesional)}`).then(r => r.json()),
@@ -1312,22 +1299,31 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("formCancelar").addEventListener("submit", async (e) => {
     e.preventDefault();
     const idCita = document.getElementById("modalEditarCita").dataset.idCita;
+    const telefono = await obtenerTelefonoPaciente(localStorage.getItem("nombrePaciente"));
+    console.log("Teléfono obtenido para cancelación:", telefono);
+    if (!telefono || telefono.length === 0) {
+      mostrarAlerta("error", "No se pudo obtener el teléfono del paciente");
+      return;
+    }
     if (!idCita) {
       mostrarAlerta("warning", "No hay un ID válido para la cita");
       return;
     }
-
+    console.log("Cancelando cita con ID:", idCita);
+    console.log("Teléfono para notificación:", telefono[0]);
+    console.log("Fecha de la cita:", localStorage.getItem("fechaCita"));
+    console.log("Hora de la cita:", localStorage.getItem("horaCita"));
     try {
       const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/cancelarCita?idCita=${idCita}`, {
         method: "PUT"
       });
 
       const data = await res.json();
-
       if (res.ok && data.success) {
-        mostrarAlerta("success", "Cita cancelada");
+        notificarCancelacion(telefono[0], localStorage.getItem("fechaCita"), localStorage.getItem("horaCita"), idCita);
         bootstrap.Modal.getInstance(document.getElementById("modalCancelar")).hide();
         cargarHorarios(fechaInput.value);
+        mostrarAlerta("success", "Cita cancelada, notificación de cancelación enviada");
       } else {
         mostrarAlerta("warning", "Error al cancelar la cita");
       }
@@ -1457,7 +1453,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await cargarEmpresayNempleado(nombre);
       if (data) {
         empresaPacienteOriginal = data.empresa;
-        numeroEmpleadoOriginal = data.empleado;
       }
     }
   });

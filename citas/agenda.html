@@ -144,39 +144,36 @@
     </div>
 
     <!-- ✅ Columna derecha: calendario + select -->
-    <div class="tools-container p-3 bg-light rounded w-100 w-md-auto mt-3 mt-md-0" style="max-width: 350px;">
-      <div class="toolbar shadow-sm rounded mb-3">
-        <nav class="navbar-tools navbar-expand-lg navbar-light bg-white rounded px-3 border-bottom d-flex align-items-center justify-content-between">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown position-relative">
-              <a class="navbar-icono nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="bi bi-tools" style="font-size: 20px;"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <a class="dropdown-item" href="#" id="recordatorioWhastAppDIA">
-                    <i class="bi bi-whatsapp"></i> Enviar recordatorios
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item disabled" href="" id="cancelarCitasDia">
-                    <i class="bi bi-x-circle-fill"></i> Cancelar citas
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" onclick="abrirModalEventos()">
-                    <i class="bi bi-calendar2-check"></i> Eventos
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
+    <div class="tools-container p-3 bg-white rounded-4 shadow-sm d-flex align-items-center gap-3 flex-wrap"
+      style="max-width: 350px;">
+      <div class="flex-grow-1">
+        <select class="form-select stylish-select" id="trabajador" required>
+          <option value="" disabled selected>Cargando usuarios...</option>
+        </select>
       </div>
-      <select class="form-select mb-3" id="trabajador" required>
-        <option value="" disabled selected>Cargando usuarios...</option>
-      </select>
+      <div class="dropdown">
+        <button class="btn btn-light border-0 rounded-circle shadow-sm" type="button" id="droptools"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-tools" style="font-size: 20px;"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-label="dropdownTools">
+          <li>
+            <a class="dropdown-item" href="#" id="recordatorioWhastAppDIA">
+              <i class="bi bi-whatsapp"></i> Enviar recordatorios
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item disabled" href="" id="cancelarCitasDia">
+              <i class="bi bi-x-circle-fill"></i> Cancelar citas
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" onclick="abrirModalEventos()">
+              <i class="bi bi-calendar2-check"></i> Eventos
+            </a>
+          </li>
+        </ul>
+      </div>
       <div id="fechaSeleccionada" class="desktop-only"></div>
     </div>
   </div>
@@ -212,7 +209,6 @@
             </div>
             <div class="mb-3">
               <input type="text" class="form-control mb-3" id="seguros" placeholder="Empresa" required>
-              <input type="text" placeholder="No de nomina" id="noseguros" hidden>
             </div>
             <div class="mb-3">
               <input type="text" class="form-control" placeholder="Cuota de recuperación" id="valor" required>
@@ -284,7 +280,8 @@
               </select>
             </div>
             <div class="mb-3">
-              <input type="text" placeholder="Empresa" class="form-control mb-3" name="Editarseguro" id="Editarseguro" required>
+              <input type="text" placeholder="Empresa" class="form-control mb-3" name="Editarseguro" id="Editarseguro"
+                required>
             </div>
             <div class="mb-3">
               <select class="form-select mb-3" name="EditartrabajadorModal" id="EditartrabajadorModal">
@@ -298,10 +295,8 @@
             <div class="dropdown">
               <button type="submit" class="btn btn-primary btn-custom">Aplicar cambios</button>
 
-              <button class="btnDropdown btn-outline-dark btn-sm rounded-circle p-2 dropdown-toggle" 
-                      type="button" id="dropdownMenuEditar"
-                      data-bs-toggle="dropdown" aria-expanded="false" 
-                      aria-label="Opciones">
+              <button class="btnDropdown btn-outline-dark btn-sm rounded-circle p-2 dropdown-toggle" type="button"
+                id="dropdownMenuEditar" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opciones">
                 <i class="bi bi-three-dots-vertical fs-5"></i>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuEditar">
@@ -409,7 +404,7 @@
             <div class="mb-3">
               <label class="form-label">¿Seguro que desea cancelar esta cita?</label>
             </div>
-            <button type="button" class="btn  btn-danger" id="btnAucensia">
+            <button type="submit" class="btn  btn-danger" id="btnAucensia">
               Cancelar cita
             </button>
           </form>
@@ -521,11 +516,13 @@
               <div class="carousel-item active">
               </div>
             </div>
-            <button class="carousel-control-prev bg-light rounded-circle" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+            <button class="carousel-control-prev bg-light rounded-circle" type="button" data-bs-target="#carousel"
+              data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">previous</span>
             </button>
-            <button class="carousel-control-next bg-light rounded-circle" type="button" data-bs-target="#carousel" data-bs-slide="next">
+            <button class="carousel-control-next bg-light rounded-circle" type="button" data-bs-target="#carousel"
+              data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>
