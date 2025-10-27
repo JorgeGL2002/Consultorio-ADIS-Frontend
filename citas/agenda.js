@@ -752,8 +752,17 @@ function enviarRecordatorio(telefono, idCita) {
     });
 }
 
-function notificarCancelacion(telefono, fecha) {
+function notificarCancelacion(telefono, idCita) {
   const telefonoFormateado = formatearNumero(telefono);
+  if(!telefonoFormateado){
+    mostrarAlerta("error", "Paciente sin numero o inválido");
+    return;
+  }
+  if(!idCita){
+    mostrarAlerta("error", "Cita sin ID");
+    return;
+  }
+  console.log("Notificando cancelación a:", telefonoFormateado, "Cita ID:", idCita);
   fetch('https://api-railway-production-24f1.up.railway.app/api/test/notificarCancelacion', {
     method: 'POST',
     headers: {
@@ -761,12 +770,12 @@ function notificarCancelacion(telefono, fecha) {
     },
     body: JSON.stringify({
       telefono: telefonoFormateado,
-      fecha: fecha
+      idCita: idCita
     })
   })
     .then(res => res.json())
     .then(data => {
-      
+      console.log("Notificación de cancelación enviada:", data);
     })
     .catch(err => {
       mostrarAlerta("error", "Error al enviar recordatorio");
@@ -1320,7 +1329,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        notificarCancelacion(telefono[0], localStorage.getItem("fechaCita"), localStorage.getItem("horaCita"), idCita);
+        notificarCancelacion(telefono[0], idCita);
         bootstrap.Modal.getInstance(document.getElementById("modalCancelar")).hide();
         cargarHorarios(fechaInput.value);
         mostrarAlerta("success", "Cita cancelada, notificación de cancelación enviada");
