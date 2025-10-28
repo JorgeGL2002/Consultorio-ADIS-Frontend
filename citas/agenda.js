@@ -409,7 +409,7 @@ async function cargarCitasCanceladas(fecha) {
       <div class="badge bg-danger text-start w-100 p-2" style="font-size: 16px; color: #000">
       <strong>CANCELADA</strong><br>
       Paciente: ${cita.nombrePaciente}<br>
-      Servicio: ${cita.nombreServicio}
+      Fecha: ${cita.fecha}
       </div>`;
       fila.appendChild(celdaDetalle);
       tablaCanceladas.appendChild(fila);
