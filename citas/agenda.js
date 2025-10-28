@@ -141,7 +141,7 @@ function construirUrlAusencia(fecha, rol, nombreProfesional, idProfesional) {
   return url;
 }
 
-function contruirUrlCitasCanceladad(fecha, rol, nombreProfesional, idProfesional) {
+function contruirUrlCitasCanceladas(fecha, rol, nombreProfesional, idProfesional) {
   let url = `https://api-railway-production-24f1.up.railway.app/api/test/citasCanceladas?fecha=${fecha}&rol=${rol}`;
 
   if (nombreProfesional) {
@@ -389,14 +389,15 @@ async function cargarCitasCanceladas(fecha) {
       ? obtenerIdTrabajador(document.getElementById("trabajador").value.trim())
       : null;
 
-    const urlCitasCanceladas = contruirUrlCitasCanceladad(fecha, rol, nombre, id);
+    const urlCitasCanceladas = contruirUrlCitasCanceladas(fecha, rol, nombre, id);
+    console.log("🔗 URL generada:", urlCitasCanceladas);
     const response = await fetch(urlCitasCanceladas);
     if (!response.ok) {
       tablaCanceladas.innerHTML = "<tr><td colspan='2'>Error al cargar citas canceladas</td></tr>";
       return;
     }
     const data = await response.json();
-    const citasCanceladas = data.filter(cita => cita.estado_cita === "CANCELADA");
+    const citasCanceladas = data.filter(cita => cita.estado_cita === "Cancelada");
     for (const cita of citasCanceladas) {
       const fila = document.createElement("tr");
       const celdaHora = document.createElement("td");
@@ -405,7 +406,7 @@ async function cargarCitasCanceladas(fecha) {
 
       const celdaDetalle = document.createElement("td");
       celdaDetalle.innerHTML = `
-      <div class="badge bg-danger text-start w-100 p-2" style="font-size: 16px;">
+      <div class="badge bg-danger text-start w-100 p-2" style="font-size: 16px; color: #000">
       <strong>CANCELADA</strong><br>
       Paciente: ${cita.nombrePaciente}<br>
       Servicio: ${cita.nombreServicio}
