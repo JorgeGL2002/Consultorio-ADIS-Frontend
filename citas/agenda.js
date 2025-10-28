@@ -1052,6 +1052,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.getElementById("cancelarCitasDia").addEventListener("click", async () => {
+    const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
+    let idTrabajador = id;
+    if (rol === "SUPER USUARIO" || rol === "RECEPCIÓN") {
+      if (selectPrincipal.value && selectPrincipal.value !== "Selecciona un trabajador") {
+        idTrabajador = await obtenerIdTrabajador(selectPrincipal.value);
+      }
+    }
+
+    if (!idTrabajador) {
+      mostrarAlerta("error", "El id del usuario es nulo o no existe");
+      return;
+    }
+
+    try {
+      const res = await fetch('https://api-railway-production-24f1.up.railway.app/api/test/notificarCancelaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha, idTrabajador })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        mostrarAlerta("danger", data.error || "Las notificaciones no puedieron ser enviadas")
+        return;
+      }
+
+      if (data.total === 0) {
+        mostrarAlerta("warning", "No hay citas para este día");
+        return;
+      } else {
+        mostrarAlerta("success", `Notificaciones enviadas`);
+        if (data.fallidos.length > 0) {
+          console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
+        }
+      }
+    } catch{
+      mostrarAlerta("danger", "Error al enviar notificaciones");
+      return;
+    } 
+  });
+
   btnBloqueo.addEventListener("click", async () => {
     seleccionados = Array.from(document.querySelectorAll(".check-horario:checked")).map(chk => chk.value);
     if (seleccionados.length === 0) {
