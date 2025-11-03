@@ -215,8 +215,12 @@
           <form id="formCita">
             <div class="mb-3 position-relative">
               <label class="form-label">Nombre del paciente</label>
-              <input type="text" class="form-control" id="pacientesInput" required>
-              <ul id="sugerencias" class="list-group position-absolute w-100"></ul>
+              <div class="input-group">
+                <input type="text" class="form-control" id="pacientesInput" required>
+                <ul id="sugerencias" class="list-group position-absolute w-100"></ul>
+                <button class="btn btn-info" type="button" id="nuevoPaciente"><i class="bi bi-person-add"
+                    style="font-size: 16px;"></i> Nuevo paciente</button>
+              </div>
             </div>
             <label class="form-label" style="width: 100%; background-color: rgb(208, 206, 204); ">Detalles de la
               cita</label>
@@ -245,6 +249,54 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo paciente
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formPacienteNuevo">
+            <!-- Datos basicos -->
+            <div class="mb-3 p-2 border bg-light rounded">
+              <label class="form-label fw-bold">Datos obligatorios</label>
+              <input type="text" class="form-control mb-3" id="NuevonombrePaciente" name="NuevonombrePaciente"
+                placeholder="Nombre del paciente" required>
+              <input type="text" class="form-control mb-3" id="Nuevotelefono" name="Nuevotelefono"
+                placeholder="Teléfono" required>
+              <select name="Nuevosexo" id="Nuevosexo" class="form-select mb-3" required>
+                <option value="">Sexo</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+              </select>
+              <input type="date" class="form-control mb-3" id="NuevofechaNacimiento" name="NuevofechaNacimiento"
+                required>
+              <input type="number" class="form-control mb-3" id="Nuevoedad" name="Nuevoedad" placeholder="Edad"
+                required>
+              <select name="NuevolugarNacimiento" id="NuevolugarNacimiento" class="form-select mb-3" required>
+                <option value="" disabled selected>Lugar de nacimiento</option>
+              </select>
+              <select class="form-select mb-3" id="Nuevoseguro" required>
+                <option value="" disabled selected>Cargando empresas...</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer sticky-bottom bg-white z-3">
+          <!-- BOTÓN -->
+          <div class="text-end">
+            <button type="button" class="btn btn-success px-4" id="btnGuardarPaciente">
+              Guardar paciente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -320,13 +372,15 @@
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuEditar">
                 <li>
                   <a href="#" class="dropdown-item" onclick="AgendarUnoMas()">
-                    <img src="../assets/mas.png" alt="Agendar uno mas" style="width: 20px; margin-right: 8px;"> Agendar
+                    <img src="../assets/mas.png" alt="Agendar uno mas" style="width: 20px; margin-right: 8px;">
+                    Agendar
                     uno mas
                   </a>
                 </li>
                 <li>
                   <a href="#" class="dropdown-item" onclick=" abrirModalRepetirCita()">
-                    <img src="../assets/repetir.png" alt="Repetir cita" style="width: 20px; margin-right: 8px;"> Repetir
+                    <img src="../assets/repetir.png" alt="Repetir cita" style="width: 20px; margin-right: 8px;">
+                    Repetir
                     cita
                   </a>
                 </li>

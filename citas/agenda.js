@@ -444,7 +444,7 @@ async function cargarCitasHoy(fecha) {
       celdaDetalle.innerHTML = `
       <div class="badge bg-info text-start w-100 p-2" style="font-size: 16px; color: #000">
       Paciente: ${cita.nombrePaciente}<br>
-      Fecha: ${cita.nombreProfesional}<br>
+      Profesional: ${cita.nombreProfesional}<br>
       Estado: ${cita.estado_cita}<br>
       </div>`;
       fila.appendChild(celdaDetalle);
@@ -813,8 +813,6 @@ function formatearNumero(numero) {
     return '521' + limpio;
   }
 }
-
-
 /**
  * Sends a reminder notification for an appointment via API call
  * @param {string} telefono - The phone number to send the reminder to
@@ -886,6 +884,101 @@ function animacionSecuencial() {
       setTimeout(() => icono.classList.remove("icono-iluminado"), 800);
     }, index * 500); // 500ms entre cada ícono
   });
+}
+
+function cargarLugarNacimiento(idSelect) {
+  const select = document.getElementById(idSelect);
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/Estados")
+    .then(r => r.json())
+    .then(data => {
+      select.innerHTML = '<option value="" disabled selected>Lugar de nacimiento</option>';
+      data.forEach(t => {
+        const option = new Option(t, t);
+        select.appendChild(option);
+      });
+    })
+    .catch(() => {
+      select.innerHTML = "<option>Error al cargar</option>";
+    });
+}
+
+function cargarSeguros(idSelect) {
+  const select = document.getElementById(idSelect);
+  fetch("https://api-railway-production-24f1.up.railway.app/api/test/seguros")
+    .then(r => r.json())
+    .then(data => {
+      select.innerHTML = "<option value='' disabled selected>Selecciona una empresa</option>";
+      data.forEach(s => {
+        const option = new Option(s, s);
+        select.appendChild(option);
+      });
+    }).catch(() => {
+      select.innerHTML = "<option>Error al cargar</option>";
+    });
+}
+
+async function nuevoPaciente() {
+  const discapacidad = "ninguna";
+  const datos = {
+    nombre: document.getElementById("NuevonombrePaciente").value,
+    telefono: document.getElementById("Nuevotelefono").value,
+    sexo: document.getElementById("Nuevosexo").value,
+    fechaNacimiento: document.getElementById("NuevofechaNacimiento").value,
+    edad: document.getElementById("Nuevoedad").value,
+    lugarNacimiento: document.getElementById("NuevolugarNacimiento").value,
+    empresa: document.getElementById("Nuevoseguro").value,
+    discapacidad: discapacidad
+  };
+
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/nuevoPaciente`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos)
+    });
+
+    if (!res.ok) throw new Error("Error al crear el nuevo paciente");
+
+    mostrarAlerta("success", "Paciente creado");
+    document.getElementById("formPacienteNuevo").reset();
+    bootstrap.Modal.getInstance(document.getElementById("modalNuevoPaciente")).hide();
+
+    // 🔄 Recargar lista de pacientes
+    const pacientes = await fetch("https://api-railway-production-24f1.up.railway.app/api/test/pacientes")
+      .then(res => res.json());
+
+    recargarListaPacientes(pacientes);
+
+  } catch (error) {
+    mostrarAlerta("danger", "El paciente ya existe o no se puede crear.");
+    console.error(error);
+  }
+}
+
+function recargarListaPacientes(pacientes) {
+  const input = document.getElementById("pacientesInput");
+  const lista = document.getElementById("sugerencias");
+  input.oninput = () => {
+    const texto = input.value.toLowerCase();
+    lista.innerHTML = "";
+
+    if (!texto) {
+      lista.style.display = "none";
+      return;
+    }
+
+    const filtrados = pacientes.filter(p => p.nombre.toLowerCase().includes(texto));
+    filtrados.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = p.nombre;
+      li.onclick = () => {
+        input.value = p.nombre;
+        lista.style.display = "none";
+      };
+      lista.appendChild(li);
+    });
+    lista.style.display = filtrados.length > 0 ? "block" : "none";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1276,6 +1369,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }).catch(error => {
       console.error("Error al desbloquear horario:", error);
     });
+  });
+
+  document.getElementById("nuevoPaciente").addEventListener("click", () => {
+    const modal = new bootstrap.Modal(document.getElementById("modalNuevoPaciente"));
+    modal.show();
+    cargarSeguros("Nuevoseguro");
+    cargarLugarNacimiento("NuevolugarNacimiento");
+  });
+
+  document.getElementById("btnGuardarPaciente").addEventListener("click", async (e) => {
+    nuevoPaciente();
+  });
+
+  document.getElementById("NuevofechaNacimiento").addEventListener("change", () => {
+    const fechaInput = document.getElementById("NuevofechaNacimiento").value;
+    if (!fechaInput) return;
+    const Nacimiento = new Date(fechaInput);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - Nacimiento.getFullYear();
+    const mes = hoy.getMonth() - Nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < Nacimiento.getDate())) {
+      edad--;
+    }
+    document.getElementById("Nuevoedad").value = edad > 0 ? edad : "0";
   });
 
   const input = document.getElementById("pacientesInput");
