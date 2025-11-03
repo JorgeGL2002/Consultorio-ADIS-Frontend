@@ -177,13 +177,18 @@
           </li>
           <li>
             <a class="dropdown-item" href="" id="cancelarCitasDia" role="button">
-              <i class="bi bi-x-circle-fill"></i> Cancelar citas
+              <i class="bi bi-x-circle"></i> Cancelar citas
             </a>
           </li>
           <li>
             <a class="dropdown-item" href="#" onclick="abrirModalEventos()">
               <i class="bi bi-calendar2-check"></i> Eventos
             </a>
+          </li>
+          <li>
+            <button class="dropdown-item" id="citasHoy" type="button">
+              <i class="bi bi-calendar-date"></i> Citas del día
+            </button>
           </li>
         </ul>
       </div>
@@ -511,6 +516,26 @@
               <label class="form-label" id="estadoCita"></label>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalCitasHoy" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Citas agendadas para hoy</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-bordered table-striped align-middle text-center ">
+              <tbody id="tabla-CitasHoy">
+                <!-- Llenado con JavaScript -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -420,6 +420,41 @@ async function cargarCitasCanceladas(fecha) {
   }
 }
 
+async function cargarCitasHoy(fecha) {
+  try {
+    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/citasHoy?fecha=${fecha}`);
+    if (!res.ok) {
+      mostrarAlerta("info", "No hay citas para hoy o la busqueda no se pudo completar.");
+    }
+    const datos = await res.json();
+    if (datos.length === 0) {
+      mostrarAlerta("info", "Sin citas para hoy");
+      return;
+    }
+    console.log("Historial recibido: ", datos);
+    const tbody = document.getElementById("tabla-CitasHoy");
+    tbody.innerHTML = "";
+    datos.forEach(cita => {
+      const fila = document.createElement("tr");
+      const celdaHora = document.createElement("td");
+      celdaHora.textContent = cita.hora;
+      fila.appendChild(celdaHora);
+
+      const celdaDetalle = document.createElement("td");
+      celdaDetalle.innerHTML = `
+      <div class="badge bg-info text-start w-100 p-2" style="font-size: 16px; color: #000">
+      Paciente: ${cita.nombrePaciente}<br>
+      Fecha: ${cita.nombreProfesional}<br>
+      Estado: ${cita.estado_cita}<br>
+      </div>`;
+      fila.appendChild(celdaDetalle);
+      tbody.appendChild(fila);
+    });
+  } catch (error) {
+    mostrarAlerta("danger", "Paciente sin citas o mal registrado.");
+  }
+}
+
 function generarHorariosBase(inicio, fin, intervalo) {
   const [hInicio, mInicio] = inicio.split(':').map(Number);
   const [hFin, mFin] = fin.split(':').map(Number);
@@ -873,6 +908,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar horarios iniciales
   cargarHorarios(fechaHoy || new Date().toISOString().split("T")[0]);
   cargarCitasCanceladas(fechaHoy || new Date().toISOString().split("T")[0]);
+  cargarCitasHoy(fechaHoy || new Date().toISOString().split("T")[0]);
   const inputHora = document.getElementById("hora");
   setInterval(() => {
     const fechaHoy = new Date().toISOString().split("T")[0];
@@ -903,6 +939,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("EditartrabajadorModal").required = false;
     document.getElementById("EditartrabajadorModal").disabled = true;
   }
+
+  document.getElementById("citasHoy").disabled = rol === "ESPECIALISTA";
 
   if (selectPrincipal) {
     selectPrincipal.addEventListener("change", async () => {
@@ -941,6 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor || new Date().toISOString().split("T")[0]);
         cargarCitasCanceladas(fechaValor || new Date().toISOString().split("T")[0]);
+        cargarCitasHoy(fechaValor || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor || new Date().toISOString().split("T")[0], id);
         cargarEventos(fechaValor || new Date().toISOString().split("T")[0], id);
         setInterval(() => {
@@ -956,6 +995,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("fechaTabla").textContent = fechaValor;
         cargarHorarios(fechaValor || new Date().toISOString().split("T")[0]);
+        cargarCitasHoy(fechaValor || new Date().toISOString().split("T")[0]);
         cargarCitasCanceladas(fechaValor || new Date().toISOString().split("T")[0]);
         cargarNotas(fechaValor || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
         cargarEventos(fechaValor || new Date().toISOString().split("T")[0], localStorage.getItem("idSelectPrincipal") || id);
@@ -989,6 +1029,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (rol !== "RECEPCIÓN") {
     document.getElementById("trabajador").addEventListener("change", () => {
       cargarHorarios(fechaInput.value);
+      cargarCitasHoy(fechaInput.value);
       cargarCitasCanceladas(fechaInput.value);
     });
   }
@@ -1089,10 +1130,10 @@ document.addEventListener("DOMContentLoaded", () => {
           console.warn("No se pudieron enviar a estos teléfonos:", data.fallidos);
         }
       }
-    } catch{
+    } catch {
       mostrarAlerta("danger", "Error al enviar notificaciones");
       return;
-    } 
+    }
   });
 
   btnBloqueo.addEventListener("click", async () => {
@@ -1192,6 +1233,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
       mostrarAlerta("danger", "Error al enviar recordatorios");
     }
+  });
+
+  document.getElementById("citasHoy").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const fecha = fechaInput.value || new Date().toISOString().split("T")[0];
+    const modal = new bootstrap.Modal(document.getElementById("modalCitasHoy"));
+    modal.show();
+    cargarCitasHoy(fecha);
   });
 
   document.getElementById("formMotivo").addEventListener("submit", async (e) => {
@@ -1311,6 +1360,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("formCita").reset();
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
+      cargarCitasHoy(fechaInput.value);
       cargarCitasCanceladas(fechaInput.value);
     } else {
       mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
@@ -1342,6 +1392,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarAlerta("success", "Cambios guardados correctamente");
       bootstrap.Modal.getInstance(document.getElementById("modalEditarCita")).hide();
       cargarHorarios(fechaInput.value);
+      cargarCitasHoy(fechaInput.value);
       cargarCitasCanceladas(fechaInput.value);
     } else {
       mostrarAlerta("error", "No se pudieron aplicar los cambios");
@@ -1386,6 +1437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("checkAll").checked = false;
     actualizarBotonBloqueo();
     cargarHorarios(fecha);
+    cargarCitasHoy(fecha);
     cargarCitasCanceladas(fecha);
   });
 
@@ -1408,6 +1460,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mostrarAlerta("success", "Cita marcada como ausente");
         bootstrap.Modal.getInstance(document.getElementById("modalAusencia")).hide();
         cargarHorarios(fechaInput.value);
+        cargarCitasHoy(fechaInput.value);
         cargarCitasCanceladas
       } else {
         mostrarAlerta("warning", "Error al marcar la cita como ausente");
@@ -1445,6 +1498,7 @@ document.addEventListener("DOMContentLoaded", () => {
         notificarCancelacion(telefono[0], idCita);
         bootstrap.Modal.getInstance(document.getElementById("modalCancelar")).hide();
         cargarHorarios(fechaInput.value);
+        cargarCitasHoy(fechaInput.value);
         cargarCitasCanceladas(fechaInput.value);
         mostrarAlerta("success", "Cita cancelada, notificación de cancelación enviada");
       } else {
@@ -1478,6 +1532,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const [nombreProfesional, idProfesional] = await obtenerProfesionalParaHorarios();
         document.getElementById("formRepetirCita").reset();
         cargarHorarios(fechaInput.value);
+        cargarCitasHoy(fechaInput.value);
         cargarCitasCanceladas(fechaInput.value);
       } else {
         mostrarAlerta("warning", "Error al repetir la cita");
@@ -1510,6 +1565,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bootstrap.Modal.getInstance(document.getElementById("modalCambiarHorario")).hide();
         document.getElementById("formCambiarHorario").reset();
         cargarHorarios(fechaInput.value);
+        cargarCitasHoy(fechaInput.value);
         cargarCitasCanceladas(fechaInput.value);
       } else {
         mostrarAlerta("warning", "Error al cambiar el horario");
@@ -1529,8 +1585,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalRepetirCita = document.getElementById("modalRepetirCita");
   const modalCambiarHorario = document.getElementById("modalCambiarHorario");
   const modalNotificaciones = document.getElementById("modalNotificaciones");
-  let empresaPacienteOriginal = ""; // Para comparar si el usuario regresa a la empresa original
-  let numeroEmpleadoOriginal = "";
 
   modalCita.addEventListener("hidden.bs.modal", async (event) => {
     const form = document.getElementById("formCita");
