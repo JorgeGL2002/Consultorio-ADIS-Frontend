@@ -1433,7 +1433,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombrePaciente = document.getElementById("pacientesInput").value.trim();
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
-    await cargarEmpresayNempleado(nombrePaciente);
+      try {
+        await cargarEmpresayNempleado(nombrePaciente);
+      } catch (error) {
+        console.error("Error al cargar empresa y número de empleado:", error);
+        mostrarAlerta("error", "Paciente sin empresa o información incompleta.");
+        return;
+      }
     const [idPaciente, idEspecialista, idServicio] = await Promise.all([
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/pacientesByName?nombrePaciente=${encodeURIComponent(nombrePaciente)}`).then(r => r.json()),
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${encodeURIComponent(nombreProfesional)}`).then(r => r.json()),
@@ -1466,11 +1472,26 @@ document.addEventListener("DOMContentLoaded", () => {
       estadoCita: "Agendada"
     };
 
+    if (!nombreProfesional || !datosCita.fecha || !datosCita.hora) {
+      mostrarAlerta("warning", "Por favor, complete todos los campos obligatorios.");
+      return;
+    }
+
+    if(!nombrePaciente || nombrePaciente.length === 0){
+      mostrarAlerta("warning", "Por favor, ingrese un nombre de paciente válido.");
+      return;
+    }
+
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosCita)
     });
+    if(!res.ok){
+      console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
+      mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
+      return;
+    }
     const resultado = await res.json();
     if (res.ok && resultado.success) {
       mostrarAlerta("success", "Cita agendada correctamente.");
