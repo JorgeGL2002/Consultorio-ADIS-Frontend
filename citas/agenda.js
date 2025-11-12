@@ -1498,7 +1498,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("formCita").reset();
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
-      cargarCitasHoy(fechaInput.value);
+      cargarCitasHoy(fechaInput.value); 
       cargarCitasCanceladas(fechaInput.value);
     } else {
       mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
@@ -1724,42 +1724,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalCambiarHorario = document.getElementById("modalCambiarHorario");
   const modalNotificaciones = document.getElementById("modalNotificaciones");
 
-  modalCita.addEventListener("hidden.bs.modal", async (event) => {
+  modalCita.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formCita");
     form.reset();
   });
 
-  modalEditarCita.addEventListener("hidden.bs.modal", async (event) => {
+  modalEditarCita.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formEditarCita");
     form.reset();
   });
 
-  modalMotivoAccion.addEventListener("hidden.bs.modal", async (event) => {
+  modalMotivoAccion.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formMotivoAccion");
     form.reset();
   });
 
-  modalAusencia.addEventListener("hidden.bs.modal", async (event) => {
+  modalAusencia.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formAusencia");
     form.reset();
   });
 
-  modalCancelar.addEventListener("hidden.bs.modal", async (event) => {
+  modalCancelar.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formCancelar");
     form.reset();
   });
 
-  modalRepetirCita.addEventListener("hidden.bs.modal", async (event) => {
+  modalRepetirCita.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formRepetirCita");
     form.reset();
   });
 
-  modalCambiarHorario.addEventListener("hidden.bs.modal", async (event) => {
+  modalCambiarHorario.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formCambiarHorario");
     form.reset();
   });
 
-  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+  modalNotificaciones.addEventListener("hidden.bs.modal", (event) => {
     const form = document.getElementById("formNotificaciones");
     form.reset();
   });
