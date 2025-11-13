@@ -1,5 +1,5 @@
 const rol = localStorage.getItem("rol");
-const id  = localStorage.getItem("id");
+const id = localStorage.getItem("id");
 function abrirVentanaP() {
   window.location.href = '../pacientes/pacientesmain.html';
 }
@@ -21,6 +21,27 @@ function abrirVentanaConfiguracion() {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
   }
 }
+
+function notificarAvisos() {
+  if (rol === "SUPER USUARIO") {
+    fetch("https://api-railway-production-24f1.up.railway.app/api/test/avisos", {
+      method: "POST"
+    }).then(response => {
+      if (response.ok) {
+        mostrarAlerta("success", "Aviso enviado");
+      } else {
+        mostrarAlerta("danger", "Error al enviar notificaciones: " + response.statusText);
+      }
+    }).catch(error => {
+      mostrarAlerta
+        ("danger", "Error al enviar notificaciones: " + error.message);
+    });
+  } else {
+    mostrarAlerta("danger", "No tiene permisos para realizar esta acción");
+  }
+};
+
+
 
 
 function CerrarSesion() {
@@ -91,7 +112,7 @@ let swiper = new Swiper('.mySwiper', {
 });
 
 function abrirModalNuevoEvento() {
-  if(rol !== "SUPER USUARIO" && rol !== "RECEPCIÓN") {
+  if (rol !== "SUPER USUARIO" && rol !== "RECEPCIÓN") {
     mostrarAlerta("danger", "No tiene permisos para acceder a esta sección");
     return;
   }
@@ -120,7 +141,7 @@ async function cargarEventos(fecha) {
     const eventos = await res.json();
     swiper.removeAllSlides();
     swiper.update();
-    if(!Array.isArray(eventos) || eventos.length === 0){
+    if (!Array.isArray(eventos) || eventos.length === 0) {
       const vacio = `
               <h1 class="text-center position-absolute top-50 start-50 translate-middle">Sin eventos</h1>
         `;
@@ -180,11 +201,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const modalNotificaciones = document.getElementById("modalNotificaciones");
-    modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
+  modalNotificaciones.addEventListener("hidden.bs.modal", async (event) => {
     const form = document.getElementById("formNotificaciones");
     form.reset();
   });
-  
+
   document.getElementById("formNuevoEvento").addEventListener("submit", async function (e) {
     e.preventDefault();
     // Tomar valores del formulario
@@ -205,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (imagenFile) {
       imagenBase64 = await toBase64(imagenFile);
     }
-     const [inicio, fin] = fechaNuevoCalendar.value.split(" a ");
+    const [inicio, fin] = fechaNuevoCalendar.value.split(" a ");
     if (!fechaNuevoCalendar.value) {
       mostrarAlerta("warning", "Por favor, selecciona una fecha.");
       return;
