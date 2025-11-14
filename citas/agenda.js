@@ -228,7 +228,7 @@ async function cargarEmpresaPaciente(nombre) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
     if (!res.ok) throw new Error("Paciente sin empresa o no encontrada");
 
-    const data = await res.text();
+    const data = await res.json();
     const Empresa = document.getElementById("seguros");
     if (Empresa) Empresa.value = data.empresa || "";
     
@@ -495,7 +495,7 @@ async function abrirModalEditarCitaPorID(idCita) {
     const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/CitasPorId?idCita=${idCita}`);
     if (!response.ok) throw new Error("No se pudo obtener la cita");
     const datosCita = await response.json();
-    cargarEmpresaPaciente(datosCita.nombrePaciente);
+    console.log("Datos de la cita obtenidos:", datosCita);
     abrirModalEditarCita(datosCita.hora, datosCita);
   } catch (error) {
     console.error("Error al obtener la cita:", error);
@@ -709,6 +709,7 @@ async function abrirModalEditarCita(hora, datosCita) {
   localStorage.setItem("nombrePaciente", datosCita.nombrePaciente);
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
+  document.getElementById("Editarseguro").value = datosCita.seguro || "";
   cargarEmpresaPaciente(datosCita.nombrePaciente);
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
@@ -1438,7 +1439,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         await cargarEmpresaPaciente(nombrePaciente);
       } catch (error) {
-        console.error("Error al cargar empresa y número de empleado:", error);
+        console.error("Error al cargar empresa del paciente: ", error);
         mostrarAlerta("error", "Paciente sin empresa o información incompleta.");
         return;
       }
