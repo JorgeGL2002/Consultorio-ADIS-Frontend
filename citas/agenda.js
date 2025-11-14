@@ -228,7 +228,7 @@ async function cargarEmpresaPaciente(nombre) {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
     if (!res.ok) throw new Error("Paciente sin empresa o no encontrada");
 
-    const data = await res.next();
+    const data = await res.text();
     const Empresa = document.getElementById("seguros");
     if (Empresa) Empresa.value = data.empresa || "";
     
