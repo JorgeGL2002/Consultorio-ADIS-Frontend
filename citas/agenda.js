@@ -220,8 +220,8 @@ async function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
 }
 
 async function cargarEmpresaPaciente(nombre) {
-  if(nombre === "" || nombre === null){
-    mostrarAlerta("warning", "El nombre del paciente está vacío o no se a podido recuperar.");
+  if (!nombre || nombre.trim() === "") {
+    mostrarAlerta("warning", "El nombre del paciente está vacío o no se pudo recuperar.");
     return null;
   }
   try {
@@ -229,15 +229,16 @@ async function cargarEmpresaPaciente(nombre) {
     if (!res.ok) throw new Error("Paciente sin empresa o no encontrada");
 
     const data = await res.json();
-    const Empresa = document.getElementById("seguros");
-    if (Empresa) Empresa.value = data.empresa || "";
-    
+    const campoSeguros = document.getElementById("seguros");
+    if (campoSeguros) campoSeguros.value = data.empresa || "";
+
     return data;
   } catch (e) {
-    console.error("Se produjo un error al recuperar la empresa del paciente: "+e);
+    console.error("Se produjo un error al recuperar la empresa del paciente: " + e);
     return null;
   }
 }
+
 
 function normalizarHora(hora) {
   if (!hora) return null;
@@ -710,7 +711,6 @@ async function abrirModalEditarCita(hora, datosCita) {
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
   document.getElementById("Editarseguro").value = datosCita.seguro || "";
-  cargarEmpresaPaciente(datosCita.nombrePaciente);
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
     document.getElementById("Editarvalor").value = datosCita.cuota;
@@ -1436,13 +1436,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombrePaciente = document.getElementById("pacientesInput").value.trim();
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
-      try {
-        await cargarEmpresaPaciente(nombrePaciente);
-      } catch (error) {
-        console.error("Error al cargar empresa del paciente: ", error);
-        mostrarAlerta("error", "Paciente sin empresa o información incompleta.");
-        return;
-      }
     const [idPaciente, idEspecialista, idServicio] = await Promise.all([
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/pacientesByName?nombrePaciente=${encodeURIComponent(nombrePaciente)}`).then(r => r.json()),
       fetch(`https://api-railway-production-24f1.up.railway.app/api/test/especialistasByName?nombreProfesional=${encodeURIComponent(nombreProfesional)}`).then(r => r.json()),
@@ -1480,7 +1473,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if(!nombrePaciente || nombrePaciente.length === 0){
+    if (!nombrePaciente || nombrePaciente.length === 0) {
       mostrarAlerta("warning", "Por favor, ingrese un nombre de paciente válido.");
       return;
     }
@@ -1490,7 +1483,7 @@ document.addEventListener("DOMContentLoaded", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosCita)
     });
-    if(!res.ok){
+    if (!res.ok) {
       console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
       mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
       return;
@@ -1501,7 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("formCita").reset();
       bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
       cargarHorarios(fechaInput.value); // ya no pasa nombre/id
-      cargarCitasHoy(fechaInput.value); 
+      cargarCitasHoy(fechaInput.value);
       cargarCitasCanceladas(fechaInput.value);
     } else {
       mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
@@ -1768,12 +1761,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("pacientesInput").addEventListener("change", async (e) => {
-    const nombre = e.target.value.trim();
-    if (nombre) {
-      const data = await cargarEmpresaPaciente(nombre);
-      if (data) {
-        empresaPacienteOriginal = data.empresa;
-      }
+    const nombre = document.getElementById("pacientesInput").value.trim();
+    if (nombre) {  
+        const data = await cargarEmpresaPaciente(nombre);    
     }
   });
 });
