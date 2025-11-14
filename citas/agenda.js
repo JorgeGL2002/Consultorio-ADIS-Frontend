@@ -219,20 +219,22 @@ async function cargarEmpresa(empresaPaciente, idSelect = "seguros") {
   }
 }
 
-async function cargarEmpresayNempleado(nombre) {
+async function cargarEmpresaPaciente(nombre) {
+  if(nombre === "" || nombre === null){
+    mostrarAlerta("warning", "El nombre del paciente está vacío o no se a podido recuperar.");
+    return null;
+  }
   try {
     const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/datosCitaPaciente?nombrePaciente=${encodeURIComponent(nombre)}`);
-    if (!res.ok) throw new Error("Paciente no encontrado");
+    if (!res.ok) throw new Error("Paciente sin empresa o no encontrada");
 
     const data = await res.json();
-    const inputEditarEmpresa = document.getElementById("Editarseguro");
-    if (inputEditarEmpresa) {
-      inputEditarEmpresa.value = data.empresa ?? "";
-    }
-
+    const Empresa = document.getElementById("seguros");
+    if (Empresa) Empresa.value = data.empresa || "";
+    
     return data;
   } catch (e) {
-    console.error(e);
+    console.error("Se produjo un error al recuperar la empresa del paciente: "+e);
     return null;
   }
 }
@@ -493,7 +495,7 @@ async function abrirModalEditarCitaPorID(idCita) {
     const response = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/CitasPorId?idCita=${idCita}`);
     if (!response.ok) throw new Error("No se pudo obtener la cita");
     const datosCita = await response.json();
-    cargarEmpresayNempleado(datosCita.nombrePaciente);
+    cargarEmpresaPaciente(datosCita.nombrePaciente);
     abrirModalEditarCita(datosCita.hora, datosCita);
   } catch (error) {
     console.error("Error al obtener la cita:", error);
@@ -707,7 +709,7 @@ async function abrirModalEditarCita(hora, datosCita) {
   localStorage.setItem("nombrePaciente", datosCita.nombrePaciente);
   document.getElementById("Editarvalor").value = datosCita.cuota || "";
   document.getElementById("Editarservicio").value = datosCita.nombreServicio;
-  cargarEmpresayNempleado(datosCita.nombrePaciente);
+  cargarEmpresaPaciente(datosCita.nombrePaciente);
   if (datosCita.cuota) {
     document.getElementById("Editarvalor").disabled = false;
     document.getElementById("Editarvalor").value = datosCita.cuota;
@@ -1434,7 +1436,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombreProfesional = (rol === "SUPER USUARIO" || rol === "RECEPCIÓN")
       ? document.getElementById("trabajadorModal").value : nombre;
       try {
-        await cargarEmpresayNempleado(nombrePaciente);
+        await cargarEmpresaPaciente(nombrePaciente);
       } catch (error) {
         console.error("Error al cargar empresa y número de empleado:", error);
         mostrarAlerta("error", "Paciente sin empresa o información incompleta.");
@@ -1767,7 +1769,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("pacientesInput").addEventListener("change", async (e) => {
     const nombre = e.target.value.trim();
     if (nombre) {
-      const data = await cargarEmpresayNempleado(nombre);
+      const data = await cargarEmpresaPaciente(nombre);
       if (data) {
         empresaPacienteOriginal = data.empresa;
       }
