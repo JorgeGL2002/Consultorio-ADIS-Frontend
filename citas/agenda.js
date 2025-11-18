@@ -694,6 +694,25 @@ function abrirModalDesbloquearHorario(hora) {
   modal.show();
 }
 
+function registrarError(id, mensaje) {
+  if (!id || !mensaje) {
+    console.log("ID o mensaje nulo, no se registra el error");
+    return;
+  }
+  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/registrarErrores?id=${id}&mensaje=${mensaje}`, {
+    method: "POST"
+  }).then(response => {
+    if (!response.ok) {
+      console.error("Error al registrar el error");
+    } else {
+      console.log("Error registrado correctamente");
+    }
+  }).catch(error => {
+    console.error
+      ("Error al registrar el error:", error);
+  });
+}
+
 async function abrirModalEditarCita(hora, datosCita) {
   const fechaSeleccionada = fechaInput.value;
   localStorage.setItem("horaCita", hora);
@@ -1477,27 +1496,33 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarAlerta("warning", "Por favor, ingrese un nombre de paciente válido.");
       return;
     }
-
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datosCita)
-    });
-    if (!res.ok) {
-      console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
+    try {
+      const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datosCita)
+      });
+      if (!res.ok) {
+        console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
+        mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
+        registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText}`);
+        return;
+      }
+      const resultado = await res.json();
+      if (resultado?.success) {
+        mostrarAlerta("success", "Cita agendada correctamente.");
+        document.getElementById("formCita").reset();
+        bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
+        cargarHorarios(fechaInput.value); // ya no pasa nombre/id
+        cargarCitasHoy(fechaInput.value);
+        cargarCitasCanceladas(fechaInput.value);
+      } else {
+        mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
+      }
+    } catch (error) {
+      console.error("Error al agendar la cita:", error);
       mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
-      return;
-    }
-    const resultado = await res.json();
-    if (res.ok && resultado.success) {
-      mostrarAlerta("success", "Cita agendada correctamente.");
-      document.getElementById("formCita").reset();
-      bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
-      cargarHorarios(fechaInput.value); // ya no pasa nombre/id
-      cargarCitasHoy(fechaInput.value);
-      cargarCitasCanceladas(fechaInput.value);
-    } else {
-      mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
+      registrarError(id, `Error al agendar cita: ${error.message}`);
     }
   });
 
@@ -1520,7 +1545,11 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       body: JSON.stringify(datos)
     });
-
+    if (!response.ok) {
+      mostrarAlerta("error", "Error al conectar con el servidor");
+      registrarError(id, `Error al editar cita: ${response.status} ${response.statusText}`);
+      return;
+    }
     const resultado = await response.json();
     if (response.ok && resultado.success) {
       mostrarAlerta("success", "Cambios guardados correctamente");
@@ -1561,6 +1590,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const resultado = await response.json().catch(() => ({}));
       if (!response.ok || !resultado.success) {
         console.error("Error al bloquear:", resultado.error || response.statusText);
+        mostrarAlerta("error", `Error al bloquear el horario ${hora} - ${resultado.error || response.statusText}`);
+        registrarError(id, `Error al bloquear horario ${hora} en ${fecha}: ${response.status} ${response.statusText}`);
+        return;
       }
     }));
 
@@ -1602,6 +1634,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error(err);
       mostrarAlerta("danger", "Error de conexión con el servidor");
+      registrarError(id, `Error al marcar ausencia cita ID ${idCita}: ${err.message}`);
     }
   });
 
@@ -1640,6 +1673,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error(err);
+      registrarError(id, `Error al cancelar cita ID ${idCita}: ${err.message}`);
       mostrarAlerta("danger", "Error de conexión con el servidor");
     }
   });
@@ -1673,6 +1707,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {
       console.error("Error de red o parsing:", e);
+      registrarError(id, `Error al repetir cita ID ${idCita}: ${e.message}`);
       mostrarAlerta("danger", "Error al procesar la solicitud.");
     }
   });
@@ -1707,6 +1742,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {
       console.error("Error de red o parsing:", e);
+      registrarError(id, `Error al cambiar horario cita ID ${idCita}: ${e.message}`);
       mostrarAlerta("danger", "Error al procesar la solicitud.");
     }
   });
@@ -1762,8 +1798,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("pacientesInput").addEventListener("change", async (e) => {
     const nombre = document.getElementById("pacientesInput").value.trim();
-    if (nombre) {  
-        const data = await cargarEmpresaPaciente(nombre);    
+    if (nombre) {
+      const data = await cargarEmpresaPaciente(nombre);
     }
   });
 });
