@@ -812,6 +812,25 @@ function abrirNotificacionesEstadoCita() {
   }
 }
 
+function registrarError(id, mensaje) {
+  if (!id || !mensaje) {
+    console.log("ID o mensaje nulo, no se registra el error");
+    return;
+  }
+  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/registrarErrores?id=${id}&mensaje=${mensaje}`, {
+    method: "POST"
+  }).then(response => {
+    if (!response.ok) {
+      console.error("Error al registrar el error");
+    } else {
+      console.log("Error registrado correctamente");
+    }
+  }).catch(error => {
+    console.error
+      ("Error al registrar el error:", error);
+  });
+}
+
 async function obtenerTelefonoPaciente(nombre) {
   if (!nombre) {
     mostrarAlerta("error", "No hay paciente");
@@ -1498,7 +1517,12 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarAlerta("warning", "Por favor, ingrese un nombre de paciente válido.");
       return;
     }
+<<<<<<< HEAD
     try {
+=======
+
+   try {
+>>>>>>> 3a7efdf2974ea21bfedf543d99eef0b6f02bd146
       const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1507,7 +1531,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) {
         console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
         mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
+<<<<<<< HEAD
         registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText} ${!res.ok}`);
+=======
+        registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText}`);
+>>>>>>> 3a7efdf2974ea21bfedf543d99eef0b6f02bd146
         return;
       }
       const resultado = await res.json();
