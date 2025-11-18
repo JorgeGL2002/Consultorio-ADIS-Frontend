@@ -791,6 +791,25 @@ function abrirNotificacionesEstadoCita() {
   }
 }
 
+function registrarError(id, mensaje) {
+  if (!id || !mensaje) {
+    console.log("ID o mensaje nulo, no se registra el error");
+    return;
+  }
+  fetch(`https://api-railway-production-24f1.up.railway.app/api/test/registrarErrores?id=${id}&mensaje=${mensaje}`, {
+    method: "POST"
+  }).then(response => {
+    if (!response.ok) {
+      console.error("Error al registrar el error");
+    } else {
+      console.log("Error registrado correctamente");
+    }
+  }).catch(error => {
+    console.error
+      ("Error al registrar el error:", error);
+  });
+}
+
 async function obtenerTelefonoPaciente(nombre) {
   if (!nombre) {
     mostrarAlerta("error", "No hay paciente");
