@@ -1497,26 +1497,33 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datosCita)
-    });
-    if (!res.ok) {
-      console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
+   try {
+      const res = await fetch(`https://api-railway-production-24f1.up.railway.app/api/test/agendarCitas?rol=${rol}&SessionId=${id}&SessionUser=${nombre}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datosCita)
+      });
+      if (!res.ok) {
+        console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
+        mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
+        registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText}`);
+        return;
+      }
+      const resultado = await res.json();
+      if (resultado?.success) {
+        mostrarAlerta("success", "Cita agendada correctamente.");
+        document.getElementById("formCita").reset();
+        bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
+        cargarHorarios(fechaInput.value); // ya no pasa nombre/id
+        cargarCitasHoy(fechaInput.value);
+        cargarCitasCanceladas(fechaInput.value);
+      } else {
+        mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
+      }
+    } catch (error) {
+      console.error("Error al agendar la cita:", error);
       mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
-      return;
-    }
-    const resultado = await res.json();
-    if (res.ok && resultado.success) {
-      mostrarAlerta("success", "Cita agendada correctamente.");
-      document.getElementById("formCita").reset();
-      bootstrap.Modal.getInstance(document.getElementById("modalCita")).hide();
-      cargarHorarios(fechaInput.value); // ya no pasa nombre/id
-      cargarCitasHoy(fechaInput.value);
-      cargarCitasCanceladas(fechaInput.value);
-    } else {
-      mostrarAlerta("warning", "El paciente no existe o lleno mal algun campo");
+      registrarError(id, `Error al agendar cita: ${error.message}`);
     }
   });
 
