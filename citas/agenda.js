@@ -695,10 +695,12 @@ function abrirModalDesbloquearHorario(hora) {
 }
 
 function registrarError(id, mensaje) {
+  // Check if either id or mensaje is null/undefined
   if (!id || !mensaje) {
     console.log("ID o mensaje nulo, no se registra el error");
     return;
   }
+  // Fetch API call to register the error
   fetch(`https://api-railway-production-24f1.up.railway.app/api/test/registrarErrores?id=${id}&mensaje=${mensaje}`, {
     method: "POST"
   }).then(response => {
@@ -1505,7 +1507,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) {
         console.error("Error en la respuesta de la API al agendar cita:", res.statusText);
         mostrarAlerta("error", "Error al agendar la cita. Por favor, inténtelo de nuevo.");
-        registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText}`);
+        registrarError(id, `Error al agendar cita: ${res.status} ${res.statusText} ${!res.ok}`);
         return;
       }
       const resultado = await res.json();
