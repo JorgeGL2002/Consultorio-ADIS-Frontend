@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
 .background {
   position: absolute;
   width: 100%;
@@ -6,7 +8,7 @@
   overflow: hidden;
 }
 
-.box div{
+.box div {
   position: relative;
   width: 60px;
   height: 60px;
@@ -14,7 +16,7 @@
   border: 6px solid rgba(0, 212, 255, 1);
 }
 
-.circle div{
+.circle div {
   position: relative;
   width: 60px;
   height: 60px;
@@ -24,135 +26,217 @@
   border: 6px solid rgb(45, 74, 146);
 }
 
-.box div:nth-child(1){
-  top:12%;
+.box div:nth-child(1) {
+  top: 12%;
   left: 10%;
-  animation:animate 10s linear infinite;
+  animation: animate 10s linear infinite;
 }
 
-.box div:nth-child(2){
+.box div:nth-child(2) {
   top: 70%;
   left: 50%;
-  animation:animate 7s linear infinite;
+  animation: animate 7s linear infinite;
 }
 
-.box div:nth-child(3){
+.box div:nth-child(3) {
   top: 17%;
   left: 6%;
-  animation:animate 9s linear infinite;
+  animation: animate 9s linear infinite;
 }
 
-.box div:nth-child(4){
+.box div:nth-child(4) {
   top: 20%;
   left: 60%;
-  animation:animate 10s linear infinite;
+  animation: animate 10s linear infinite;
 }
 
-.box div:nth-child(5){
+.box div:nth-child(5) {
   top: 67%;
   left: 10%;
-  animation:animate 6s linear infinite;
+  animation: animate 6s linear infinite;
 }
 
-.box div:nth-child(6){
+.box div:nth-child(6) {
   top: 80%;
   left: 70%;
-  animation:animate 6s linear infinite;
+  animation: animate 6s linear infinite;
 }
 
-.box div:nth-child(7){
+.box div:nth-child(7) {
   top: 60%;
   left: 25%;
-  animation:animate 15s linear infinite;
+  animation: animate 15s linear infinite;
 }
 
-.box div:nth-child(8){
+.box div:nth-child(8) {
   top: 32%;
   left: 25%;
-  animation:animate 16s linear infinite;
+  animation: animate 16s linear infinite;
 }
 
-.box div:nth-child(9){
+.box div:nth-child(9) {
   top: 90%;
   left: 25%;
-  animation:animate 9s linear infinite;
+  animation: animate 9s linear infinite;
 }
 
-.box div:nth-child(10){
+.box div:nth-child(10) {
   top: 20%;
   left: 80%;
-  animation:animate 5s linear infinite;
+  animation: animate 5s linear infinite;
 }
 
-.circle div:nth-child(1){
+.circle div:nth-child(1) {
   top: 50%;
   left: 50%;
-  animation:animate 10s linear infinite;
+  animation: animate 10s linear infinite;
 }
 
-.circle div:nth-child(2){
+.circle div:nth-child(2) {
   top: 20%;
   left: 40%;
-  animation:animate 7s linear infinite;
+  animation: animate 7s linear infinite;
 }
 
-.circle div:nth-child(3){
+.circle div:nth-child(3) {
   top: 80%;
   left: 20%;
-  animation:animate 9s linear infinite;
+  animation: animate 9s linear infinite;
 }
 
-.circle div:nth-child(4){
+.circle div:nth-child(4) {
   top: 70%;
   left: 80%;
-  animation:animate 10s linear infinite;
+  animation: animate 10s linear infinite;
 }
 
-.circle div:nth-child(5){
+.circle div:nth-child(5) {
   top: 30%;
   left: 70%;
-  animation:animate 6s linear infinite;
+  animation: animate 6s linear infinite;
 }
 
-.circle div:nth-child(6){
+.circle div:nth-child(6) {
   top: 40%;
   left: 10%;
-  animation:animate 6s linear infinite;
+  animation: animate 6s linear infinite;
 }
 
-.circle div:nth-child(7){
+.circle div:nth-child(7) {
   top: 60%;
   left: 25%;
-  animation:animate 15s linear infinite;
+  animation: animate 15s linear infinite;
 }
 
-.circle div:nth-child(8){
+.circle div:nth-child(8) {
   top: 32%;
   left: 25%;
-  animation:animate 16s linear infinite;
+  animation: animate 16s linear infinite;
 }
 
-.circle div:nth-child(9){
+.circle div:nth-child(9) {
   top: 90%;
   left: 25%;
-  animation:animate 9s linear infinite;
+  animation: animate 9s linear infinite;
 }
 
-.circle div:nth-child(10){
+.circle div:nth-child(10) {
   top: 20%;
   left: 80%;
-  animation:animate 5s linear infinite;
+  animation: animate 5s linear infinite;
 }
 
 @keyframes animate {
-  0%{
+  0% {
     transform: scale(1) translateY(0) rotate(0deg);
     opacity: 1;
     border-radius: 0;
   }
-  100%{
+
+  100% {
     transform: scale(0) translateY(-1000px) rotate(720deg);
     opacity: 0;
     border-radius: 50%;
+  }
+}
+
+.btn{
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:before,
+.btn:after {
+  position: absolute;
+  content: "";
+  width: 150%;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1000;
+  background-repeat: no-repeat;
+}
+
+.btn.animate::before {
+  top: 70%;
+  background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, #7d2ae8 20%, transparent 30%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #7d2ae8 15%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+  animation: greentopBubbles ease-in 0.6s forwards infinite;
+}
+
+@keyframes greentopBubbles {
+  0% {
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+  }
+
+  50% {
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+  }
+
+  100% {
+    background-position: 5% -10%, 10% -10%, 10% -10%, 15% -10%, 25% -10%, 25% -10%, 40% -10%, 55% -10%, 70% -10%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+.btn.animate::after {
+  bottom: 70%;
+  background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #7d2ae8 15%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+  animation: greenbottomBubbles ease-in 0.6s forwards infinite;
+}
+
+@keyframes greenbottomBubbles {
+  0% {
+    background-position: 10% -10%, 30% 10%, 55% 40%, 70% 50%, 10% 50%, 30% 65%, 70% 80%;
+  }
+
+  50% {
+    background-position: 0% 20%, 20% 0%, 40% 30%, 60% 20%, 20% 40%, 40% 60%, 80% 50%;
+  }
+
+  100% {
+    background-position: 10% 90%, 30% 90%, 55% 90%, 70% 90%, 10% 90%, 30% 90%, 70% 90%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
